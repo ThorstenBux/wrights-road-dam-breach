@@ -189,13 +189,18 @@
   document.getElementById('h1').textContent = sc + ' embankment breach – flood animation';
   document.getElementById('desc').textContent = M.description + ' Simulated with ANUGA on LINZ 1 m LiDAR (' + M.cell + ' m display grid). Screening model – not a certified assessment.';
   document.getElementById('eyebrow').textContent = 'Wrights Road Storage Ponds · ' + M.mode + ' run · peak ' + Math.round(M.peak_q).toLocaleString() + ' m³/s';
-  const dmaxLegend = M.dscale * 255;
-  document.getElementById('dmax').textContent = (dmaxLegend).toFixed(0) + ' m+';
-  document.getElementById('dmid').textContent = (dmaxLegend / 2).toFixed(0) + ' m';
+  // Depth colour ramp saturates at the deepest water that actually occurs in this run (rounded up to 0.5 m),
+  // so the legend spans the real range rather than the export's 8-bit ceiling.
+  function b64(s) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+  let rawMax = 0; F.frames.forEach(f => { const u = b64(f); for (let i = 0; i < u.length; i++) if (u[i] > rawMax) rawMax = u[i]; });
+  const dTop = Math.max(0.5, Math.ceil(rawMax * M.dscale * 2) / 2);
+  const fmtD = v => parseFloat(v.toFixed(2)).toString() + ' m';
+  const dTopLabel = rawMax >= 255 ? fmtD(dTop) + '+' : fmtD(dTop);
+  document.getElementById('dmax').textContent = dTopLabel;
+  document.getElementById('dmid').textContent = fmtD(dTop / 2);
   document.getElementById('t1').textContent = M.times_h[M.times_h.length - 1].toFixed(1) + ' h';
 
   // ---------- decode ----------
-  function b64(s) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
   const dem16 = new Uint16Array(b64(F.dem).buffer);
   const elev = new Float32Array(NX * NY);
   for (let i = 0; i < elev.length; i++) elev[i] = M.z0 + dem16[i] * M.zscale; // metres
@@ -294,7 +299,7 @@
         c = hzCol[dep > 0.05 ? hazardClass(dep, v) : 0];
       } else {
         if (sp) { const v = sp[gi] * M.sscale; if (v > ms) ms = v; }
-        const t = Math.min(dep / 4, 1);
+        const t = Math.min(dep / dTop, 1);
         c = t < 0.5 ? w1.clone().lerp(w2, t * 2) : w2.clone().lerp(w3, (t - 0.5) * 2);
       }
       wcol[vi * 3] = c.r; wcol[vi * 3 + 1] = c.g; wcol[vi * 3 + 2] = c.b;
@@ -469,7 +474,7 @@
   playBtn.addEventListener('click', () => setPlaying(!playing));
   scrub.addEventListener('input', () => { setPlaying(false); setFrame(+scrub.value, true); });
   const legend = {
-    depth: { ramp: '', k: 'Water depth ', lo: '0.05 m', mid: (dmaxLegend / 2).toFixed(0) + ' m', hi: dmaxLegend.toFixed(0) + ' m+' },
+    depth: { ramp: '', k: 'Water depth ', lo: '0.05 m', mid: fmtD(dTop / 2), hi: dTopLabel },
     speed: { ramp: 'linear-gradient(90deg, #fff3b0, #ff8c42 50%, #b3001b)', k: 'Flow speed ', lo: '0 m/s', mid: '1.5 m/s', hi: '3 m/s+' },
     hazard: { ramp: 'linear-gradient(90deg, #7fc8f8 0 16.6%, #4fa64f 16.6% 33.3%, #d8c400 33.3% 50%, #ff8c1a 50% 66.6%, #e63c1e 66.6% 83.3%, #7a0c2e 83.3%)', k: 'Hazard class (ARR / NZSOLD) ', lo: 'H1 safe', mid: 'H3–H4 unsafe', hi: 'H6' },
   };
