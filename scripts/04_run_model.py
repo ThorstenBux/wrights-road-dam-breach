@@ -51,10 +51,12 @@ def main():
     # Start the 2D simulation when water first leaves the ponds (cascade: Pond 2 breach initiation).
     summ_path = out_dir / "breach_summary.json"
     t0 = float(json.loads(summ_path.read_text()).get("t_init_s") or 0.0) if summ_path.exists() else 0.0
-    Q = lambda t, Q_raw=Q_raw, t0=t0: Q_raw(t + t0)
-    print(f"[run] hydrograph time offset: simulation t=0 corresponds to t={t0:.0f} s in {hyd.name}")
+    hydro = sc.get("hydrology") or {}
+    pre = float(hydro.get("pre_breach_h", 0.0)) * 3600   # spin-up before the breach opens (storm scenarios)
+    Q = lambda t, Q_raw=Q_raw, t0=t0, pre=pre: (Q_raw(t - pre + t0) if t >= pre else 0.0)
+    print(f"[run] hydrograph time offset: simulation t={pre:.0f} s (breach opens) corresponds to t={t0:.0f} s in {hyd.name}")
     run_cfg = site["run"][mode]; mesh_cfg = site["mesh"][mode]
-    finaltime = (a.finaltime_h or run_cfg["finaltime_h"]) * 3600; yieldstep = a.yieldstep_s or run_cfg["yieldstep_s"]
+    finaltime = (a.finaltime_h or run_cfg["finaltime_h"]) * 3600 + pre; yieldstep = a.yieldstep_s or run_cfg["yieldstep_s"]
     manning = a.manning or dam["friction"]["default_manning_n"]
 
     # terrain: burn the full ponds as a solid block at crest level
@@ -74,18 +76,43 @@ def main():
     name = f"{a.scenario}_{mode}{a.tag}"
     domain, offset = model.build_domain(burned, bbox, mesh_cfg, refine, out_dir, name, manning)
 
-    # inlet patch just outside the embankment toe
-    loc = np.array(sc["breach_location_nztm"], float); d = np.array(sc["outward_dir"], float); d /= np.linalg.norm(d)
-    t = np.array([-d[1], d[0]])
+    # inlet patch just outside the embankment toe (one per external breach)
     L, Wd = dam["breach_defaults"]["inlet_polygon_size_m"]
-    c = loc + d * (10 + Wd / 2)
-    poly = [c - t * L / 2, c + t * L / 2, c + t * L / 2 + d * Wd, c - t * L / 2 + d * Wd]
-    poly = [c - t * L / 2 - d * Wd / 2, c + t * L / 2 - d * Wd / 2, c + t * L / 2 + d * Wd / 2, c - t * L / 2 + d * Wd / 2]
-    model.add_inlet(domain, offset, poly, Q, label=f"breach_{a.scenario}")
+    def inlet_poly(loc, outward):
+        loc = np.array(loc, float); d = np.array(outward, float); d /= np.linalg.norm(d)
+        t = np.array([-d[1], d[0]]); c = loc + d * (10 + Wd / 2)
+        return [c - t * L / 2 - d * Wd / 2, c + t * L / 2 - d * Wd / 2, c + t * L / 2 + d * Wd / 2, c - t * L / 2 + d * Wd / 2]
+    external = [b for b in sc.get("breaches", []) if not b.get("feeds")]
+    if external:
+        polys = []
+        for b in external:
+            hb = out_dir / f"hydrograph_{b['name']}{a.tag}.csv"
+            if not hb.exists():
+                hb = out_dir / f"hydrograph_{b['name']}.csv"
+            Qb_raw = read_hydrograph_csv(hb); Qb = lambda t, Qb_raw=Qb_raw, t0=t0: Qb_raw(t + t0)
+            poly = inlet_poly(b["location_nztm"], b["outward_dir"]); polys.append(poly)
+            model.add_inlet(domain, offset, poly, Qb, label=f"breach_{a.scenario}_{b['name']}")
+        poly = polys[0]
+    else:
+        poly = inlet_poly(sc["breach_location_nztm"], sc["outward_dir"])
+        model.add_inlet(domain, offset, poly, Q, label=f"breach_{a.scenario}")
 
-    meta = {"scenario": a.scenario, "mode": mode, "bbox": bbox, "dem": str(dem_path), "hydrograph": str(hyd),
+    # storm hydrology: uniform net rain + rivers already in flood at the domain edge
+    river_polys = []
+    if hydro:
+        net = float(hydro.get("rain_mm_h", 0.0)) - float(hydro.get("infiltration_mm_h", 0.0))
+        if net > 0:
+            model.add_rain(domain, net / 1000.0 / 3600.0)
+        for rv in hydro.get("river_inflows", []):
+            loc = rv["location_nztm"][mode] if isinstance(rv["location_nztm"], dict) else rv["location_nztm"]
+            fd = rv["flow_dir"][mode] if isinstance(rv["flow_dir"], dict) else rv["flow_dir"]
+            rp = inlet_poly(loc, fd); river_polys.append(rp)
+            qr = float(rv["q_m3s"]); model.add_inlet(domain, offset, rp, lambda t, qr=qr: qr, label=f"river_{rv['name'].replace(' ', '_')}")
+    meta = {"scenario": a.scenario, "mode": mode, "bbox": bbox, "pre_breach_s": pre, "hydrology": hydro or None,
+            "river_inlet_polygons": [[list(map(float, p)) for p in pp] for pp in river_polys], "dem": str(dem_path), "hydrograph": str(hyd),
             "triangles": int(domain.number_of_triangles), "manning_n": manning, "finaltime_s": finaltime,
             "yieldstep_s": yieldstep, "inlet_polygon": [list(map(float, p)) for p in poly],
+            "inlet_polygons": [[list(map(float, p)) for p in pp] for pp in (polys if external else [poly])],
             "flow_algorithm": mesh_cfg.get("flow_algorithm", "DE0"), "time_offset_s": t0,
             "started": time.strftime("%Y-%m-%d %H:%M:%S")}
     (out_dir / f"run_meta_{mode}{a.tag}.json").write_text(json.dumps(meta, indent=2))

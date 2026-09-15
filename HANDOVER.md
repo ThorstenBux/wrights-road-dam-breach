@@ -10,6 +10,8 @@ Potential Impact Classification under the Building (Dam Safety) Regulations 2022
 
 * East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
 * West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
+* Earthquake, all embankments at once (postulated seismic failure): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
+* Storm, east breach during 10 mm/h rain with the Eyre River in flood (rainy-day combination): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
 * Index: https://thorstenbux.github.io/wrights-road-dam-breach/
 
 Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons
@@ -52,6 +54,7 @@ impacts, a reproducible pipeline, and an interactive 3D animation.
 | South (cascade) | 215.4 m | 1,070 m³/s | 5.3 Mm³ | not run in 2D | | | 54 |
 | North (cascade) | 216.7 m | 820 m³/s | 4.7 Mm³ | not run in 2D | | | 95 |
 | West (Pond 1 piping only) | 221.9 m | 235 m³/s | 1.2 Mm³ | 6.0 km² | 2 | 5 | 4 |
+| Earthquake (all embankments at once, postulated) | 210.8–221.9 m | 3,000 m³/s combined | 7.4 Mm³ | 43.4 km² | 87 | ~218 | – |
 
 * The east peak is within 20 % of Damwatch's "approximately 2,500 m³/s". The ordering E > S > N > W follows the
   ground level at the toe (211 m on the Wrights Road side vs 222 m on the MR4 side), now quantified from LiDAR.

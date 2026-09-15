@@ -84,6 +84,71 @@ scenarios:
     outward_dir: [-0.959, 0.284]
     damwatch_2012: {flood_zone_km2: 15, households_in_zone: 50, households_at_risk: 1, PAR: 4, PIC_regs2008: MEDIUM, PIC_nzsold2000: LOW}
 
+  quake:
+    # Postulated earthquake-triggered failure. The design intent is that the ponds survive the Safety
+    # Evaluation Earthquake (GNS site-specific hazard; SEE crest settlement 233-388 mm vs 1.5 m freeboard,
+    # design report s7.3.3 / Table 34), so this is a bounding "what if", not a predicted outcome.
+    # Trigger examples: Alpine Fault rupture (Mw ~8, ~75 % probability in the next 50 years, Howarth et
+    # al. 2021) or a Canterbury Plains fault such as the 4 Sep 2010 Darfield earthquake (Mw 7.1, ~30 km
+    # from the site). Assumed consequences of strong, long-duration shaking at full supply:
+    #   - crest slumping / transverse cracking of ALL embankments -> simultaneous breaches at t = 0,
+    #     no cascade delay and no warning time (sirens and the TDR crest cable may be lost);
+    #   - erosion through a cracked, slumped fill is faster than the historical (mostly non-seismic)
+    #     Froehlich record -> formation time x0.5 (the low end of the sensitivity range);
+    #   - Pond 1 also fails through the dividing embankment into Pond 2 (as in the cascade scenarios);
+    #   - final breach sizes per Froehlich (2008) for each embankment as if it failed alone (conservative
+    #     for total outflow capacity: the ponds are volume-limited, not capacity-limited);
+    #   - foundation liquefaction is not assumed: alluvial gravels, groundwater ~20 m below ground (s3, s6).
+    title: "Earthquake – all embankments fail at once"
+    description: "Postulated earthquake-triggered failure at full supply (e.g. Alpine Fault Mw 8 or a Darfield-type Mw 7 event): all four external embankments and the dividing embankment slump and breach simultaneously, with no cascade delay and no warning. Both ponds (8.2 Mm3) drain in every direction at once."
+    seismic: true
+    cascade: false
+    formation_time_factor: 0.5
+    pond: pond2                                 # primary pond / breach for single-location consumers
+    mode: overtopping
+    breach_location_nztm: [1535192, 5196838]    # = east breach (primary)
+    outward_dir: [0.959, -0.284]
+    breaches:
+      - {name: east,     pond: pond2, mode: overtopping, location_nztm: [1535192, 5196838], outward_dir: [0.959, -0.284]}
+      - {name: south,    pond: pond2, mode: overtopping, location_nztm: [1534525, 5196475], outward_dir: [-0.282, -0.959]}
+      - {name: north,    pond: pond2, mode: overtopping, location_nztm: [1534829, 5197507], outward_dir: [0.282, 0.959]}
+      - {name: west,     pond: pond1, mode: piping,      location_nztm: [1534162, 5197144], outward_dir: [-0.959, 0.284]}
+      - {name: dividing, pond: pond1, mode: piping,      feeds: pond2, invert_mRL: 222.8}
+    damwatch_2012: null                         # not a Damwatch scenario
+
+  storm:
+    # "Rainy day" combination (NZSOLD 2024 M2 s2.3.3): the governing east cascade breach happens during a
+    # regional storm. Same breach as `east`; the 2D model additionally gets
+    #   - steady rainfall of 10 mm/h on the whole domain (no infiltration: saturated ground, worst case);
+    #   - the Eyre River already in flood where it enters the domain (WDC flood mapping cited in the design
+    #     report s3 shows a major Eyre flood reaching the north embankment; the river crosses the breach flood
+    #     corridor ~10 km east of the site, so a full channel cannot absorb part of the breach wave);
+    #   - a spin-up of 2 h with rain and river flow before the breach opens, so the channel is flowing across the
+    #     domain and the plain is wet when the wave arrives.
+    # The Eyre flood flow is an ASSUMPTION: 10 mm/h on the ~150 km2 foothill catchment upstream of the domain
+    # with a runoff coefficient of ~0.4 gives ~170 m3/s; 150 m3/s adopted. Replace with an ECan flow record
+    # (Eyre River at Downs Road / Eyrewell) before any reportable use. Note: at the site itself the Eyre runs
+    # ~7 km north of the ponds, outside both model domains, so flooding of the north embankment by the river
+    # is NOT represented.
+    title: "Storm – breach during heavy rain with the Eyre River in flood"
+    description: "Rainy-day combination: the east cascade breach (Pond 1 -> Pond 2 -> Wrights Road side) opens during a regional storm with steady 10 mm/h rain on saturated ground and the Eyre River already in flood (150 m3/s assumed) where it crosses the flood corridor. Two hours of rain and river flow precede the breach."
+    cascade: true
+    pond: pond2
+    mode: overtopping
+    breach_location_nztm: [1535192, 5196838]
+    outward_dir: [0.959, -0.284]
+    hydrology:
+      pre_breach_h: 2.0
+      rain_mm_h: 10.0
+      infiltration_mm_h: 0.0
+      river_inflows:
+        - name: Eyre River
+          q_m3s: 150
+          # ~400 m inside the domain from where the OSM river centreline crosses the domain's north edge
+          location_nztm: {shakedown: [1543457, 5200792], production: [1536906, 5202713]}
+          flow_dir: {shakedown: [0.854, -0.520], production: [0.697, -0.718]}
+    damwatch_2012: null
+
 cascade:
   # Pond 1 -> Pond 2 through the dividing embankment: breach invert taken at Pond 2 FSL
   # (tailwater-limited erosion; simple level-pool, no submergence correction).

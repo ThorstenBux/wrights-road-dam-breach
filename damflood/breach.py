@@ -229,6 +229,87 @@ def route(event: BreachEvent, t_end: float, dt: float = 1.0,
             "t_init": t_init, "volume_released": float(np.trapezoid(Q_out, t))}
 
 
+@dataclass
+class MultiBreachEvent:
+    """Several breaches opening in the SAME reservoir at the same time (e.g. an earthquake that
+    slumps and cracks more than one embankment).  Every breach starts at `start_time`; the pool
+    drains through the sum of the individual weir flows.  `feeds` marks the breach whose outflow
+    goes into another pond (the dividing embankment) rather than downstream."""
+    reservoir: Reservoir
+    breaches: dict                          # name -> BreachGeometry
+    initial_level: Optional[float] = None
+    start_time: float = 0.0
+    weir_coeff_rect: float = 1.7
+    weir_coeff_tri: float = 1.4
+    feeds: Optional[str] = None             # name of the breach that discharges into the next pond
+
+
+def route_multi(event: MultiBreachEvent, t_end: float, dt: float = 1.0,
+                inflow: Optional[Callable[[float], float]] = None) -> dict:
+    """Level-pool routing with several simultaneous breaches.  Returns the same keys as
+    `route` (Q_out = total outflow, breach_bottom etc. for the first breach) plus
+    Q_by_breach {name: array}."""
+    res = event.reservoir
+    names = list(event.breaches)
+    n = int(np.ceil(t_end / dt)) + 1
+    t = np.arange(n) * dt
+    Qb = {k: np.zeros(n) for k in names}
+    Q_out = np.zeros(n); Q_in = np.zeros(n); lev = np.zeros(n)
+    zb_arr = np.zeros(n); bw = np.zeros(n); tw = np.zeros(n)
+    z = res.fsl if event.initial_level is None else event.initial_level
+    V = float(res.volume(z))
+    zb_start = {}
+    for i in range(n):
+        ti = t[i]
+        qin = float(inflow(ti)) if inflow else 0.0
+        qs, zbs, bs, tws = {}, {}, {}, {}
+        if ti >= event.start_time:
+            for k in names:
+                g = event.breaches[k]
+                if k not in zb_start:
+                    zb_start[k] = res.crest if g.mode.lower().startswith("over") else min(z, res.crest)
+                frac = g.fraction(ti - event.start_time)
+                zb = zb_start[k] - (zb_start[k] - g.invert) * frac
+                b = g.bottom_width * frac
+                qs[k] = _weir_flow(z - zb, b, g.side_slope, event.weir_coeff_rect, event.weir_coeff_tri)
+                zbs[k], bs[k] = zb, b
+                tws[k] = b + 2 * g.side_slope * max(zb_start[k] - zb, 0.0)
+        else:
+            for k in names:
+                qs[k] = 0.0; zbs[k] = res.crest; bs[k] = 0.0; tws[k] = 0.0
+        qtot = sum(qs.values())
+        # cannot release more than what is stored above the lowest breach bottom this step
+        zb_low = min(zbs.values())
+        avail = max(V - float(res.volume(zb_low)), 0.0) + qin * dt
+        if qtot * dt > avail and qtot > 0:
+            scale = avail / (qtot * dt); qs = {k: v * scale for k, v in qs.items()}; qtot = avail / dt
+        for k in names:
+            Qb[k][i] = qs[k]
+        Q_out[i], Q_in[i], lev[i] = qtot, qin, z
+        k0 = names[0]; zb_arr[i], bw[i], tw[i] = zbs[k0], bs[k0], tws[k0]
+        V = max(V + (qin - qtot) * dt, 0.0)
+        z = res.level(V)
+    return {"t": t, "Q_out": Q_out, "Q_in": Q_in, "level": lev, "breach_bottom": zb_arr,
+            "breach_bottom_width": bw, "breach_top_width": tw, "Q_by_breach": Qb,
+            "t_init": event.start_time, "volume_released": float(np.trapezoid(Q_out, t))}
+
+
+def cascade_multi(events: list[MultiBreachEvent], t_end: float, dt: float = 1.0) -> list[dict]:
+    """Route a chain of ponds with simultaneous breaches: the `feeds` breach of events[i]
+    is the inflow to events[i+1]; every other breach discharges downstream."""
+    results: list[dict] = []
+    inflow = None
+    for ev in events:
+        r = route_multi(ev, t_end, dt, inflow=inflow)
+        results.append(r)
+        if ev.feeds is not None:
+            tt, qq = r["t"], r["Q_by_breach"][ev.feeds]
+            inflow = lambda s, tt=tt, qq=qq: float(np.interp(s, tt, qq, left=0.0, right=0.0))
+        else:
+            inflow = None
+    return results
+
+
 def cascade(events: list[BreachEvent], t_end: float, dt: float = 1.0) -> list[dict]:
     """Route a chain of ponds: outflow of events[i] is the inflow to events[i+1]."""
     results: list[dict] = []

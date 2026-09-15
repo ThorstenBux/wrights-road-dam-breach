@@ -113,6 +113,14 @@ def add_inlet(domain, offset, polygon_xy_abs, Q: Callable[[float], float], label
     return op
 
 
+def add_rain(domain, rate_m_s: float, label="rain"):
+    """Uniform rainfall (net of infiltration) over the whole domain, m/s."""
+    import anuga
+    op = anuga.Rate_operator(domain, rate=float(rate_m_s), factor=1.0, label=label)
+    print(f"[model] rain '{label}' {rate_m_s*3.6e6:.1f} mm/h on the whole domain")
+    return op
+
+
 def run(domain, Q: Callable[[float], float], finaltime: float, yieldstep: float, log_path: Path,
         verbose: bool = True) -> Path:
     t0 = time.time()

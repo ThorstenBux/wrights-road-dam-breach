@@ -39,6 +39,11 @@
   .title h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: 0.01em; line-height: 1.05; text-wrap: balance; }
   .title p { margin: 4px 0 0; color: var(--ink-2); font-size: 12.5px; max-width: 60ch; }
   .title .eyebrow { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .scen { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 7px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; }
+  .scen span { color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10.5px; }
+  .scen a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid transparent; }
+  .scen a:hover { color: var(--ink); }
+  .scen a.on { color: var(--water-1); border-bottom-color: var(--water-1); }
   #help { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 8px 12px; color: var(--ink-2); font-size: 12px; backdrop-filter: blur(6px); }
   #help b { color: var(--ink); font-weight: 500; }
   .topright { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
@@ -118,6 +123,7 @@
     <span class="eyebrow" id="eyebrow">Wrights Road Storage Ponds · screening model</span>
     <h1 id="h1">Breach flood animation</h1>
     <p id="desc"></p>
+    <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
   </div>
   <div class="topright">
     <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode</div>
@@ -186,7 +192,10 @@
 
   // ---------- text ----------
   const sc = M.scenario.charAt(0).toUpperCase() + M.scenario.slice(1);
-  document.getElementById('h1').textContent = sc + ' embankment breach – flood animation';
+  document.getElementById('h1').textContent = (M.title ? M.title : sc + ' embankment breach') + ' – flood animation';
+  if (M.seismic) document.querySelector('#stats .stat .k').textContent = 'Time after quake';
+  { const nav = document.getElementById('scen'); const h = location.hostname;
+    if (h.endsWith('github.io') || h === 'localhost' || h === '127.0.0.1') { nav.hidden = false; nav.querySelectorAll('a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === M.scenario)); } }
   document.getElementById('desc').textContent = M.description + ' Simulated with ANUGA on LINZ 1 m LiDAR (' + M.cell + ' m display grid). Screening model – not a certified assessment.';
   document.getElementById('eyebrow').textContent = 'Wrights Road Storage Ponds · ' + M.mode + ' run · peak ' + Math.round(M.peak_q).toLocaleString() + ' m³/s';
   // Depth colour ramp saturates at the deepest water that actually occurs in this run (rounded up to 0.5 m),
@@ -199,6 +208,8 @@
   document.getElementById('dmax').textContent = dTopLabel;
   document.getElementById('dmid').textContent = fmtD(dTop / 2);
   document.getElementById('t1').textContent = M.times_h[M.times_h.length - 1].toFixed(1) + ' h';
+  if (M.times_h[0] < 0) document.getElementById('t0').textContent = '−' + Math.abs(M.times_h[0]).toFixed(0) + ' h (rain + river only)';
+  if (M.hydrology) document.getElementById('desc').textContent += ' Rain ' + M.hydrology.rain_mm_h + ' mm/h on the whole area; ' + (M.hydrology.river_inflows || []).map(r => r.name + ' ' + r.q_m3s + ' m³/s').join(', ') + ' already in flood; the breach opens at 0:00 after ' + M.pre_breach_h.toFixed(0) + ' h of storm.';
 
   // ---------- decode ----------
   const dem16 = new Uint16Array(b64(F.dem).buffer);
@@ -412,7 +423,11 @@
   });
   { const c = M.footprint_km; const cx = c.reduce((s, p) => s + p[0], 0) / c.length, cy = c.reduce((s, p) => s + p[1], 0) / c.length;
     const el = document.createElement('div'); el.className = 'rl pond'; el.textContent = 'Wrights Road ponds'; document.body.appendChild(el); labels.unshift({ el, xk: cx, yk: cy, lift: 30, rank: -2, w: 0 }); }
-  { const b = M.breach_km; const el = document.createElement('div'); el.className = 'rl pond'; el.textContent = '▼ breach'; document.body.appendChild(el); labels.unshift({ el, xk: b[0], yk: b[1], lift: 20, rank: -3, w: 0 }); }
+  (M.breaches_km && M.breaches_km.length ? M.breaches_km : [{ name: '', km: M.breach_km }]).forEach((bk, i) => {
+    const b = bk.km; const el = document.createElement('div'); el.className = 'rl pond';
+    el.textContent = '▼ breach' + (M.breaches_km && M.breaches_km.length > 1 ? ' ' + bk.name : ''); document.body.appendChild(el);
+    labels.unshift({ el, xk: b[0], yk: b[1], lift: 20, rank: -3 - i, w: 0 });
+  });
   const tmpV = new THREE.Vector3();
   const placed = [];
   function placeLabels() {
@@ -462,8 +477,8 @@
     k = Math.min(Math.max(k, 0), F.frames.length - 1);
     if (k !== curFrame) applyFrame(k);
     if (!fromScrub) scrub.value = k;
-    const th = M.times_h[k]; const hh = Math.floor(th), mm = Math.round((th - hh) * 60);
-    document.getElementById('tv').textContent = hh + ':' + String(mm).padStart(2, '0');
+    const th = M.times_h[k]; const ta = Math.abs(th); let hh = Math.floor(ta), mm = Math.round((ta - hh) * 60); if (mm === 60) { hh += 1; mm = 0; }
+    document.getElementById('tv').textContent = (th < -1e-6 ? '−' : '') + hh + ':' + String(mm).padStart(2, '0');
     document.getElementById('qv').textContent = Math.round(M.q_m3s[k]).toLocaleString();
     document.getElementById('av').textContent = M.area_km2[k].toFixed(1);
     document.getElementById('dv').textContent = maxDepth.toFixed(1);
@@ -563,7 +578,7 @@
     g.lineTo(w, h - 12); g.closePath(); g.fillStyle = 'rgba(31,111,214,0.35)'; g.fill();
     g.beginPath(); for (let i = 0; i < n; i++) { const x = i / (n - 1) * w, y = (h - 12) - M.q_m3s[i] / qm * (h - 18); i ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.strokeStyle = '#8fd3ff'; g.lineWidth = 1.5; g.stroke();
-    g.fillStyle = '#9aa4b5'; g.font = '10px "IBM Plex Mono", monospace'; g.fillText('breach outflow, peak ' + Math.round(qm).toLocaleString() + ' m³/s', 4, 11);
+    g.fillStyle = '#9aa4b5'; g.font = '10px "IBM Plex Mono", monospace'; g.fillText((M.seismic ? 'total breach outflow, peak ' : 'breach outflow, peak ') + Math.round(qm).toLocaleString() + ' m³/s', 4, 11);
   }
 
   // ---------- loop ----------

@@ -1,0 +1,155 @@
+{
+  "peak_Q_m3s": 3001.095216839124,
+  "time_to_peak_s": 2094.0,
+  "t_init_s": 0.0,
+  "volume_released_m3": 7433380.976933983,
+  "duration_gt_1pct_peak_s": 13659.0,
+  "final_level_m": 210.82924494578586,
+  "max_level_m": 222.80006869623446,
+  "scenario": "quake",
+  "description": "Postulated earthquake-triggered failure at full supply (e.g. Alpine Fault Mw 8 or a Darfield-type Mw 7 event): all four external embankments and the dividing embankment slump and breach simultaneously, with no cascade delay and no warning. Both ponds (8.2 Mm3) drain in every direction at once.",
+  "title": "Earthquake \u2013 all embankments fail at once",
+  "breach_invert_mRL": 210.80213260499406,
+  "breach_invert_source": "LiDAR toe (dem_full_10m.tif)",
+  "scour_m": 0.0,
+  "pond2_trigger_mRL": null,
+  "pond2_max_level_mRL": 222.80006869623446,
+  "damwatch_2012_2016_peak_m3s": 2500,
+  "breach_notes": [
+    "east (pond2, overtopping): invert 210.8 m (LiDAR toe (dem_full_10m.tif)); V_w=6.199e+06 m3, h_b=12.00 m, B_avg=57.8 m; B_bot=45.8 m, z=1.0, t_f=0.58 h (x0.5)",
+    "south (pond2, overtopping): invert 215.4 m (LiDAR toe (dem_full_10m.tif)); V_w=4.390e+06 m3, h_b=7.38 m, B_avg=50.8 m; B_bot=43.4 m, z=1.0, t_f=0.80 h (x0.5)",
+    "north (pond2, overtopping): invert 216.7 m (LiDAR toe (dem_full_10m.tif)); V_w=3.742e+06 m3, h_b=6.06 m, B_avg=47.9 m; B_bot=41.8 m, z=1.0, t_f=0.89 h (x0.5)",
+    "west (pond1, piping): invert 221.9 m (LiDAR toe (dem_full_10m.tif)); V_w=1.255e+06 m3, h_b=4.63 m, B_avg=25.7 m; B_bot=22.4 m, z=0.7, t_f=0.68 h (x0.5)",
+    "dividing (pond1, piping, feeds pond2): invert 222.8 m (config); V_w=1.024e+06 m3, h_b=3.70 m, B_avg=23.8 m; B_bot=21.3 m, z=0.7, t_f=0.77 h (x0.5)"
+  ],
+  "width_factor": 1.0,
+  "time_factor": 0.5,
+  "breaches": [
+    {
+      "name": "east",
+      "pond": "pond2",
+      "mode": "overtopping",
+      "feeds": null,
+      "location_nztm": [
+        1535192,
+        5196838
+      ],
+      "outward_dir": [
+        0.959,
+        -0.284
+      ],
+      "invert_mRL": 210.80213260499406,
+      "toe_samples_m": [
+        212.15,
+        211.73,
+        211.31,
+        210.8
+      ],
+      "B_bot_m": 45.81461777471379,
+      "z": 1.0,
+      "t_f_h": 0.5815920453329463,
+      "peak_Q_m3s": 2566.993311625675,
+      "time_to_peak_h": 0.5816666666666667,
+      "volume_m3": 6041429.18552825
+    },
+    {
+      "name": "south",
+      "pond": "pond2",
+      "mode": "overtopping",
+      "feeds": null,
+      "location_nztm": [
+        1534525,
+        5196475
+      ],
+      "outward_dir": [
+        -0.282,
+        -0.959
+      ],
+      "invert_mRL": 215.42168103637474,
+      "toe_samples_m": [
+        216.0,
+        216.02,
+        215.75,
+        215.42
+      ],
+      "B_bot_m": 43.39226903972055,
+      "z": 1.0,
+      "t_f_h": 0.7958330954839002,
+      "peak_Q_m3s": 207.36436043492765,
+      "time_to_peak_h": 0.7958333333333333,
+      "volume_m3": 376984.3983050247
+    },
+    {
+      "name": "north",
+      "pond": "pond2",
+      "mode": "overtopping",
+      "feeds": null,
+      "location_nztm": [
+        1534829,
+        5197507
+      ],
+      "outward_dir": [
+        0.282,
+        0.959
+      ],
+      "invert_mRL": 216.73858711718535,
+      "toe_samples_m": [
+        216.77,
+        216.79,
+        216.74,
+        216.95
+      ],
+      "B_bot_m": 41.800591242932505,
+      "z": 1.0,
+      "t_f_h": 0.8943524974338048,
+      "peak_Q_m3s": 49.45594643255357,
+      "time_to_peak_h": 0.47,
+      "volume_m3": 47591.02975518703
+    },
+    {
+      "name": "west",
+      "pond": "pond1",
+      "mode": "piping",
+      "feeds": null,
+      "location_nztm": [
+        1534162,
+        5197144
+      ],
+      "outward_dir": [
+        -0.959,
+        0.284
+      ],
+      "invert_mRL": 221.8690781694389,
+      "toe_samples_m": [
+        221.87,
+        222.17,
+        222.47,
+        222.52
+      ],
+      "B_bot_m": 22.437662520697845,
+      "z": 0.7,
+      "t_f_h": 0.678026170753777,
+      "peak_Q_m3s": 273.6581140162143,
+      "time_to_peak_h": 0.6780555555555555,
+      "volume_m3": 967376.3633455206
+    },
+    {
+      "name": "dividing",
+      "pond": "pond1",
+      "mode": "piping",
+      "feeds": "pond2",
+      "location_nztm": null,
+      "outward_dir": null,
+      "invert_mRL": 222.8,
+      "toe_samples_m": [],
+      "B_bot_m": 21.257737507572795,
+      "z": 0.7,
+      "t_f_h": 0.7666393164428758,
+      "peak_Q_m3s": 122.45028152250936,
+      "time_to_peak_h": 0.7666666666666667,
+      "volume_m3": 275182.34802211047
+    }
+  ],
+  "seismic": true,
+  "method": "Froehlich (2008) parameters per embankment, formation time x0.50 (seismic); simultaneous level-pool routing of all breaches; broad-crested weir; no tailwater submergence"
+}

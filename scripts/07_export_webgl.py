@@ -54,7 +54,8 @@ def main():
     frames, speeds, times, q, area = [], [], [], [], []
     hyd = np.genfromtxt(out_dir / "hydrograph.csv", delimiter=",", names=True)
     meta_path = out_dir / f"run_meta_{mode}.json"
-    t_off = float(json.loads(meta_path.read_text()).get("time_offset_s", 0.0)) if meta_path.exists() else 0.0
+    rmeta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+    t_off = float(rmeta.get("time_offset_s", 0.0)); pre = float(rmeta.get("pre_breach_s", 0.0))
     for k in range(0, len(sww.time), a.every):
         s = np.ma.filled(LinearTriInterpolator(sww.tri, st[k, :])(X, Y), np.nan)
         d = np.nan_to_num(s - Z); d[d < 0.05] = 0.0
@@ -63,8 +64,8 @@ def main():
         with np.errstate(divide="ignore", invalid="ignore"):
             v = np.where(d > 0.05, np.hypot(mx_, my_) / np.maximum(d, 1e-6), 0.0)
         speeds.append(base64.b64encode(np.round(np.clip(np.nan_to_num(v), 0, a.max_speed) / sscale).astype("u1").tobytes()).decode())
-        t = float(sww.time[k]); times.append(round(t / 3600, 3))
-        q.append(round(float(np.interp(t + t_off, hyd["t_s"], hyd["Q_out_m3s"])), 1))
+        t = float(sww.time[k]) - pre; times.append(round(t / 3600, 3))
+        q.append(round(float(np.interp(t + t_off, hyd["t_s"], hyd["Q_out_m3s"])) if t >= 0 else 0.0, 1))
         area.append(round(float((d > 0.1).sum() * a.cell * a.cell / 1e6), 2))
     # roads (clip + simplify), footprint
     gpkg = config.DATA_RAW / "osm_domain.gpkg"
@@ -110,7 +111,12 @@ def main():
                              round(ang, 3), h, 1 if (btype in dwelling_types and not big) else 0])
     fp = [[round((x - W) / 1000, 3), round((y - S) / 1000, 3)] for x, y in site["site"]["footprint_nztm"]]
     sc = dam["scenarios"][a.scenario]; bl = sc["breach_location_nztm"]
-    meta = {"scenario": a.scenario, "description": sc["description"], "mode": mode, "bbox": bbox,
+    bpts = config.breach_points(a.scenario)
+    bnames = [b["name"] for b in sc.get("breaches", []) if not b.get("feeds") and b.get("location_nztm")] or [a.scenario]
+    meta = {"scenario": a.scenario, "description": sc["description"], "title": sc.get("title"), "seismic": bool(sc.get("seismic")),
+            "hydrology": sc.get("hydrology"), "pre_breach_h": pre / 3600,
+            "breaches_km": [{"name": n, "km": [round((x - W) / 1000, 3), round((y - S) / 1000, 3)]} for n, (x, y) in zip(bnames, bpts)],
+            "mode": mode, "bbox": bbox,
             "nx": len(xs), "ny": len(ys), "cell": a.cell, "z0": z0, "zscale": zscale, "dscale": dscale, "sscale": sscale,
             "times_h": times, "q_m3s": q, "area_km2": area, "footprint_km": fp,
             "breach_km": [round((bl[0] - W) / 1000, 3), round((bl[1] - S) / 1000, 3)],

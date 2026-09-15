@@ -110,6 +110,59 @@ The model reaches each road ~45 min earlier and generally deeper than the 2016 s
 
 ![west t_peak_h](outputs/west/t_peak_h_shakedown.png)
 
+## 3b. Earthquake scenario – all embankments fail at once (`quake`)
+
+Postulated seismic failure at full supply (e.g. Alpine Fault Mw ~8 or a Darfield-type Mw 7 event): the east,
+south, north and west embankments and the dividing embankment all start to breach at t = 0, with Froehlich
+formation times halved for erosion through cracked, slumped fill, and no warning time. Assumption list in
+`config/dam.yaml: scenarios.quake`; method in SPEC §3.1 item 7. Time zero is the earthquake.
+
+| Metric | Earthquake (all breaches) | East cascade (reference) |
+|---|---|---|
+| Combined peak outflow (m³/s) | **3,001** at 0.6 h (east breach alone 2,567; west 274; south 207; north 49) | 2,098 at 1.1 h |
+| Volume released (Mm³) | 7.43 (east 6.04, west 0.97, south 0.38, north 0.05) | 7.18 |
+| Lag from initiating event to external breach (h) | 0 | 2.2 (Pond 1 → Pond 2 filling) |
+| Inundated area > 0.1 m after 4 h (km²) | 43.4 | 39.5 |
+| Deepest water (m) | 3.1 | 2.9 |
+| Fastest flow (m/s) | 5.9 | 5.5 |
+| Buildings > 0.1 m / ≥ 0.5 m | 474 / 87 | 439 / 95 |
+| PAR screening (2.5 persons per at-risk building) | 218 | 238 |
+
+Road arrival (h after the initiating event, water > 0.1 m) and maximum depth:
+
+| Road | Earthquake arrival | East cascade arrival (after Pond 2 breach) | East cascade arrival (after Pond 1 failure) | Quake depth (m) | East depth (m) |
+|---|---|---|---|---|---|
+| Carleton Road | 0.60 | 0.77 | 2.94 | 1.04 | 1.00 |
+| Wolffs Road | 1.07 | 1.33 | 3.50 | 0.90 | 0.94 |
+| Poyntzs Road | 1.60 | 1.90 | 4.07 | 0.72 | 0.75 |
+| Pesters Road | 1.98 | 2.27 | 4.44 | 0.48 | 0.51 |
+| Downs Road | 3.10 | 3.33 | 5.50 | 1.11 | 1.18 |
+| Dixon Road (north) | 0.29 | – | – | 0.76 | – |
+| Domain Road (north) | 0.49 | – | – | 0.51 | – |
+
+Reading: the east breach still carries 80 % of the water because its invert is 5–6 m lower than the others,
+so the downstream picture along Carleton–Downs Road resembles the east cascade, arriving 10–20 min sooner
+and, measured from the initiating event, about 2.3 h sooner because there is no Pond 1 → Pond 2 stage. The
+extra 4 km² of inundation and the additional buildings reached are on the Dixon Road (north), MR4 (west) and
+R2 race (south) sides, which the single-breach scenarios do not touch. The number of buildings ≥ 0.5 m is
+slightly lower than the east case because the same volume is spread over more directions.
+
+![quake hydrograph](outputs/quake/hydrograph.png)
+
+### Earthquake maps
+
+![quake max_depth](outputs/quake/max_depth_shakedown.png)
+
+![quake max_speed](outputs/quake/max_speed_shakedown.png)
+
+![quake max_dv](outputs/quake/max_dv_shakedown.png)
+
+![quake hazard](outputs/quake/hazard_shakedown.png)
+
+![quake arrival_h](outputs/quake/arrival_h_shakedown.png)
+
+![quake t_peak_h](outputs/quake/t_peak_h_shakedown.png)
+
 ## 4. Key finding on the cascade
 
 With the design report's volumes and areas, Pond 1 draining into Pond 2 statically equalises at ~223.8 m RL, 0.5 m below the Pond 2 crest (224.3 m). The overtopping cascade Damwatch describes therefore requires dynamic surge or a different stage–storage shape. The model initiates the Pond 2 breach at 223.6 m RL (`config/dam.yaml: cascade.pond2_trigger_mRL`); reconcile with Appendix H before any reportable use.
@@ -118,3 +171,5 @@ With the design report's volumes and areas, Pond 1 draining into Pond 2 statical
 
 * East: https://thorstenbux.github.io/wrights-road-dam-breach/east/
 * West: https://thorstenbux.github.io/wrights-road-dam-breach/west/
+* Earthquake (all embankments): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
+* Storm (east breach + rain + Eyre River in flood): https://thorstenbux.github.io/wrights-road-dam-breach/storm/

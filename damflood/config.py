@@ -46,3 +46,11 @@ def scenario_dir(name: str) -> Path:
     d = OUTPUTS / name
     os.makedirs(d, exist_ok=True)
     return d
+
+
+def breach_points(name: str) -> list:
+    """All external breach locations (NZTM) of a scenario – one for the classic scenarios,
+    several for a multi-breach (seismic) scenario."""
+    sc = scenario(name)
+    pts = [b["location_nztm"] for b in sc.get("breaches", []) if not b.get("feeds") and b.get("location_nztm")]
+    return pts or [sc["breach_location_nztm"]]

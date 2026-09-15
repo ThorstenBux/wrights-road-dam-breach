@@ -56,3 +56,32 @@ def test_cascade_triggers_lower_pond(pond2):
     assert r2["level"].max() >= trigger
     assert r2["level"].max() < 224.3  # static equalisation does not reach the crest
     assert r2["Q_out"].max() > r1["Q_out"].max() * 0.5
+
+
+def test_route_multi_matches_single_and_conserves_mass(pond2):
+    from damflood.breach import MultiBreachEvent, route_multi
+    invert = 215.5
+    g = BreachGeometry.from_froehlich_2008(pond2, invert=invert, mode="overtopping", pool_level=223.6)
+    single = route(BreachEvent(pond2, g, initial_level=223.6), t_end=12 * 3600, dt=2.0)
+    multi1 = route_multi(MultiBreachEvent(pond2, {"east": g}, initial_level=223.6), t_end=12 * 3600, dt=2.0)
+    assert np.allclose(multi1["Q_out"], single["Q_out"], rtol=1e-9, atol=1e-9)
+    # two identical breaches: total release unchanged (volume-limited), per-breach flows equal, faster drawdown
+    multi2 = route_multi(MultiBreachEvent(pond2, {"east": g, "south": g}, initial_level=223.6), t_end=12 * 3600, dt=2.0)
+    assert np.allclose(multi2["Q_by_breach"]["east"], multi2["Q_by_breach"]["south"])
+    assert np.allclose(multi2["Q_out"], multi2["Q_by_breach"]["east"] + multi2["Q_by_breach"]["south"])
+    assert multi2["volume_released"] == pytest.approx(pond2.volume_above(invert, 223.6), rel=0.02)
+    assert multi2["Q_out"].max() > single["Q_out"].max()
+    assert np.argmax(multi2["level"] < 218.0) < np.argmax(single["level"] < 218.0)
+
+
+def test_cascade_multi_feeds_next_pond(pond2):
+    from damflood.breach import MultiBreachEvent, cascade_multi
+    pond1 = Reservoir("Pond 1", fsl=226.5, invert=218.5, area_fsl=300_000, volume_fsl=2.0e6, crest=228.0)
+    gd = BreachGeometry.from_froehlich_2008(pond1, invert=222.8, mode="piping")
+    gw = BreachGeometry.from_froehlich_2008(pond1, invert=221.9, mode="piping")
+    ge = BreachGeometry.from_froehlich_2008(pond2, invert=210.8, mode="overtopping")
+    r1, r2 = cascade_multi([MultiBreachEvent(pond1, {"dividing": gd, "west": gw}, feeds="dividing"),
+                            MultiBreachEvent(pond2, {"east": ge})], t_end=10 * 3600, dt=2.0)
+    assert r2["Q_in"].max() > 0 and r2["Q_in"].max() == pytest.approx(r1["Q_by_breach"]["dividing"].max(), rel=1e-6)
+    assert r2["t_init"] == 0.0
+    assert r1["volume_released"] == pytest.approx(pond1.volume_above(221.9), rel=0.03)

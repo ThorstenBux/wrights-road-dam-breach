@@ -33,7 +33,11 @@ def main():
     print(f"[post] reading {sww_path}")
     sww = post.SWW(sww_path)
     print(f"[post] {len(sww.time)} timesteps, {len(sww.x)} points, {len(sww.volumes)} triangles")
-    mx = sww.maxima(depth_threshold=thr)
+    meta_path0 = out_dir / f"run_meta_{mode}{a.tag}.json"
+    if not meta_path0.exists():
+        meta_path0 = out_dir / f"run_meta_{mode}.json"
+    pre = float(json.loads(meta_path0.read_text()).get("pre_breach_s", 0.0)) if meta_path0.exists() else 0.0
+    mx = sww.maxima(depth_threshold=thr, t_breach=pre)
     rasters = {}
     for key in ("max_depth", "max_speed", "max_dv", "arrival_h", "t_peak_h", "hazard"):
         vals = mx[key]
@@ -59,7 +63,7 @@ def main():
     summary = {"scenario": a.scenario, "mode": mode, "time_zero": "external breach initiation",
                "offset_from_pond1_failure_h": round(t_off / 3600, 2), "inundated_area_km2_gt_%.2fm" % thr: round(extent_km2, 2),
                "max_depth_m": float(np.nanmax(mx["max_depth"])), "max_speed_ms": float(np.nanmax(mx["max_speed"])),
-               "sim_hours": float(sww.time[-1] / 3600)}
+               "sim_hours": float((sww.time[-1] - pre) / 3600), "pre_breach_h": pre / 3600}
 
     gpkg = config.DATA_RAW / "osm_domain.gpkg"
     if not gpkg.exists():
@@ -83,7 +87,7 @@ def main():
     fp = [list(map(float, p)) for p in site["site"]["footprint_nztm"]]
     post.quick_map(out_dir / f"max_depth_{mode}{a.tag}.png", rasters["max_depth"], footprint=fp, roads=roads,
                    title=f"Wrights Road ponds – {a.scenario} breach ({mode}): max depth, {summary['sim_hours']:.1f} h",
-                   priority_roads=dam["consequence"]["roads_of_interest"], breach_xy=config.scenario(a.scenario)["breach_location_nztm"])
+                   priority_roads=dam["consequence"]["roads_of_interest"], breach_xy=config.breach_points(a.scenario))
     print(json.dumps(summary, indent=2))
 
 

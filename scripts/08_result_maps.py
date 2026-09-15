@@ -26,7 +26,7 @@ def main():
     site, dam = config.site(), config.dam(); out = config.scenario_dir(a.scenario)
     roads = vectors.load(config.DATA_RAW / "osm_domain.gpkg", "roads")
     fp = [list(map(float, p)) for p in site["site"]["footprint_nztm"]]
-    bl = config.scenario(a.scenario)["breach_location_nztm"]
+    bls = config.breach_points(a.scenario)
     import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
     from shapely.geometry import box
     import geopandas as gpd
@@ -44,7 +44,7 @@ def main():
         rc[~rc.index.isin(major.index)].plot(ax=ax, color="0.75", linewidth=0.3, zorder=4); major.plot(ax=ax, color="0.35", linewidth=0.6, zorder=5)
         post._road_labels(ax, rc, b, dam["consequence"]["roads_of_interest"])
         xs, ys = zip(*(fp + [fp[0]])); ax.plot(xs, ys, "-", color="#e8542a", lw=1.4, zorder=7, label="pond footprint")
-        ax.plot(bl[0], bl[1], marker="v", color="#e8542a", ms=7, zorder=8, label="breach")
+        for i, bl in enumerate(bls): ax.plot(bl[0], bl[1], marker="v", color="#e8542a", ms=7, zorder=8, label="breach" if i == 0 else None)
         ax.set_title(f"Wrights Road ponds – {a.scenario} breach ({mode}): {label}"); ax.set_xlabel("NZTM E (m)"); ax.set_ylabel("NZTM N (m)")
         ax.set_aspect("equal"); ax.ticklabel_format(style="plain", useOffset=False); ax.tick_params(labelsize=7); ax.legend(loc="lower right", fontsize=7)
         cb = fig.colorbar(im, ax=ax, label=label, shrink=0.8)

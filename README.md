@@ -6,12 +6,14 @@ Open tools only: LINZ LiDAR (no API key), OpenStreetMap, ANUGA 2D shallow-water 
 
 **Read [SPEC.md](SPEC.md) first**, then [RESULTS.md](RESULTS.md) (key numbers and all maps) and [HANDOVER.md](HANDOVER.md) – what is needed, what has been assumed, and what a certified
 assessment under the Building (Dam Safety) Regulations 2022 additionally requires.
-Source facts with page references are in [docs/source-notes.md](docs/source-notes.md).
+Source facts with page references are in [docs/source-notes.md](docs/source-notes.md); points to raise with the Community Liaison Group and the assumption register are in [docs/clg-notes.md](docs/clg-notes.md).
 
 ## Live animations (GitHub Pages)
 
 * East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
 * West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
+* Earthquake (all embankments at once): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
+* Storm (east breach + 10 mm/h rain + Eyre River in flood): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
 * Index: https://thorstenbux.github.io/wrights-road-dam-breach/
 
 Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons

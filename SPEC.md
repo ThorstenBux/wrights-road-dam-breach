@@ -106,6 +106,26 @@ carry that caveat.
    shape. The default initiation level is set to RL 223.6 (FSL + 0.8 m) and must be reconciled with
    Appendix H. This is the single most consequential assumption in the cascade scenarios.
 6. West scenario: direct piping failure of Pond 1 only (Medium PIC), no cascade.
+7. **Earthquake scenario (`quake`)** – simultaneous breaches (`MultiBreachEvent`, `route_multi`, `cascade_multi`):
+   every external embankment (E, S, N of Pond 2; W of Pond 1) and the dividing embankment start to fail at t = 0,
+   each with Froehlich (2008) final dimensions as if it failed alone and a formation time halved for erosion through
+   cracked, slumped fill. Pond 1 drains through the west and dividing breaches (the latter into Pond 2); Pond 2 drains
+   through the sum of its three breaches, and the pool is volume-limited across all of them. The downstream
+   hydrograph is the sum of the four external breaches, each injected at its own inlet in the 2D model. This is a
+   postulated bounding case (the design intent is that the ponds survive the Safety Evaluation Earthquake with
+   233–388 mm crest settlement against 1.5 m freeboard), triggered for example by an Alpine Fault rupture (Mw ~8) or
+   a Darfield-type Mw 7 Canterbury Plains event; it assumes no warning time and no liquefaction of the gravel
+   foundation (groundwater ~20 m deep). See `config/dam.yaml: scenarios.quake` for the full assumption list.
+8. **Storm scenario (`storm`)** – the NZSOLD "rainy day" combination: the east cascade breach (identical hydrograph)
+   opens during a regional storm. The 2D model gets steady 10 mm/h rain on the whole domain with no infiltration
+   (`Rate_operator`), the Eyre River already in flood where it enters the domain (constant 150 m³/s inlet – an
+   assumption derived from 10 mm/h on the ~150 km² foothill catchment with a runoff coefficient of ~0.4; replace with
+   ECan flow records), and 2 h of spin-up before the breach so the channel is flowing across the domain and the plain
+   is wet. Arrival times are measured as the first time the depth exceeds the pre-breach depth by 0.1 m, so rain and
+   the river do not count as the breach wave; maximum depths are absolute. The design report (s3) cites WDC mapping
+   showing a major Eyre flood reaching the north embankment, but the river is ~7 km north of the ponds, outside both
+   model domains, so that interaction is not represented. Emergency dewatering of the ponds is via control gates
+   G2/G3/G6 into the irrigation races (report s3.0, Table 6), not into the Eyre River.
 
 ### 3.2 2D flood routing (D2–D4) – `damflood/model.py`
 
@@ -144,6 +164,8 @@ carry that caveat.
 | south | cascade, overtopping | R2 race (S) | 8.2 Mm³ | High | 54 |
 | north | cascade, overtopping | Dixon Rd (N) | 8.2 Mm³ | High | 95 |
 | west | Pond 1 piping only | MR4 race (W) | 2.0 Mm³ | Medium | 4 |
+| quake | earthquake: all embankments + dividing embankment breach at once, t_f x0.5, no warning | E + S + N + W | 8.2 Mm³ | – (postulated) | – |
+| storm | rainy day: east cascade breach + 10 mm/h rain (no infiltration) + Eyre River in flood (150 m³/s assumed), 2 h spin-up | Wrights Rd (E) | 8.2 Mm³ + rain + river | – (combination) | – |
 | sensitivities | width x0.5/x2; t_f x0.5/x2; invert –1 m scour; n 0.035/0.06; cascade initiation level | east (governing) | | | |
 
 ## 5. Work plan
@@ -173,6 +195,7 @@ carry that caveat.
 | south | 215.4 | **1,066** | 1.5 | 2.2 | 5.34 | 777 |
 | north | 216.7 | **817** | 1.7 | 2.2 | 4.68 | 600 |
 | west | 221.9 | **235** | 1.4 | 0.0 | 1.24 | 256 |
+| quake (sum of E+S+N+W) | 210.8 / 215.4 / 216.7 / 221.9 | **3,001** (east alone 2,567; west 274; south 207; north 49) | 0.6 | 0.0 (all at t = 0) | 7.43 | – |
 
 Breach geometry (Froehlich 2008, final size; B_bot = bottom width, z = side slope H:V, t_f = formation time):
 
@@ -180,6 +203,7 @@ Breach geometry (Froehlich 2008, final size; B_bot = bottom width, z = side slop
 * **south** – pond2 external breach (overtopping, initiates when Pond 2 reaches 223.6 m RL; crest 224.3 m): V_w=4.977e+06 m3, h_b=8.18 m, B_avg=53.1 m; B_bot=44.9 m, z=1.0, t_f=1.53 h
 * **north** – pond2 external breach (overtopping, initiates when Pond 2 reaches 223.6 m RL; crest 224.3 m): V_w=4.329e+06 m3, h_b=6.86 m, B_avg=50.4 m; B_bot=43.5 m, z=1.0, t_f=1.70 h
 * **west** – pond1 external breach (piping): V_w=1.255e+06 m3, h_b=4.63 m, B_avg=25.7 m; B_bot=22.4 m, z=0.7, t_f=1.36 h
+* **quake** – all five breaches open at t = 0 with formation times halved (east 0.58 h, south 0.80 h, north 0.89 h, west 0.68 h, dividing 0.77 h). The east breach, whose invert is 4.6–6 m lower than the others, takes 6.0 of the 7.4 Mm³ released: Pond 2 is empty below the south and north inverts before those breaches are fully formed, so they pass only 0.38 and 0.05 Mm³. Pond 1 loses 0.97 Mm³ west and 0.28 Mm³ into Pond 2. The combined peak (3,000 m³/s at 0.6 h) is 43 % above the cascade east peak and arrives ~2.7 h earlier relative to the initiating event, because there is no Pond 1 → Pond 2 filling stage.
 * Pond 1 → Pond 2 dividing breach (all cascade scenarios): piping, invert at Pond 2 FSL 222.8 m, V_w = 1.02 Mm³, B_avg = 23.8 m, t_f = 1.53 h; Pond 2 reaches the 223.6 m initiation level 2.2 h after Pond 1 starts to fail (peak level 223.67–223.73 m, i.e. 0.6 m below the crest – see §3.1 item 5).
 
 **Comparison with Damwatch:** the east-breach peak of ~2,100 m³/s is within 20 % of the "approximately

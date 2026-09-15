@@ -48,12 +48,18 @@ class SWW:
             self.elev = self.elev[0]
         self.tri = Triangulation(self.x, self.y, self.volumes)
 
-    def maxima(self, depth_threshold=0.1, min_depth_for_speed=0.05):
+    def maxima(self, depth_threshold=0.1, min_depth_for_speed=0.05, t_breach=0.0):
+        """Per-vertex maxima over time.  `t_breach` (s) is the moment the breach opens: times are reported
+        relative to it, and arrival is the first time the depth exceeds the pre-breach depth by more than
+        `depth_threshold` (so rain or a river already flowing does not count as the breach wave arriving)."""
         n = len(self.x)
         dmax = np.zeros(n); vmax = np.zeros(n); dvmax = np.zeros(n)
         arrival = np.full(n, np.nan); tpeak = np.zeros(n)
         st, xm, ym = self.ds.variables["stage"], self.ds.variables["xmomentum"], self.ds.variables["ymomentum"]
+        k0 = int(np.searchsorted(self.time, t_breach - 1e-6)) if t_breach > 0 else 0
+        base = np.maximum(st[min(k0, len(self.time) - 1), :] - self.elev, 0.0) if t_breach > 0 else np.zeros(n)
         for k, t in enumerate(self.time):
+            t = t - t_breach
             d = np.maximum(st[k, :] - self.elev, 0.0)
             with np.errstate(divide="ignore", invalid="ignore"):
                 v = np.where(d > min_depth_for_speed, np.hypot(xm[k, :], ym[k, :]) / np.maximum(d, 1e-6), 0.0)
@@ -61,7 +67,7 @@ class SWW:
             newpeak = d > dmax
             tpeak[newpeak] = t
             dmax = np.maximum(dmax, d); vmax = np.maximum(vmax, v); dvmax = np.maximum(dvmax, dv)
-            arr = np.isnan(arrival) & (d > depth_threshold)
+            arr = np.isnan(arrival) & (d - base > depth_threshold) & (t >= 0)
             arrival[arr] = t
         return {"max_depth": dmax, "max_speed": vmax, "max_dv": dvmax,
                 "arrival_h": arrival / 3600.0, "t_peak_h": tpeak / 3600.0,
@@ -209,7 +215,9 @@ def quick_map(png: Path, depth_tif: Path, footprint=None, roads: gpd.GeoDataFram
     if footprint is not None:
         xs, ys = zip(*(footprint + [footprint[0]])); ax.plot(xs, ys, "-", color="#e8542a", lw=1.4, zorder=7, label="pond footprint")
     if breach_xy is not None:
-        ax.plot(breach_xy[0], breach_xy[1], marker="v", color="#e8542a", ms=7, zorder=8, label="breach")
+        pts = breach_xy if np.ndim(breach_xy) == 2 else [breach_xy]
+        for i, (bx, by) in enumerate(pts):
+            ax.plot(bx, by, marker="v", color="#e8542a", ms=7, zorder=8, label="breach" if i == 0 else None)
     ax.set_title(title); ax.set_xlabel("NZTM E (m)"); ax.set_ylabel("NZTM N (m)"); ax.set_aspect("equal")
     ax.ticklabel_format(style="plain", useOffset=False); ax.tick_params(labelsize=7)
     ax.legend(loc="lower right", fontsize=7, frameon=True)
