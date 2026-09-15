@@ -1,1 +1,1 @@
-{"version":"0.0.1","configurations":[{"name":"viewer","runtimeExecutable":"sh","runtimeArgs":["-c","python3 -m http.server ${PORT:-8770} --directory outputs/east/webgl"],"port":8770,"autoPort":true}]}
+{"version":"0.0.1","configurations":[{"name":"webgl-east","runtimeExecutable":"python3","runtimeArgs":["-m","http.server","8765","--directory","docs"],"port":8765}]}
