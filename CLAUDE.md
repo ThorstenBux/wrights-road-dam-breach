@@ -18,4 +18,6 @@ Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, op
   inlet per external breach; `hydrograph.csv` is the sum, `hydrograph_<breach>.csv` the parts. Keep east/west untouched.
 * Scenarios with a `hydrology:` block (the `storm` rainy-day case) add uniform rain and river inlets in script 04 and a
   `pre_breach_h` spin-up; all reported times are relative to the breach opening (post.maxima `t_breach`).
+* Viewer debris (logs/fences/cars/trees/sheds) is purely illustrative: objects mobilise on depth/speed thresholds
+  and drift down the water-surface gradient at the local speed; no debris data is exported or modelled in ANUGA.
 * Everything is a screening model; keep the "not a certified assessment" wording in any new output.
