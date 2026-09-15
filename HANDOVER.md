@@ -1,5 +1,7 @@
 # Handover – Wrights Road Storage Ponds dam-breach flood model
 
+*Key numbers and every result map: [RESULTS.md](RESULTS.md).*
+
 *Tripod Digital, 15 September 2026. Everything below was produced in one working session; treat all numbers as
 screening-level (see SPEC.md §1.3). A Recognised Engineer must own anything that feeds the certified
 Potential Impact Classification under the Building (Dam Safety) Regulations 2022.*

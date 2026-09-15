@@ -4,7 +4,7 @@ Screening-level dam-breach flood model (breach outflow hydrograph + 2D flood rou
 proposed 8.2 Mm³ Wrights Road Storage Ponds near Burnt Hill / West Eyreton, Waimakariri District.
 Open tools only: LINZ LiDAR (no API key), OpenStreetMap, ANUGA 2D shallow-water solver.
 
-**Read [SPEC.md](SPEC.md) first** – what is needed, what has been assumed, and what a certified
+**Read [SPEC.md](SPEC.md) first**, then [RESULTS.md](RESULTS.md) (key numbers and all maps) and [HANDOVER.md](HANDOVER.md) – what is needed, what has been assumed, and what a certified
 assessment under the Building (Dam Safety) Regulations 2022 additionally requires.
 Source facts with page references are in [docs/source-notes.md](docs/source-notes.md).
 
