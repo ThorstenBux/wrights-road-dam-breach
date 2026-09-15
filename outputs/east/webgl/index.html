@@ -452,11 +452,11 @@
   // Types: [name, colour, size L x H x W (m), mobilise depth (m), mobilise speed (m/s), drift factor, count]
   // Thresholds are indicative stability limits (cf. ARR 2019 vehicle/people stability, NZSOLD Table 2.5).
   const DEBRIS_TYPES = [
-    { name: 'log',   col: 0xb07a45, L: 4.0, H: 0.35, W: 0.35, dmob: 0.15, vmob: 0.3, drift: 0.85, n: 1200 },
-    { name: 'fence', col: 0xf2e8cc, L: 2.5, H: 0.12, W: 1.2,  dmob: 0.30, vmob: 0.5, drift: 0.75, n: 700 },
-    { name: 'car',   col: 0xe0e0e0, L: 4.4, H: 1.5,  W: 1.8,  dmob: 0.40, vmob: 0.8, drift: 0.6,  n: 250 },
-    { name: 'tree',  col: 0x6cc24a, L: 8.0, H: 2.5,  W: 3.5,  dmob: 0.60, vmob: 1.0, drift: 0.7,  n: 500 },
-    { name: 'shed',  col: 0xc9c0b0, L: 6.0, H: 3.0,  W: 4.0,  dmob: 0.60, vmob: 0.8, drift: 0.5,  n: 80 },
+    { name: 'log',   col: 0x6b4a2b, L: 4.0, H: 0.35, W: 0.35, dmob: 0.15, vmob: 0.3, drift: 0.85, n: 1200 },
+    { name: 'fence', col: 0xc4bba4, L: 2.5, H: 0.12, W: 1.2,  dmob: 0.30, vmob: 0.5, drift: 0.75, n: 700 },
+    { name: 'car',   col: 0xd8d8d8, L: 4.4, H: 1.5,  W: 1.8,  dmob: 0.40, vmob: 0.8, drift: 0.6,  n: 250 },
+    { name: 'tree',  col: 0x2f5d2a, L: 8.0, H: 2.5,  W: 3.5,  dmob: 0.60, vmob: 1.0, drift: 0.7,  n: 500 },
+    { name: 'shed',  col: 0x8e8a80, L: 6.0, H: 3.0,  W: 4.0,  dmob: 0.60, vmob: 0.8, drift: 0.5,  n: 80 },
   ];
   const rng = (seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(20260916);
   const debris = [];   // {t: type index, x, y (km), a (angle), w (spin), st: 0 waiting | 1 drifting | 2 stranded, x0, y0}
@@ -485,9 +485,9 @@
     else g = new THREE.BoxGeometry(1, 1, 1);
     g.translate(0, 0.5, 0);
     const n = debris.filter(d => d.t === ti).length;
-    const m = new THREE.InstancedMesh(g, new THREE.MeshLambertMaterial({ color: T.col, emissive: T.col, emissiveIntensity: 0.35 }), Math.max(n, 1));
+    const m = new THREE.InstancedMesh(g, new THREE.MeshLambertMaterial({ color: T.col }), Math.max(n, 1));
     m.count = n; m.frustumCulled = false; scene.add(m);
-    if (T.name === 'car') { const cc = [0xf0f0f0, 0xe0483a, 0x4a78d0, 0xffd23f, 0xf5efd6]; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(cc[i % cc.length])); m.instanceColor.needsUpdate = true; }
+    if (T.name === 'car') { const cc = [0xd8d8d8, 0xb8322a, 0x2d4c8a, 0x3a3a3a, 0xe8e2c8]; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(cc[i % cc.length])); m.instanceColor.needsUpdate = true; }
     return m;
   });
   const dirX = new Float32Array(NX * NY), dirY = new Float32Array(NX * NY); let dirFrame = -1;
@@ -513,10 +513,6 @@
     if (dirFrame !== curFrame) computeFlowDirection(curFrame);
     const d = frame(curFrame), sp = speedFrame(curFrame); let drifting = 0, stranded = 0;
     const idx = DEBRIS_TYPES.map(() => 0);
-    // keep every piece at least MIN_PX on screen: enlarge its footprint (not its height) in proportion to its
-    // distance from the camera; at street level / close zoom the factor is 1, i.e. true scale
-    const MIN_PX = 6, pxPerKmAt1 = (canvas.clientHeight || 700) / (2 * Math.tan(camera.fov * Math.PI / 360));
-    const sTypical = Math.max(1, MIN_PX * camera.position.distanceTo(target) / (pxPerKmAt1 * 0.004));
     for (const o of debris) {
       const T = DEBRIS_TYPES[o.t]; const gi = cellOf(o.x, o.y);
       const dep = d[gi] * M.dscale; const v = sp ? sp[gi] * M.sscale : (dep > 0 ? 0.3 * Math.sqrt(9.81 * dep) : 0);
@@ -534,15 +530,11 @@
       dp.set(o.x, yv, H - o.y); dq.setFromAxisAngle(yAxis, o.a);
       const tilt = o.st === 2 ? 0.7 : 1.0;
       if (o.st === 0) dv.set(0, 0, 0);   // not yet picked up: hidden
-      else {
-        const sEnl = Math.max(1, MIN_PX * camera.position.distanceTo(dp) / (pxPerKmAt1 * T.L / 1000));
-        dv.set(T.L / 1000 * sEnl, T.H / 1000 * fscale() * tilt, T.W / 1000 * sEnl);
-      }
+      else dv.set(T.L / 1000, T.H / 1000 * fscale() * tilt, T.W / 1000);
       dm4.compose(dp, dq, dv); m.setMatrixAt(i, dm4);
     }
     dMeshes.forEach(m => { m.visible = true; m.instanceMatrix.needsUpdate = true; });
-    document.getElementById('debrisn').textContent = drifting || stranded
-      ? '· ' + drifting + ' drifting · ' + stranded + ' stranded' + (sTypical > 1.5 ? ' · shown ×' + Math.round(sTypical) + ' larger at this zoom' : ' · true scale') : '';
+    document.getElementById('debrisn').textContent = drifting || stranded ? '· ' + drifting + ' drifting · ' + stranded + ' stranded' : '';
   }
   window.WR_DEBUG = { debris, types: DEBRIS_TYPES };   // inspection hook
   debrisBox.addEventListener('change', () => { debrisOn = debrisBox.checked; if (!debrisOn) document.getElementById('debrisn').textContent = ''; debrisTick(0); });
