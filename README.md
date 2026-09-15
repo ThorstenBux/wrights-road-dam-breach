@@ -8,6 +8,16 @@ Open tools only: LINZ LiDAR (no API key), OpenStreetMap, ANUGA 2D shallow-water 
 assessment under the Building (Dam Safety) Regulations 2022 additionally requires.
 Source facts with page references are in [docs/source-notes.md](docs/source-notes.md).
 
+## Live animations (GitHub Pages)
+
+* East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
+* West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
+* Index: https://thorstenbux.github.io/wrights-road-dam-breach/
+
+Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons
+Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
+flow speed (m/s) instead of depth. Building colour: amber > 0.1 m, red ≥ 0.5 m at the footprint.
+
 ## Quick start
 
 ```bash

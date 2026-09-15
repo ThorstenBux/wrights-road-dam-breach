@@ -4,6 +4,16 @@
 screening-level (see SPEC.md §1.3). A Recognised Engineer must own anything that feeds the certified
 Potential Impact Classification under the Building (Dam Safety) Regulations 2022.*
 
+## Live animations (GitHub Pages)
+
+* East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
+* West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
+* Index: https://thorstenbux.github.io/wrights-road-dam-breach/
+
+Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons
+Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
+flow speed (m/s) instead of depth. Building colour: amber > 0.1 m, red ≥ 0.5 m at the footprint.
+
 ## 1. What was asked
 
 "For the Wrights Road Dam in West Eyreton we need flood modelling with flow rate and water level in case of a
