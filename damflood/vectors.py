@@ -31,7 +31,11 @@ def bbox_nztm_to_ll(bbox):
 def _fetch_tile(api: str, w, s, e, n, depth=0) -> list[ET.Element]:
     url = f"{api}?bbox={w:.5f},{s:.5f},{e:.5f},{n:.5f}"
     for attempt in range(4):
-        r = requests.get(url, headers=UA, timeout=180)
+        try:
+            r = requests.get(url, headers=UA, timeout=180)
+        except requests.exceptions.RequestException as exc:   # dropped connection / truncated body
+            print(f"[osm] {exc.__class__.__name__} on attempt {attempt + 1}, retrying")
+            time.sleep(5 * (attempt + 1)); continue
         if r.status_code == 200:
             return [ET.fromstring(r.content)]
         if r.status_code in (400, 509) and depth < 4:  # too many nodes -> split
@@ -39,7 +43,7 @@ def _fetch_tile(api: str, w, s, e, n, depth=0) -> list[ET.Element]:
             return (_fetch_tile(api, w, s, mw, mn, depth + 1) + _fetch_tile(api, mw, s, e, mn, depth + 1)
                     + _fetch_tile(api, w, mn, mw, n, depth + 1) + _fetch_tile(api, mw, mn, e, n, depth + 1))
         time.sleep(5 * (attempt + 1))
-    raise RuntimeError(f"OSM map API failed for {url}: HTTP {r.status_code}")
+    raise RuntimeError(f"OSM map API failed for {url}")
 
 
 def fetch_osm(bbox_nztm, out_gpkg: Path, api: str, tile_deg: float = 0.05, verbose=True) -> Path:

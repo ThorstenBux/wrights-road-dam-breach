@@ -19,10 +19,10 @@ def hm_to_h(s: str) -> float:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenario", default="east")
-    ap.add_argument("--production", action="store_true")
+    config.add_mode_arg(ap)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
-    mode = "production" if a.production else "shakedown"
+    mode = config.mode_from_args(a)
     out_dir = config.scenario_dir(a.scenario)
     rt = pd.read_csv(out_dir / f"roads_{mode}{a.tag}.csv")
     prev = config.dam()["previous_results"]["arrival_times"]

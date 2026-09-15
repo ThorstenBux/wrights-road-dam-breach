@@ -33,7 +33,9 @@ make run SCENARIO=east                   # ANUGA 2D routing (shakedown: ~4 h sim
 make post SCENARIO=east                  # hazard rasters, road arrival table, buildings/PAR
 ```
 
-Production runs: `python scripts/01_fetch_dem.py --full` then add `--production` to scripts 04/05.
+Model tiers (`--mode` on scripts 01/04–08, or `MODE=` with make): `shakedown` (18 × 11.5 km to Browns Road, 20 m, 4 h),
+`extended` (full 31.5 × 16 km domain to Diversion Road and the Waimakariri River, still 20 m and the shakedown mesh, 12 h),
+`production` (full domain, 10 m, fine mesh, 14 h). `--production` / `--full` remain as aliases.
 
 Extras: `scripts/06_compare.py` (model vs Damwatch road arrival times) and `scripts/07_export_webgl.py`
 (data for the Three.js viewer in `webgl/index.html`: LiDAR terrain, animated water, roads with names, OSM

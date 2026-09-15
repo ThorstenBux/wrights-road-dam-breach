@@ -21,8 +21,8 @@ LAYERS = {
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--scenario", default="east"); ap.add_argument("--production", action="store_true")
-    a = ap.parse_args(); mode = "production" if a.production else "shakedown"
+    ap = argparse.ArgumentParser(); ap.add_argument("--scenario", default="east"); config.add_mode_arg(ap)
+    a = ap.parse_args(); mode = config.mode_from_args(a)
     site, dam = config.site(), config.dam(); out = config.scenario_dir(a.scenario)
     roads = vectors.load(config.DATA_RAW / "osm_domain.gpkg", "roads")
     fp = [list(map(float, p)) for p in site["site"]["footprint_nztm"]]

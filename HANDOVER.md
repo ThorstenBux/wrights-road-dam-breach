@@ -118,3 +118,6 @@ data/                   not committed (downloaded by scripts 01/02)
 20 m grid, ≥ 1,500 m² triangles, uniform roughness, no culvert/bridge/race-structure assumptions, approximate
 footprint and breach positions, buildings not in the terrain, depth at building centroid rather than surveyed
 floor level, 4 h horizon on an 18 km domain (Browns Road onward not reached), south/north scenarios not routed.
+The east scenario has since been re-run on the full domain to Diversion Road (`--mode extended`, 12 h, still 20 m):
+see RESULTS §2b. The 20 m grid / uniform roughness limitations still apply, and the extended run took 12 h
+wall-clock on a heavily loaded machine (expect ~4–6 h on an idle core); west/quake/storm remain shakedown-only.

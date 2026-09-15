@@ -140,7 +140,7 @@
     <h1 id="h1">Breach flood animation</h1>
     <p id="desc"></p>
     <button class="mini" id="title-min" aria-label="Minimise description" aria-expanded="true" title="Minimise / expand (key I)">–</button>
-    <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
+    <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../east-extended/" data-s="east-extended">East → Diversion Rd</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
   </div>
   <div class="topright">
     <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode · <b>I/L</b> hide panels · <b>B</b> debris</div>
@@ -214,7 +214,7 @@
   document.getElementById('h1').textContent = (M.title ? M.title : sc + ' embankment breach') + ' – flood animation';
   if (M.seismic) document.querySelector('#stats .stat .k').textContent = 'Time after quake';
   { const nav = document.getElementById('scen'); const h = location.hostname;
-    if (h.endsWith('github.io') || h === 'localhost' || h === '127.0.0.1') { nav.hidden = false; nav.querySelectorAll('a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === M.scenario)); } }
+    if (h.endsWith('github.io') || h === 'localhost' || h === '127.0.0.1') { nav.hidden = false; nav.querySelectorAll('a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === M.scenario + (M.mode === 'extended' ? '-extended' : ''))); } }
   document.getElementById('desc').textContent = M.description + ' Simulated with ANUGA on LINZ 1 m LiDAR (' + M.cell + ' m display grid). Screening model – not a certified assessment.';
   document.getElementById('eyebrow').textContent = 'Wrights Road Storage Ponds · ' + M.mode + ' run · peak ' + Math.round(M.peak_q).toLocaleString() + ' m³/s';
   // Depth colour ramp saturates at the deepest water that actually occurs in this run (rounded up to 0.5 m),
@@ -722,7 +722,7 @@
     g.lineTo(w, h - 12); g.closePath(); g.fillStyle = 'rgba(31,111,214,0.35)'; g.fill();
     g.beginPath(); for (let i = 0; i < n; i++) { const x = i / (n - 1) * w, y = (h - 12) - M.q_m3s[i] / qm * (h - 18); i ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.strokeStyle = '#8fd3ff'; g.lineWidth = 1.5; g.stroke();
-    g.fillStyle = '#9aa4b5'; g.font = '10px "IBM Plex Mono", monospace'; g.fillText((M.seismic ? 'total breach outflow, peak ' : 'breach outflow, peak ') + Math.round(qm).toLocaleString() + ' m³/s', 4, 11);
+    g.fillStyle = '#9aa4b5'; g.font = '10px "IBM Plex Mono", monospace'; g.fillText((M.seismic ? 'total breach outflow, peak ' : 'breach outflow, peak ') + Math.round(M.peak_q || qm).toLocaleString() + ' m³/s', 4, 11);
   }
 
   // ---------- loop ----------
