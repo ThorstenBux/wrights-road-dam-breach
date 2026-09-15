@@ -37,6 +37,37 @@ def scenario(name: str) -> dict:
     return sc
 
 
+MODES = ("shakedown", "extended", "production")
+
+
+def mode_settings(mode: str) -> dict:
+    """Domain bbox, DEM resolution/path and mesh/run settings for a model tier.
+    shakedown: small domain (to Browns Road), coarse;  extended: full domain (to Diversion Road) at the
+    shakedown resolution and mesh;  production: full domain, fine mesh."""
+    if mode not in MODES:
+        raise KeyError(f"Unknown mode '{mode}'. Available: {MODES}")
+    s = site()
+    if mode == "shakedown":
+        bbox, res, tag = s["domain"]["shakedown_bbox_nztm"], s["dem"]["shakedown_resolution_m"], "shakedown"
+    elif mode == "extended":
+        bbox, res, tag = s["domain"]["bbox_nztm"], s["dem"].get("extended_resolution_m", s["dem"]["shakedown_resolution_m"]), "full"
+    else:
+        bbox, res, tag = s["domain"]["bbox_nztm"], s["dem"]["resolution_m"], "full"
+    return {"mode": mode, "bbox": bbox, "dem_res": res, "dem_tag": tag,
+            "dem_path": DATA_DERIVED / f"dem_{tag}_{res:g}m.tif",
+            "mesh": s["mesh"][mode], "run": s["run"][mode]}
+
+
+def add_mode_arg(ap) -> None:
+    """--mode {shakedown,extended,production}; --production kept as an alias."""
+    ap.add_argument("--mode", choices=MODES, default=None, help="model tier (default: shakedown)")
+    ap.add_argument("--production", action="store_true", help="alias for --mode production")
+
+
+def mode_from_args(a) -> str:
+    return a.mode or ("production" if getattr(a, "production", False) else "shakedown")
+
+
 def ensure_dirs() -> None:
     for d in (DATA_RAW, DATA_DERIVED, OUTPUTS):
         os.makedirs(d, exist_ok=True)

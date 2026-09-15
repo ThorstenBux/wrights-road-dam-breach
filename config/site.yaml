@@ -20,8 +20,10 @@ site:
   road_grid_unit_vectors: {along_wrights_rd: [-0.282, -0.959], along_dixon_rd: [-0.959, 0.284]}
 
 domain:
-  # Full study domain: site to Diversion Road / Waimakariri River (Damwatch flood zones 15–73 km2)
-  bbox_nztm: [1531000, 5187000, 1558000, 5203000]
+  # Full study domain: site to Diversion Road / Waimakariri River (Damwatch flood zones 15–73 km2).
+  # Diversion Road runs 1560.6–1561.3 km E, 5191–5193 km N (OSM); the east edge sits ~1 km beyond it so the
+  # transmissive boundary is on the river side of the road, not on the road.
+  bbox_nztm: [1531000, 5187000, 1562500, 5203000]
   # Shakedown domain for fast test runs
   shakedown_bbox_nztm: [1532500, 5189500, 1550500, 5201000]
 
@@ -33,6 +35,7 @@ dem:
   alt_collection: canterbury/waimakariri_2023/dem_1m/2193
   resolution_m: 10
   shakedown_resolution_m: 20
+  extended_resolution_m: 20     # 'extended' mode: full domain at shakedown resolution / mesh (fast tier)
   vertical_datum: NZVD2016
   licence: "CC BY 4.0 – Environment Canterbury Regional Council / Toitū Te Whenua LINZ"
 
@@ -49,12 +52,14 @@ linz:
 
 mesh:
   shakedown: {max_area_m2: 6000, site_area_m2: 1500, corridor_area_m2: 3000, flow_algorithm: DE0}
+  extended:  {max_area_m2: 6000, site_area_m2: 1500, corridor_area_m2: 3000, flow_algorithm: DE0}
   production: {max_area_m2: 1200, site_area_m2: 200, corridor_area_m2: 600, flow_algorithm: DE1}
   site_refine_radius_m: 2500
-  corridor_polygon_nztm: [[1533000, 5194000], [1552000, 5190500], [1552000, 5199500], [1533000, 5199500]]
+  corridor_polygon_nztm: [[1533000, 5194000], [1562000, 5188500], [1562000, 5199500], [1533000, 5199500]]
 
 run:
   shakedown: {finaltime_h: 4, yieldstep_s: 120}
+  extended:  {finaltime_h: 12, yieldstep_s: 300}   # Damwatch east-breach arrival at Diversion Road ~9 h
   production: {finaltime_h: 14, yieldstep_s: 300}
   depth_threshold_m: 0.10      # for arrival time / inundated extent
   output_res_m: 10

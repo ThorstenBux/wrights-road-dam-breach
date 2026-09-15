@@ -13,7 +13,9 @@ Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, op
 * The cascade trigger `cascade.pond2_trigger_mRL` (223.6) is the most consequential assumption – see SPEC §3.1.
 * Viewer: edit `webgl/index.html`, then copy to every `docs/<scenario>/` (east, west, quake, storm; data.js stays) and push;
   Pages rebuilds from `docs/` on `main`. Regenerate data with `scripts/07_export_webgl.py --scenario <s> --cell 60`.
-* Production runs: `01_fetch_dem.py --full`, then `--production` on scripts 04/05/06/07 (10 m, 14 h; hours per run).
+* Model tiers: `--mode shakedown|extended|production` on scripts 01/04–08 (`config.mode_settings`). `extended` = the full
+  domain to Diversion Road at 20 m with the shakedown mesh (~270k triangles, 12 h); outputs carry the `_extended` suffix.
+  `--production`/`--full` are aliases for the 10 m tier (14 h; hours per run).
 * Scenarios with a `breaches:` list (the `quake` earthquake case) use `route_multi`/`cascade_multi` and one ANUGA
   inlet per external breach; `hydrograph.csv` is the sum, `hydrograph_<breach>.csv` the parts. Keep east/west untouched.
 * Scenarios with a `hydrology:` block (the `storm` rainy-day case) add uniform rain and river inlets in script 04 and a

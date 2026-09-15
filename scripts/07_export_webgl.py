@@ -23,7 +23,7 @@ from damflood import config, post, vectors  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenario", default="east")
-    ap.add_argument("--production", action="store_true")
+    config.add_mode_arg(ap)
     ap.add_argument("--cell", type=float, default=60.0, help="grid cell size (m)")
     ap.add_argument("--every", type=int, default=1, help="use every n-th timestep")
     ap.add_argument("--max-depth", type=float, default=6.0)
@@ -32,10 +32,10 @@ def main():
     ap.add_argument("--out", default="webgl", help="output folder name under outputs/<scenario>/")
     a = ap.parse_args()
     site, dam = config.site(), config.dam()
-    mode = "production" if a.production else "shakedown"
+    mode = config.mode_from_args(a)
     out_dir = config.scenario_dir(a.scenario)
     sww_path = out_dir / f"{a.scenario}_{mode}{a.tag}.sww"
-    bbox = site["domain"]["bbox_nztm"] if a.production else site["domain"]["shakedown_bbox_nztm"]
+    bbox = config.mode_settings(mode)["bbox"]
     W, S, E, N = bbox
     sww = post.SWW(sww_path)
     # grid

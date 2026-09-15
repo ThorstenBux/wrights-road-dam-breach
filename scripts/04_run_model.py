@@ -27,7 +27,7 @@ def split_footprint(fp, share):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenario", default="east")
-    ap.add_argument("--production", action="store_true", help="full domain / fine mesh (default: shakedown)")
+    config.add_mode_arg(ap)
     ap.add_argument("--dem", type=Path)
     ap.add_argument("--hydrograph", type=Path)
     ap.add_argument("--finaltime-h", type=float)
@@ -37,12 +37,11 @@ def main():
     a = ap.parse_args()
 
     site, dam = config.site(), config.dam(); sc = config.scenario(a.scenario)
-    mode = "production" if a.production else "shakedown"
-    bbox = site["domain"]["bbox_nztm"] if a.production else site["domain"]["shakedown_bbox_nztm"]
-    res = site["dem"]["resolution_m"] if a.production else site["dem"]["shakedown_resolution_m"]
-    dem_path = a.dem or (config.DATA_DERIVED / f"dem_{'full' if a.production else 'shakedown'}_{res:g}m.tif")
+    mode = config.mode_from_args(a); ms = config.mode_settings(mode)
+    bbox = ms["bbox"]
+    dem_path = a.dem or ms["dem_path"]
     if not dem_path.exists():
-        raise SystemExit(f"DEM not found: {dem_path} – run scripts/01_fetch_dem.py{' --full' if a.production else ''}")
+        raise SystemExit(f"DEM not found: {dem_path} – run scripts/01_fetch_dem.py --mode {mode}")
     out_dir = config.scenario_dir(a.scenario)
     hyd = a.hydrograph or (out_dir / "hydrograph.csv")
     if not hyd.exists():
@@ -55,7 +54,7 @@ def main():
     pre = float(hydro.get("pre_breach_h", 0.0)) * 3600   # spin-up before the breach opens (storm scenarios)
     Q = lambda t, Q_raw=Q_raw, t0=t0, pre=pre: (Q_raw(t - pre + t0) if t >= pre else 0.0)
     print(f"[run] hydrograph time offset: simulation t={pre:.0f} s (breach opens) corresponds to t={t0:.0f} s in {hyd.name}")
-    run_cfg = site["run"][mode]; mesh_cfg = site["mesh"][mode]
+    run_cfg = ms["run"]; mesh_cfg = ms["mesh"]
     finaltime = (a.finaltime_h or run_cfg["finaltime_h"]) * 3600 + pre; yieldstep = a.yieldstep_s or run_cfg["yieldstep_s"]
     manning = a.manning or dam["friction"]["default_manning_n"]
 
@@ -104,8 +103,10 @@ def main():
         if net > 0:
             model.add_rain(domain, net / 1000.0 / 3600.0)
         for rv in hydro.get("river_inflows", []):
-            loc = rv["location_nztm"][mode] if isinstance(rv["location_nztm"], dict) else rv["location_nztm"]
-            fd = rv["flow_dir"][mode] if isinstance(rv["flow_dir"], dict) else rv["flow_dir"]
+            # per-mode river inlet positions; the extended tier shares the production domain edge
+            key = "production" if mode == "extended" else mode
+            loc = rv["location_nztm"][key] if isinstance(rv["location_nztm"], dict) else rv["location_nztm"]
+            fd = rv["flow_dir"][key] if isinstance(rv["flow_dir"], dict) else rv["flow_dir"]
             rp = inlet_poly(loc, fd); river_polys.append(rp)
             qr = float(rv["q_m3s"]); model.add_inlet(domain, offset, rp, lambda t, qr=qr: qr, label=f"river_{rv['name'].replace(' ', '_')}")
     meta = {"scenario": a.scenario, "mode": mode, "bbox": bbox, "pre_breach_s": pre, "hydrology": hydro or None,

@@ -15,18 +15,18 @@ from damflood import config, post, vectors  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenario", default="east")
-    ap.add_argument("--production", action="store_true")
+    config.add_mode_arg(ap)
     ap.add_argument("--sww", type=Path)
     ap.add_argument("--res", type=float)
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
     site, dam = config.site(), config.dam()
-    mode = "production" if a.production else "shakedown"
+    mode = config.mode_from_args(a); ms = config.mode_settings(mode)
     out_dir = config.scenario_dir(a.scenario)
     sww_path = a.sww or (out_dir / f"{a.scenario}_{mode}{a.tag}.sww")
     if not sww_path.exists():
         raise SystemExit(f"SWW not found: {sww_path}")
-    bbox = site["domain"]["bbox_nztm"] if a.production else site["domain"]["shakedown_bbox_nztm"]
+    bbox = ms["bbox"]
     res = a.res or site["run"]["output_res_m"]
     thr = site["run"]["depth_threshold_m"]
 
