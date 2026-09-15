@@ -47,6 +47,7 @@
   .vb:hover { background: #283548; }
   .vb:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
   .vb.on { border-color: var(--water-1); color: var(--water-1); }
+  .modelbl { align-self: center; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); background: var(--panel); padding: 7px 8px; border-radius: 6px; }
 
   /* readouts */
   #stats { left: 16px; bottom: 122px; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -119,11 +120,17 @@
     <p id="desc"></p>
   </div>
   <div class="topright">
-    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause</div>
+    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode</div>
     <div class="views" role="group" aria-label="Views">
       <button id="v-recenter" class="vb" title="Frame the whole flood extent (key R)">⌖ Re-centre</button>
       <button id="v-breach" class="vb" title="Close-up of the breach (key 2)">Breach</button>
       <button id="v-street" class="vb" title="Street level at a flooded house, true vertical scale (key 3)">Street level</button>
+    </div>
+    <div class="views" role="radiogroup" aria-label="Water colouring">
+      <span class="modelbl">Colour water by</span>
+      <button class="vb mode on" data-mode="depth" title="Water depth (key D)">Depth</button>
+      <button class="vb mode" data-mode="speed" title="Flow speed in m/s (key S)">Flow speed</button>
+      <button class="vb mode" data-mode="hazard" title="Flood hazard class H1–H6 from depth × velocity (key H)">Hazard</button>
     </div>
   </div>
 </div>
@@ -133,13 +140,14 @@
   <div class="stat"><div class="k">Breach outflow</div><div class="v"><span id="qv">0</span><span class="u">m³/s</span></div></div>
   <div class="stat"><div class="k">Area wet &gt; 0.1 m</div><div class="v"><span id="av">0.0</span><span class="u">km²</span></div></div>
   <div class="stat"><div class="k">Deepest water</div><div class="v"><span id="dv">0.0</span><span class="u">m</span></div></div>
+  <div class="stat"><div class="k">Fastest flow</div><div class="v"><span id="sv">0.0</span><span class="u">m/s</span></div></div>
 </div>
 
 <div id="side" class="hud">
   <div class="legend">
-    <div class="k">Water depth <span id="wnote" style="text-transform: none; letter-spacing: 0; color: var(--ink-3)">· thickness shown ×2 (on top of terrain ×)</span></div>
-    <div class="ramp"></div>
-    <div class="ramp-l"><span>0.05 m</span><span id="dmid">2 m</span><span id="dmax">4 m+</span></div>
+    <div class="k" id="legk">Water depth <span id="wnote" style="text-transform: none; letter-spacing: 0; color: var(--ink-3)">· thickness shown ×2 (on top of terrain ×)</span></div>
+    <div class="ramp" id="ramp"></div>
+    <div class="ramp-l"><span id="dlo">0.05 m</span><span id="dmid">2 m</span><span id="dmax">4 m+</span></div>
     <div class="row"><span class="sw" style="background: var(--pond)"></span>Pond footprint (crest level)</div>
     <div class="row"><span class="sw" style="background: var(--road)"></span>Roads (OpenStreetMap)</div>
     <div class="row"><span class="sw" style="background: #cfc7b4; height: 8px"></span>Buildings (OSM footprints, 5 m houses · 6.5 m sheds)</div>
@@ -193,6 +201,13 @@
   for (let i = 0; i < elev.length; i++) elev[i] = M.z0 + dem16[i] * M.zscale; // metres
   const frameCache = new Array(F.frames.length);
   function frame(k) { if (!frameCache[k]) frameCache[k] = b64(F.frames[k]); return frameCache[k]; }
+  const speedCache = new Array((F.speeds || []).length);
+  function speedFrame(k) { if (!F.speeds) return null; if (!speedCache[k]) speedCache[k] = b64(F.speeds[k]); return speedCache[k]; }
+  let colourMode = 'depth', maxSpeed = 0;
+  const HZ = [[0.3,0.3,2.0],[0.6,0.5,2.0],[0.6,1.2,2.0],[1.0,2.0,2.0],[4.0,4.0,4.0]];
+  const hzCol = [0x7fc8f8, 0x4fa64f, 0xd8c400, 0xff8c1a, 0xe63c1e, 0x7a0c2e].map(c => new THREE.Color(c));
+  function hazardClass(D, V) { const DV = D * V; for (let h = 0; h < 5; h++) { const [dv, d, v] = HZ[h]; if (DV <= dv && D <= d && V <= v) return h; } return 5; }
+  const s1 = new THREE.Color(0xfff3b0), s2 = new THREE.Color(0xff8c42), s3 = new THREE.Color(0xb3001b);
   const zmin = M.zmin;
 
   // ---------- three ----------
@@ -247,7 +262,7 @@
   let curFrame = -1, maxDepth = 0;
   const wz = new Float32Array(NX * NY);           // water surface height per grid cell (NaN = dry)
   function applyFrame(k) {
-    const d = frame(k); let mx = 0;
+    const d = frame(k); let mx = 0; const sp = speedFrame(k); let ms = 0;
     // pass 1: wet cells – surface = ground + depth (flood scale), colour by depth
     for (let gi = 0; gi < NX * NY; gi++) {
       const dep = d[gi] * M.dscale;
@@ -269,12 +284,23 @@
         dep = 0.02;
       }
       wpos.setZ(vi, z);
-      const t = Math.min(dep / 4, 1);
-      const c = t < 0.5 ? w1.clone().lerp(w2, t * 2) : w2.clone().lerp(w3, (t - 0.5) * 2);
+      let c;
+      if (colourMode === 'speed' && sp) {
+        const v = sp[gi] * M.sscale; if (v > ms) ms = v;
+        const t = Math.min(v / 3, 1);
+        c = t < 0.5 ? s1.clone().lerp(s2, t * 2) : s2.clone().lerp(s3, (t - 0.5) * 2);
+      } else if (colourMode === 'hazard' && sp) {
+        const v = sp[gi] * M.sscale; if (v > ms) ms = v;
+        c = hzCol[dep > 0.05 ? hazardClass(dep, v) : 0];
+      } else {
+        if (sp) { const v = sp[gi] * M.sscale; if (v > ms) ms = v; }
+        const t = Math.min(dep / 4, 1);
+        c = t < 0.5 ? w1.clone().lerp(w2, t * 2) : w2.clone().lerp(w3, (t - 0.5) * 2);
+      }
       wcol[vi * 3] = c.r; wcol[vi * 3 + 1] = c.g; wcol[vi * 3 + 2] = c.b;
     }
     wpos.needsUpdate = true; wgeo.attributes.color.needsUpdate = true; wgeo.computeVertexNormals();
-    curFrame = k; maxDepth = mx;
+    curFrame = k; maxDepth = mx; maxSpeed = ms;
     if (typeof colourBuildings === 'function') colourBuildings(k);
   }
   function rebuildTerrain() {
@@ -436,11 +462,29 @@
     document.getElementById('qv').textContent = Math.round(M.q_m3s[k]).toLocaleString();
     document.getElementById('av').textContent = M.area_km2[k].toFixed(1);
     document.getElementById('dv').textContent = maxDepth.toFixed(1);
+    document.getElementById('sv').textContent = maxSpeed.toFixed(1);
     document.getElementById('cursor').style.left = (k / (F.frames.length - 1) * 100) + '%';
   }
   function setPlaying(p) { playing = p; playBtn.textContent = p ? '❚❚' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pause' : 'Play'); last = performance.now(); }
   playBtn.addEventListener('click', () => setPlaying(!playing));
   scrub.addEventListener('input', () => { setPlaying(false); setFrame(+scrub.value, true); });
+  const legend = {
+    depth: { ramp: '', k: 'Water depth ', lo: '0.05 m', mid: (dmaxLegend / 2).toFixed(0) + ' m', hi: dmaxLegend.toFixed(0) + ' m+' },
+    speed: { ramp: 'linear-gradient(90deg, #fff3b0, #ff8c42 50%, #b3001b)', k: 'Flow speed ', lo: '0 m/s', mid: '1.5 m/s', hi: '3 m/s+' },
+    hazard: { ramp: 'linear-gradient(90deg, #7fc8f8 0 16.6%, #4fa64f 16.6% 33.3%, #d8c400 33.3% 50%, #ff8c1a 50% 66.6%, #e63c1e 66.6% 83.3%, #7a0c2e 83.3%)', k: 'Hazard class (ARR / NZSOLD) ', lo: 'H1 safe', mid: 'H3–H4 unsafe', hi: 'H6' },
+  };
+  function setMode(m) {
+    if (!F.speeds && m !== 'depth') return;
+    colourMode = m; const L = legend[m];
+    document.querySelectorAll('.vb.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    document.getElementById('ramp').style.background = L.ramp;
+    document.getElementById('legk').firstChild.textContent = L.k;
+    document.getElementById('wnote').hidden = m !== 'depth';
+    document.getElementById('dlo').textContent = L.lo; document.getElementById('dmid').textContent = L.mid; document.getElementById('dmax').textContent = L.hi;
+    if (curFrame >= 0) applyFrame(curFrame);
+  }
+  document.querySelectorAll('.vb.mode').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
   function fitBox(bx, pad) {
     // centre the orbit target on the box and back the camera off until the box fits the view
     const cx = (bx.x0 + bx.x1) / 2, cy = (bx.y0 + bx.y1) / 2;
@@ -495,6 +539,9 @@
     if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
     if (e.key === '1' || e.key === '2' || e.key === '3') preset(+e.key);
     if (e.key === 'r' || e.key === 'R') preset(1);
+    if (e.key === 'd' || e.key === 'D') setMode('depth');
+    if (e.key === 's' || e.key === 'S') setMode('speed');
+    if (e.key === 'h' || e.key === 'H') setMode('hazard');
   });
   const exagIn = document.getElementById('exag');
   exagIn.addEventListener('input', () => { setExag(+exagIn.value, true); updateCamera(); });
