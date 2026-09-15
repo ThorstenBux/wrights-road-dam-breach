@@ -1,0 +1,60 @@
+{
+  "scenario": "east",
+  "mode": "shakedown",
+  "bbox": [
+    1532500,
+    5189500,
+    1550500,
+    5201000
+  ],
+  "pre_breach_s": 0.0,
+  "hydrology": null,
+  "river_inlet_polygons": [],
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/data/derived/dem_shakedown_20m.tif",
+  "hydrograph": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/outputs/east/hydrograph.csv",
+  "triangles": 95140,
+  "manning_n": 0.045,
+  "finaltime_s": 14400.0,
+  "yieldstep_s": 120,
+  "inlet_polygon": [
+    [
+      1535190.23029817,
+      5196796.806940446
+    ],
+    [
+      1535212.946470817,
+      5196873.514016392
+    ],
+    [
+      1535241.7116242968,
+      5196864.99545165
+    ],
+    [
+      1535218.9954516497,
+      5196788.288375704
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1535190.23029817,
+        5196796.806940446
+      ],
+      [
+        1535212.946470817,
+        5196873.514016392
+      ],
+      [
+        1535241.7116242968,
+        5196864.99545165
+      ],
+      [
+        1535218.9954516497,
+        5196788.288375704
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-16 01:58:06"
+}

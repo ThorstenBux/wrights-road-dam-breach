@@ -1,0 +1,109 @@
+{
+  "scenario": "storm",
+  "mode": "shakedown",
+  "bbox": [
+    1532500,
+    5189500,
+    1550500,
+    5201000
+  ],
+  "pre_breach_s": 7200.0,
+  "hydrology": {
+    "pre_breach_h": 2.0,
+    "rain_mm_h": 10.0,
+    "infiltration_mm_h": 0.0,
+    "river_inflows": [
+      {
+        "name": "Eyre River",
+        "q_m3s": 150,
+        "location_nztm": {
+          "shakedown": [
+            1543457,
+            5200792
+          ],
+          "production": [
+            1536906,
+            5202713
+          ]
+        },
+        "flow_dir": {
+          "shakedown": [
+            0.854,
+            -0.52
+          ],
+          "production": [
+            0.697,
+            -0.718
+          ]
+        }
+      }
+    ]
+  },
+  "river_inlet_polygons": [
+    [
+      [
+        1543444.738258709,
+        5200752.634409689
+      ],
+      [
+        1543486.3441671676,
+        5200820.964113195
+      ],
+      [
+        1543511.9678059828,
+        5200805.3618975235
+      ],
+      [
+        1543470.3618975242,
+        5200737.032194017
+      ]
+    ]
+  ],
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/data/derived/dem_shakedown_20m.tif",
+  "hydrograph": "outputs/storm/hydrograph_zero.csv",
+  "triangles": 95140,
+  "manning_n": 0.045,
+  "finaltime_s": 21600.0,
+  "yieldstep_s": 120,
+  "inlet_polygon": [
+    [
+      1535190.23029817,
+      5196796.806940446
+    ],
+    [
+      1535212.946470817,
+      5196873.514016392
+    ],
+    [
+      1535241.7116242968,
+      5196864.99545165
+    ],
+    [
+      1535218.9954516497,
+      5196788.288375704
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1535190.23029817,
+        5196796.806940446
+      ],
+      [
+        1535212.946470817,
+        5196873.514016392
+      ],
+      [
+        1535241.7116242968,
+        5196864.99545165
+      ],
+      [
+        1535218.9954516497,
+        5196788.288375704
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-16 03:21:20"
+}

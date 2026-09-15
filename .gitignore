@@ -10,3 +10,5 @@ __pycache__/
 .pytest_cache/
 *.log
 .DS_Store
+# deployed viewer copies live in docs/<scenario>/; regenerate with scripts/07_export_webgl.py
+outputs/**/webgl/data.js
