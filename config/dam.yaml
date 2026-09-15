@@ -1,0 +1,134 @@
+# Dam parameters – Wrights Road Storage Ponds (proposed; not yet constructed as of Sep 2026)
+# Primary source: Damwatch Engineering Ltd, "Wrights Road Storage Ponds – Design Report",
+#   Issue 6, 26 Oct 2021, project E2131, ECan-approved 21 Dec 2021 (bhsl.co.nz).
+# Secondary: WIL Emergency Action Plan Issue 6 (8 Jun 2020, E1154); WIL Emergency Evacuation Plan
+#   draft v7.2 (15 Jun 2020) quoting Damwatch "Dam Break Flood Hazard Update" (15 Sep 2016).
+# Heights are "RL" as printed in the design report; datum NOT stated – confirm vs NZVD2016 (see SPEC).
+owner: Burnt Hill Storage Limited (BHSL) – infrastructure/management by Waimakariri Irrigation Ltd
+designer: Damwatch Engineering Ltd (design-build with Rooney Earthmoving Ltd)
+status: consented (building consent Jun 2013; resource consents Oct 2014; Environment Court Aug 2020); construction not started; target operation 2029/30 season
+
+ponds:
+  pond1:
+    description: "Upper pond (west). Piping through liner defect is the assumed failure mode."
+    fsl_mRL: 226.5            # s2.1
+    max_depth_m: 8.0          # Table 3
+    invert_mRL: 218.5         # = FSL - max depth (assumed lowest floor)
+    area_fsl_m2: 300000       # Table 3: ~30 ha wetted footprint
+    volume_m3: 2000000          # Table 3
+    freeboard_m: 1.5          # s7.3.2
+    crest_mRL: 228.0          # FSL + freeboard (300 mm crest topping included in freeboard)
+    embankment_height_m: 8.0  # Table 34
+    ext_slope_h_per_v: 2.0    # Medium PIC sections 1V:2H (west embankment; north of the Tub)
+    int_slope_h_per_v: 3.0
+  pond2:
+    description: "Lower pond (east, 3.7 m lower FSL). Overtopping failure after Pond 1 breaches into it."
+    fsl_mRL: 222.8
+    max_depth_m: 12.0
+    invert_mRL: 210.8
+    area_fsl_m2: 720000       # ~72 ha
+    volume_m3: 6200000
+    freeboard_m: 1.5
+    crest_mRL: 224.3
+    embankment_height_m: 12.0
+    ext_slope_h_per_v: 2.5    # High PIC sections 1V:2.5H
+    int_slope_h_per_v: 3.0
+  total_volume_m3: 8200000
+  liner: exposed geomembrane (HDPE/LLDPE) on gravel fill; 1,485,000 m3 bulk fill sourced from pond inverts
+  crest_width_m: null         # not stated in report – take from drawings WIL1125/30/101-119
+  spillways: "service spillway Buffer Pond->Pond 2 (17 m3/s); emergency spillways at Buffer Pond (12 m3/s), Pond 1->Buffer Pond, Tub; 20 m fuse plug in Buffer Pond south embankment (~60 m3/s, ~700,000 m3)"
+
+breach_defaults:
+  method: froehlich_2008      # NZSOLD 2024 M2 recommends Froehlich 2016a/b – engineer to confirm coefficients
+  progression: linear         # or sine
+  routing_dt_s: 1.0
+  duration_h: 14
+  weir_coeff_rect: 1.7
+  weir_coeff_tri: 1.4
+  breach_invert: dem_at_toe   # final breach bottom = natural ground at the toe from LiDAR (no foundation scour)
+  breach_invert_scour_m: 0.0  # optional extra scour below natural ground (sensitivity: 1.0)
+  inlet_polygon_size_m: [80, 30]   # ANUGA inlet patch (along embankment x outward)
+
+# Failure scenarios (Damwatch modelled East, South, North, West embankment breaches)
+scenarios:
+  east:
+    description: "Sunny-day cascade: Pond 1 pipes into Pond 2 through the dividing embankment; Pond 2 overtops and fails through the EAST embankment (Wrights Road side)."
+    cascade: true
+    pond: pond2
+    mode: overtopping
+    breach_location_nztm: [1535192, 5196838]   # mid east embankment (approx.)
+    outward_dir: [0.959, -0.284]
+    damwatch_2012: {flood_zone_km2: 73, households_in_zone: 176, households_at_risk: 40, PAR: 107, PIC_regs2008: HIGH, PIC_nzsold2000: HIGH}
+  south:
+    description: "Sunny-day cascade: Pond 1 -> Pond 2; Pond 2 overtops and fails through the SOUTH embankment (R2 race side)."
+    cascade: true
+    pond: pond2
+    mode: overtopping
+    breach_location_nztm: [1534525, 5196475]   # mid south embankment (approx.)
+    outward_dir: [-0.282, -0.959]
+    damwatch_2012: {flood_zone_km2: 59, households_in_zone: 75, households_at_risk: 19, PAR: 54, PIC_regs2008: HIGH, PIC_nzsold2000: MEDIUM}
+  north:
+    description: "Sunny-day cascade: Pond 1 -> Pond 2; Pond 2 overtops and fails through the NORTH embankment (Dixon Road side)."
+    cascade: true
+    pond: pond2
+    mode: overtopping
+    breach_location_nztm: [1534829, 5197507]   # mid north embankment (approx.)
+    outward_dir: [0.282, 0.959]
+    damwatch_2012: {flood_zone_km2: 66, households_in_zone: 198, households_at_risk: 35, PAR: 95, PIC_regs2008: HIGH, PIC_nzsold2000: MEDIUM}
+  west:
+    description: "Sunny-day piping failure of Pond 1 directly through the WEST embankment (MR4 race side). Only Pond 1 volume released."
+    cascade: false
+    pond: pond1
+    mode: piping
+    breach_location_nztm: [1534162, 5197144]   # mid west embankment (approx.)
+    outward_dir: [-0.959, 0.284]
+    damwatch_2012: {flood_zone_km2: 15, households_in_zone: 50, households_at_risk: 1, PAR: 4, PIC_regs2008: MEDIUM, PIC_nzsold2000: LOW}
+
+cascade:
+  # Pond 1 -> Pond 2 through the dividing embankment: breach invert taken at Pond 2 FSL
+  # (tailwater-limited erosion; simple level-pool, no submergence correction).
+  dividing_breach_mode: piping
+  dividing_breach_invert_mRL: 222.8
+  # Pond 2 overtopping-breach initiation level. Static level-pool equalisation of the two ponds
+  # (8.2 Mm3 over ~102 ha) only reaches ~223.8 m RL, 0.5 m BELOW the Pond 2 crest (224.3), so an
+  # overtopping breach needs a dynamic surge allowance; Damwatch's Appendix H (not public) must be
+  # checked for how the cascade was represented. 223.6 = FSL + 0.8 m (surge/wave allowance).
+  pond2_trigger_mRL: 223.6
+
+sensitivity:
+  breach_width_factor: [0.5, 1.0, 2.0]
+  formation_time_factor: [0.5, 1.0, 2.0]
+  manning_n: [0.035, 0.045, 0.06]
+  breach_invert_scour_m: [0.0, 1.0]
+
+friction:
+  default_manning_n: 0.045    # grazed pasture / cropping on Canterbury Plains
+  by_landcover:               # for a land-cover-based friction raster (LCDB v5 or OSM landuse)
+    pasture: 0.040
+    crop: 0.060
+    forest_shelterbelt: 0.120
+    urban_building: 0.300
+    road_sealed: 0.020
+    gravel_road: 0.025
+    water: 0.030
+
+consequence:
+  persons_per_dwelling: 2.5   # Damwatch 2012 assumption
+  at_risk_depth_m: 0.5        # Damwatch 2012 "at risk" criterion
+  nzsold_par_rule: "people in buildings exposed to hazard > H2; in vehicles > H1 (NZSOLD 2024 M2 s2.4.3.3)"
+  roads_of_interest: [Carleton Road, Wolffs Road, Poyntzs Road, Pesters Road, Downs Road, Browns Road,
+                      Two Chain Road, Diversion Road, Wrights Road, Dixon Road, South Eyre Road, Thongcaster Road,
+                      Domain Road, Barrett Road, Kennedy Road]
+
+# Damwatch 2016 arrival times (WIL Emergency Evacuation Plan Table 1) – for comparison only
+previous_results:
+  peak_breach_outflow_m3s: 2500     # "approximately 2,500 m3/s" (design report s3)
+  arrival_times:
+    Carleton Road:  {north: "0:50", south: "1:35", east: "1:30", depth_m: [0.71, 1.43, 0.68]}
+    Wolffs Road:    {north: "1:10", south: "2:05", east: "2:05", depth_m: [0.59, 0.99, 0.33]}
+    Poyntzs Road:   {north: "1:35", south: "2:35", east: "2:40", depth_m: [0.41, 0.60, 0.34]}
+    Pesters Road:   {north: "1:50", south: "3:05", east: "3:00", depth_m: [0.55, 0.56, 0.57]}
+    Downs Road:     {north: "2:30", south: "4:35", east: "4:10", depth_m: [0.33, 1.16, 0.30]}
+    Browns Road:    {north: "3:30", south: "6:40", east: "5:15", depth_m: [0.50, 0.36, 0.58]}
+    Two Chain Road: {north: "4:20", south: "8:05", east: "7:20", depth_m: [0.37, 0.36, 0.46]}
+    Diversion Road: {north: "5:35", south: "10:40", east: "9:00", depth_m: ["<0.1", "<0.1", "<0.1"]}

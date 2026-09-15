@@ -1,0 +1,60 @@
+# Site and data configuration – Wrights Road Storage Ponds, Burnt Hill, Waimakariri District
+# All coordinates NZTM2000 (EPSG:2193), metres. Heights: LiDAR is NZVD2016.
+project: Wrights Road Storage Ponds – dam-breach flood model (screening level)
+crs: EPSG:2193
+
+site:
+  # Emergency Action Plan (Damwatch E1154 Issue 6, 8 Jun 2020) s5.1: "1,534,683 mE, 5,196,928 mN"
+  centre_nztm: [1534683, 5196928]
+  footprint_centroid_nztm: [1534677, 5196991]
+  # Wrights Road x Dixon Road corner from OpenStreetMap (lat -43.37375, lon 172.20228)
+  corner_wrights_dixon_nztm: [1535375, 5197371]
+  # APPROXIMATE pond footprint (order NW, NE, SE, SW): ~1.075 km square SW of the Wrights/Dixon corner
+  # (design report s2.1: footprint "approximately a square 1 km x 1 km", 120 ha property,
+  #  5.4 m setback from Dixons Rd (north) and Wrights Rd (east), MR4 race on the west, R2 race south).
+  # REPLACE with the crest line from drawing WIL1125/30/2 before any reportable run.
+  footprint_nztm: [[1534313, 5197659], [1535344, 5197354], [1535041, 5196323], [1534010, 5196628]]
+  footprint_source: "approximate – 1075 m square rotated with the road grid (Wrights Rd bearing ~196°, Dixon Rd ~287°), NE corner inset 25 m from the Wrights/Dixon corner; centroid within 65 m of the EAP coordinate"
+  # Dividing embankment between Pond 1 (west, higher) and Pond 2 (east, lower) – assumed position.
+  pond1_share_of_width: 0.30   # Pond 1 ~30 ha of ~102 ha wetted; Pond 1 assumed on the WEST (MR4) side
+  road_grid_unit_vectors: {along_wrights_rd: [-0.282, -0.959], along_dixon_rd: [-0.959, 0.284]}
+
+domain:
+  # Full study domain: site to Diversion Road / Waimakariri River (Damwatch flood zones 15–73 km2)
+  bbox_nztm: [1531000, 5187000, 1558000, 5203000]
+  # Shakedown domain for fast test runs
+  shakedown_bbox_nztm: [1532500, 5189500, 1550500, 5201000]
+
+dem:
+  bucket: https://nz-elevation.s3.ap-southeast-2.amazonaws.com
+  # Canterbury LiDAR 1m DEM 2020-2025 (STAC title) – full corridor coverage, captured 2020-04 .. 2025-03
+  collection: canterbury/canterbury_2020-2023/dem_1m/2193
+  # Waimakariri LiDAR 1m DEM (Jun–Jul 2023) – newest at the site but gaps east of Downs Road
+  alt_collection: canterbury/waimakariri_2023/dem_1m/2193
+  resolution_m: 10
+  shakedown_resolution_m: 20
+  vertical_datum: NZVD2016
+  licence: "CC BY 4.0 – Environment Canterbury Regional Council / Toitū Te Whenua LINZ"
+
+osm:
+  api: https://api.openstreetmap.org/api/0.6/map
+  tile_deg: 0.05
+
+linz:
+  api_key_env: LINZ_API_KEY
+  layers:                      # verify ids on data.linz.govt.nz before use
+    building_outlines: 101290
+    road_centrelines_topo50: 50329
+    primary_parcels: 50772
+
+mesh:
+  shakedown: {max_area_m2: 6000, site_area_m2: 1500, corridor_area_m2: 3000, flow_algorithm: DE0}
+  production: {max_area_m2: 1200, site_area_m2: 200, corridor_area_m2: 600, flow_algorithm: DE1}
+  site_refine_radius_m: 2500
+  corridor_polygon_nztm: [[1533000, 5194000], [1552000, 5190500], [1552000, 5199500], [1533000, 5199500]]
+
+run:
+  shakedown: {finaltime_h: 4, yieldstep_s: 120}
+  production: {finaltime_h: 14, yieldstep_s: 300}
+  depth_threshold_m: 0.10      # for arrival time / inundated extent
+  output_res_m: 10

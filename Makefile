@@ -1,0 +1,36 @@
+# Wrights Road Storage Ponds – dam-breach flood model pipeline
+# Usage:  make env && conda activate damflood && make all SCENARIO=east
+SHELL := /bin/bash
+PY ?= python
+SCENARIO ?= east
+
+.PHONY: env test dem vectors breach run post all clean
+
+env:
+	conda env create -f environment.yml || conda env update -f environment.yml
+
+test:
+	$(PY) -m pytest -q tests
+
+dem:
+	$(PY) scripts/01_fetch_dem.py
+
+vectors:
+	$(PY) scripts/02_fetch_vectors.py
+
+breach:
+	$(PY) scripts/03_breach_hydrograph.py --scenario $(SCENARIO)
+
+run:
+	$(PY) scripts/04_run_model.py --scenario $(SCENARIO)
+
+compare:
+	$(PY) scripts/06_compare.py --scenario $(SCENARIO)
+
+post:
+	$(PY) scripts/05_postprocess.py --scenario $(SCENARIO)
+
+all: dem vectors breach run post
+
+clean:
+	rm -rf outputs/* data/derived/*

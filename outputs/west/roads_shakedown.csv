@@ -1,0 +1,16 @@
+road,sample_points,points_inundated_gt_0.1m,first_arrival_h,max_depth_m,first_arrival_E,first_arrival_N,note,first_arrival_after_pond1_failure_h
+Carleton Road,664.0,30.0,1.93,0.36912283301353455,1537738.4997122858,5197418.266134877,,1.93
+Wolffs Road,415.0,20.0,2.86,0.2973715662956238,1540049.9146069223,5196340.222522129,,2.86
+Poyntzs Road,711.0,0.0,,0.0,,,,
+Pesters Road,291.0,0.0,,0.0,,,,
+Downs Road,446.0,0.0,,0.0,,,,
+Browns Road,470.0,0.0,,0.0,,,,
+Two Chain Road,330.0,0.0,,0.0,,,,
+Diversion Road,,,,,,,not in roads layer,
+Wrights Road,447.0,25.0,1.13,0.5674606561660767,1535438.3207472425,5197586.701022276,,1.13
+Dixon Road,285.0,88.0,0.64,0.7142220735549927,1534266.8503174644,5197698.619257786,,0.64
+South Eyre Road,1290.0,0.0,,0.0,,,,
+Thongcaster Road,382.0,0.0,,0.0,,,,
+Domain Road,280.0,17.0,1.1,0.503903329372406,1535292.3997241408,5197749.462613816,,1.1
+Barrett Road,348.0,0.0,,0.0,,,,
+Kennedy Road,,,,,,,not in roads layer,

@@ -1,0 +1,30 @@
+{
+  "peak_Q_m3s": 235.15788785378044,
+  "time_to_peak_s": 4882.0,
+  "t_init_s": 0.0,
+  "volume_released_m3": 1240866.2903016494,
+  "duration_gt_1pct_peak_s": 29782.0,
+  "final_level_m": 221.92836682975909,
+  "max_level_m": 226.5,
+  "scenario": "west",
+  "description": "Sunny-day piping failure of Pond 1 directly through the WEST embankment (MR4 race side). Only Pond 1 volume released.",
+  "breach_invert_mRL": 221.8690781694389,
+  "breach_invert_source": "LiDAR toe (dem_full_10m.tif)",
+  "toe_samples_m": [
+    221.87,
+    222.17,
+    222.47,
+    222.52
+  ],
+  "scour_m": 0.0,
+  "froehlich_1995_peak_check_m3s": 255.70604122747596,
+  "pond2_trigger_mRL": null,
+  "pond2_max_level_mRL": 226.5,
+  "damwatch_2012_2016_peak_m3s": 2500,
+  "breach_notes": [
+    "pond1 external breach (piping): V_w=1.255e+06 m3, h_b=4.63 m, B_avg=25.7 m; B_bot=22.4 m, z=0.7, t_f=1.36 h"
+  ],
+  "width_factor": 1.0,
+  "time_factor": 1.0,
+  "method": "Froehlich (2008) parameters; level-pool routing; broad-crested weir; no tailwater submergence"
+}

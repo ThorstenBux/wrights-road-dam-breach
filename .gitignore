@@ -1,0 +1,12 @@
+# large / regenerable
+data/raw/
+data/derived/
+outputs/**/*.sww
+outputs/**/*.tif
+outputs/**/*.msh
+outputs/**/webgl_artifact/
+*.pts
+__pycache__/
+.pytest_cache/
+*.log
+.DS_Store

@@ -1,0 +1,24 @@
+# Conda environment for the Wrights Road dam-breach flood model.
+#   conda env create -f environment.yml
+#   conda activate damflood
+name: damflood
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - anuga            # 2D shallow-water solver (Geoscience Australia / ANU)
+  - gdal
+  - rasterio
+  - geopandas
+  - rioxarray
+  - pyproj
+  - shapely
+  - scipy
+  - numpy
+  - pandas
+  - xarray
+  - matplotlib
+  - netcdf4
+  - pyyaml
+  - requests
+  - pytest
