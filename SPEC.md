@@ -282,6 +282,14 @@ artifact: https://claude.ai/artifact/KjgsKm5Q7NGFzwZ3G1v1v6
 
 ### 7.3 Caveats specific to the shakedown
 
+* **Mesh repair (16 Sep 2026).** The original refinement handling left a 1 m gap between the site circle and the
+  corridor polygon, which the mesher filled with a ring of 61,503 sliver triangles (< 5 m) – 37 % of the 165,047
+  triangles – pinning the CFL time step at ~0.15 s. `_prepare_refinements` now separates regions by 150 m; the
+  shakedown mesh has 95,140 triangles, none under 22 m, and runs 4–10× faster. The east, west and quake results
+  above were produced on the old mesh; the storm scenario on the repaired one. A re-run of east on the repaired mesh
+  (`outputs/east/*_mesh2.*`) changes inundated area 39.5 → 39.2 km², road arrivals by ≤ 2 min, buildings ≥ 0.5 m
+  95 → 92 – i.e. the mesh defect cost time, not accuracy. Production runs should use the repaired mesh.
+
 * 20 m grid and ≥ 1,500 m² triangles smooth out road embankments, races and drains; production runs use 10 m / 200–600 m².
 * Pond footprint, dividing embankment and breach positions are approximate (§2).
 * Uniform roughness; no culvert/bridge blockage assumptions; buildings not represented in the terrain.

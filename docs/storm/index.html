@@ -1,0 +1,742 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wrights Road Breach Flood</title>
+<meta name="description" content="3D animation of a modelled embankment breach at the Wrights Road Storage Ponds, Waimakariri District">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #0d1117;
+    --panel: rgba(21, 27, 36, 0.86);
+    --panel-edge: #2a3442;
+    --ink: #e7ebf1;
+    --ink-2: #9aa4b5;
+    --ink-3: #66718a;
+    --water-1: #8fd3ff;
+    --water-2: #1f6fd6;
+    --water-3: #0b2f7a;
+    --pond: #ff8c4b;
+    --road: #d8d1bf;
+    --focus: #ffd166;
+    --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    --font-ui: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--ground); color: var(--ink);
+    font-family: var(--font-ui); font-size: 14px; line-height: 1.4;
+    overflow: hidden;
+  }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }  /* canvas is a replaced element: needs explicit size to fill the viewport */
+  #scene:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  .hud { position: fixed; z-index: 2; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+
+  /* top bar */
+  #top { inset: 0 0 auto 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 14px 16px 0; }
+  .title { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 10px 14px 11px; max-width: min(560px, 100%); backdrop-filter: blur(6px); }
+  .title h1 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: 0.01em; line-height: 1.05; text-wrap: balance; }
+  .title p { margin: 4px 0 0; color: var(--ink-2); font-size: 12.5px; max-width: 60ch; }
+  .title .eyebrow { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .scen { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 7px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em; }
+  .scen span { color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-size: 10.5px; }
+  .scen a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid transparent; }
+  .scen a:hover { color: var(--ink); }
+  .scen a.on { color: var(--water-1); border-bottom-color: var(--water-1); }
+  /* minimise toggles */
+  .mini { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--panel-edge); background: #1f2937; color: var(--ink-2); font-family: var(--font-mono); font-size: 13px; line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .mini:hover { background: #283548; color: var(--ink); }
+  .mini:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .title { position: relative; padding-right: 36px; }
+  .title.collapsed { padding: 7px 36px 8px 12px; }
+  .title.collapsed h1 { font-size: 15px; }
+  .title.collapsed .eyebrow, .title.collapsed p, .title.collapsed nav { display: none; }
+  #side-toggle { align-self: flex-end; }
+  #side.collapsed .legend { display: none; }
+  #side .mini { position: static; width: auto; padding: 0 9px; height: 26px; font-size: 11px; letter-spacing: 0.04em; }
+  #help { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 8px 12px; color: var(--ink-2); font-size: 12px; backdrop-filter: blur(6px); }
+  #help b { color: var(--ink); font-weight: 500; }
+  .topright { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .views { display: flex; gap: 6px; }
+  .vb { white-space: nowrap; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; color: var(--ink); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.03em; padding: 7px 11px; cursor: pointer; backdrop-filter: blur(6px); }
+  .vb:hover { background: #283548; }
+  .vb:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .vb.on { border-color: var(--water-1); color: var(--water-1); }
+  .modelbl { align-self: center; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); background: var(--panel); padding: 7px 8px; border-radius: 6px; }
+
+  /* readouts */
+  #stats { left: 16px; bottom: 122px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 7px 11px 8px; min-width: 104px; backdrop-filter: blur(6px); }
+  .stat .k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+  .stat .v { font-family: var(--font-display); font-weight: 600; font-size: 25px; line-height: 1; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .stat .u { font-family: var(--font-mono); font-size: 11px; color: var(--ink-2); margin-left: 3px; }
+
+  /* legend + view controls */
+  #side { right: 16px; bottom: 122px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .legend { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 8px 12px 9px; backdrop-filter: blur(6px); width: 210px; }
+  .legend .k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+  .ramp { height: 10px; border-radius: 3px; background: linear-gradient(90deg, var(--water-1), var(--water-2) 45%, var(--water-3)); }
+  .ramp-l { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-2); margin-top: 3px; }
+  .legend .row { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--ink-2); margin-top: 6px; white-space: nowrap; }
+  .sw { width: 14px; height: 3px; border-radius: 2px; }
+  .ctl { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+  .ctl label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .ctl input[type=range] { width: 90px; accent-color: var(--water-1); }
+  .ctl output { font-family: var(--font-mono); font-size: 11px; min-width: 3ch; text-align: right; }
+
+  /* timeline */
+  #timeline { left: 16px; right: 16px; bottom: 16px; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 8px 12px 10px; backdrop-filter: blur(6px); display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+  #play { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--panel-edge); background: #1f2937; color: var(--ink); cursor: pointer; font-size: 16px; display: grid; place-items: center; }
+  #play:hover { background: #283548; }
+  #play:focus-visible, #speed:focus-visible, #exag:focus-visible, #scrub:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .track { position: relative; height: 54px; }
+  .track canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #scrub { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .cursor { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--water-1); pointer-events: none; }
+  .track .lbl { position: absolute; left: 0; bottom: -1px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.05em; }
+  .track .lbl.r { left: auto; right: 0; }
+  .tright { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .tright select { background: #1f2937; color: var(--ink); border: 1px solid var(--panel-edge); border-radius: 4px; font-family: var(--font-mono); font-size: 11px; padding: 3px 6px; }
+  .tright .k { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* road labels */
+  .rl { position: fixed; z-index: 1; transform: translate(-50%, -100%); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--road); text-shadow: 0 0 4px #000, 0 0 2px #000; pointer-events: none; white-space: nowrap; }
+  .rl { opacity: 0.8; }
+  .rl.key { opacity: 1; font-size: 11.5px; color: #f1ecdc; }
+  .rl.pond { opacity: 1; color: var(--pond); font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; }
+
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: var(--ground); z-index: 5; font-family: var(--font-mono); color: var(--ink-2); font-size: 13px; }
+  #loading[hidden] { display: none; }
+
+  @media (max-width: 720px) {
+    #top { padding: 10px 12px 0; flex-direction: column; align-items: stretch; gap: 8px; }
+    .title { max-width: none; }
+    .topright { align-items: flex-start; }
+    .views { flex-wrap: wrap; }
+    .title h1 { font-size: 19px; }
+    .title p { display: none; }
+    #help { display: none; }
+    .vb { padding: 6px 8px; font-size: 11px; }
+    #stats { left: 12px; right: 12px; bottom: 104px; }
+    .stat { min-width: 0; flex: 1 1 30%; padding: 6px 9px 7px; }
+    .stat .v { font-size: 20px; }
+    #side { right: 12px; bottom: 104px; }
+    #side .legend { width: min(210px, calc(100vw - 24px)); }
+    #timeline { left: 12px; right: 12px; bottom: 12px; grid-template-columns: auto 1fr; }
+    .tright { display: none; }
+    .rl { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ramp { transition: none; } }
+</style>
+
+<div id="loading">Decoding terrain and flood frames…</div>
+<canvas id="scene" tabindex="0" aria-label="3D flood animation. Drag to orbit, scroll to zoom, space to play or pause."></canvas>
+
+<div id="top" class="hud">
+  <div class="title" id="title-panel">
+    <span class="eyebrow" id="eyebrow">Wrights Road Storage Ponds · screening model</span>
+    <h1 id="h1">Breach flood animation</h1>
+    <p id="desc"></p>
+    <button class="mini" id="title-min" aria-label="Minimise description" aria-expanded="true" title="Minimise / expand (key I)">–</button>
+    <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../east-extended/" data-s="east-extended">East → Diversion Rd</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
+  </div>
+  <div class="topright">
+    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode · <b>I/L</b> hide panels · <b>B</b> debris</div>
+    <div class="views" role="group" aria-label="Views">
+      <button id="v-recenter" class="vb" title="Frame the whole flood extent (key R)">⌖ Re-centre</button>
+      <button id="v-breach" class="vb" title="Close-up of the breach (key 2)">Breach</button>
+      <button id="v-street" class="vb" title="Street level at a flooded house, true vertical scale (key 3)">Street level</button>
+    </div>
+    <div class="views" role="radiogroup" aria-label="Water colouring">
+      <span class="modelbl">Colour water by</span>
+      <button class="vb mode on" data-mode="depth" title="Water depth (key D)">Depth</button>
+      <button class="vb mode" data-mode="speed" title="Flow speed in m/s (key S)">Flow speed</button>
+      <button class="vb mode" data-mode="hazard" title="Flood hazard class H1–H6 from depth × velocity (key H)">Hazard</button>
+    </div>
+  </div>
+</div>
+
+<div id="stats" class="hud">
+  <div class="stat"><div class="k">Time after breach</div><div class="v"><span id="tv">0:00</span><span class="u">h:mm</span></div></div>
+  <div class="stat"><div class="k">Breach outflow</div><div class="v"><span id="qv">0</span><span class="u">m³/s</span></div></div>
+  <div class="stat"><div class="k">Area wet &gt; 0.1 m</div><div class="v"><span id="av">0.0</span><span class="u">km²</span></div></div>
+  <div class="stat"><div class="k">Deepest water</div><div class="v"><span id="dv">0.0</span><span class="u">m</span></div></div>
+  <div class="stat"><div class="k">Fastest flow</div><div class="v"><span id="sv">0.0</span><span class="u">m/s</span></div></div>
+</div>
+
+<div id="side" class="hud">
+  <button class="mini" id="side-toggle" aria-label="Minimise legend and scale sliders" aria-expanded="true" title="Minimise / expand legend and sliders (key L)">Legend –</button>
+  <div class="legend">
+    <div class="k" id="legk">Water depth <span id="wnote" style="text-transform: none; letter-spacing: 0; color: var(--ink-3)">· thickness shown ×2 (on top of terrain ×)</span></div>
+    <div class="ramp" id="ramp"></div>
+    <div class="ramp-l"><span id="dlo">0.05 m</span><span id="dmid">2 m</span><span id="dmax">4 m+</span></div>
+    <div class="row"><span class="sw" style="background: var(--pond)"></span>Pond footprint (crest level)</div>
+    <div class="row"><span class="sw" style="background: var(--road)"></span>Roads (OpenStreetMap)</div>
+    <div class="row"><span class="sw" style="background: #cfc7b4; height: 8px"></span>Buildings (OSM footprints, 5 m houses · 6.5 m sheds)</div>
+    <div class="row" style="margin-top: 2px; padding-left: 22px"><span style="color:#ffb454">amber</span>&nbsp;&gt; 0.1 m&nbsp;·&nbsp;<span style="color:#ff5d5d">red</span>&nbsp;≥ 0.5 m at the building</div>
+    <div class="row"><span class="sw" style="background: #ffd9a8; width: 4px; height: 10px; border-radius: 2px; margin: 0 5px"></span>People, 1.8 m tall (zoom in)</div>
+    <div class="row" title="Logs, fence panels, cars, shelterbelt trees and small sheds, drawn to scale. Each is picked up when the water at its spot exceeds a depth and speed threshold for its type, drifts with the flow and strands when the water drops. Indicative only (key B)."><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="debris" style="accent-color: var(--water-1); margin: 0">Debris swept along <span id="debrisn" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3)"></span></label></div>
+  </div>
+  <div class="legend ctl"><label for="exag">Terrain ×</label><input type="range" id="exag" min="1" max="20" step="1" value="8"><output id="exagv">8</output><span id="truescale" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--water-1)" hidden>true scale</span></div>
+  <div class="legend ctl" title="Thickness of the water, and the height of buildings and people, relative to the terrain scale. They always keep their true proportions to each other."><label for="wboost">Flood ×</label><input type="range" id="wboost" min="1" max="6" step="1" value="2"><output id="wboostv">2</output><span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3)">water · buildings · people</span></div>
+</div>
+
+<div id="timeline" class="hud">
+  <button id="play" aria-label="Play or pause">▶</button>
+  <div class="track">
+    <canvas id="hyd"></canvas>
+    <div class="cursor" id="cursor" style="left:0"></div>
+    <input type="range" id="scrub" min="0" max="0" step="1" value="0" aria-label="Simulation time">
+    <span class="lbl" id="t0">0 h</span><span class="lbl r" id="t1">4 h</span>
+  </div>
+  <div class="tright">
+    <span class="k">Speed</span>
+    <select id="speed" aria-label="Playback speed"><option value="4">1× (4 min/s)</option><option value="8" selected>2× (8 min/s)</option><option value="16">4× (16 min/s)</option><option value="32">8×</option></select>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="data.js"></script>
+<script>
+(function () {
+  'use strict';
+  const F = window.FLOOD;
+  if (!F) { document.getElementById('loading').textContent = 'No flood data found (data.js missing).'; return; }
+  const M = F.meta;
+  const NX = M.nx, NY = M.ny, CELL = M.cell / 1000; // km
+  const W = NX * CELL, H = NY * CELL;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- text ----------
+  const sc = M.scenario.charAt(0).toUpperCase() + M.scenario.slice(1);
+  document.getElementById('h1').textContent = (M.title ? M.title : sc + ' embankment breach') + ' – flood animation';
+  if (M.seismic) document.querySelector('#stats .stat .k').textContent = 'Time after quake';
+  { const nav = document.getElementById('scen'); const h = location.hostname;
+    if (h.endsWith('github.io') || h === 'localhost' || h === '127.0.0.1') { nav.hidden = false; nav.querySelectorAll('a[data-s]').forEach(a => a.classList.toggle('on', a.dataset.s === M.scenario + (M.mode === 'extended' ? '-extended' : ''))); } }
+  document.getElementById('desc').textContent = M.description + ' Simulated with ANUGA on LINZ 1 m LiDAR (' + M.cell + ' m display grid). Screening model – not a certified assessment.';
+  document.getElementById('eyebrow').textContent = 'Wrights Road Storage Ponds · ' + M.mode + ' run · peak ' + Math.round(M.peak_q).toLocaleString() + ' m³/s';
+  // Depth colour ramp saturates at the deepest water that actually occurs in this run (rounded up to 0.5 m),
+  // so the legend spans the real range rather than the export's 8-bit ceiling.
+  function b64(s) { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+  let rawMax = 0; F.frames.forEach(f => { const u = b64(f); for (let i = 0; i < u.length; i++) if (u[i] > rawMax) rawMax = u[i]; });
+  const dTop = Math.max(0.5, Math.ceil(rawMax * M.dscale * 2) / 2);
+  const fmtD = v => parseFloat(v.toFixed(2)).toString() + ' m';
+  const dTopLabel = rawMax >= 255 ? fmtD(dTop) + '+' : fmtD(dTop);
+  document.getElementById('dmax').textContent = dTopLabel;
+  document.getElementById('dmid').textContent = fmtD(dTop / 2);
+  document.getElementById('t1').textContent = M.times_h[M.times_h.length - 1].toFixed(1) + ' h';
+  if (M.times_h[0] < 0) document.getElementById('t0').textContent = '−' + Math.abs(M.times_h[0]).toFixed(0) + ' h (rain + river only)';
+  if (M.hydrology) document.getElementById('desc').textContent += ' Rain ' + M.hydrology.rain_mm_h + ' mm/h on the whole area; ' + (M.hydrology.river_inflows || []).map(r => r.name + ' ' + r.q_m3s + ' m³/s').join(', ') + ' already in flood; the breach opens at 0:00 after ' + M.pre_breach_h.toFixed(0) + ' h of storm.';
+
+  // ---------- collapsible panels (state remembered per browser) ----------
+  function panelToggle(id, btnId, key, label) {
+    const el = document.getElementById(id), btn = document.getElementById(btnId);
+    let saved = null; try { saved = localStorage.getItem('wr-' + key); } catch (e) { saved = null; }
+    const small = window.innerWidth < 720;
+    let collapsed = saved === null ? small : saved === '1';
+    function apply() {
+      el.classList.toggle('collapsed', collapsed);
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      btn.textContent = label ? label + (collapsed ? ' +' : ' –') : (collapsed ? '+' : '–');
+    }
+    function toggle() {   // only a deliberate toggle is remembered; the width-based default is not
+      collapsed = !collapsed; apply();
+      try { localStorage.setItem('wr-' + key, collapsed ? '1' : '0'); } catch (e) { /* private mode: ignore */ }
+    }
+    btn.addEventListener('click', toggle);
+    apply();
+    return toggle;
+  }
+  const toggleTitle = panelToggle('title-panel', 'title-min', 'title', '');
+  const toggleSide = panelToggle('side', 'side-toggle', 'side', 'Legend');
+
+  // ---------- decode ----------
+  const dem16 = new Uint16Array(b64(F.dem).buffer);
+  const elev = new Float32Array(NX * NY);
+  for (let i = 0; i < elev.length; i++) elev[i] = M.z0 + dem16[i] * M.zscale; // metres
+  const frameCache = new Array(F.frames.length);
+  function frame(k) { if (!frameCache[k]) frameCache[k] = b64(F.frames[k]); return frameCache[k]; }
+  const speedCache = new Array((F.speeds || []).length);
+  function speedFrame(k) { if (!F.speeds) return null; if (!speedCache[k]) speedCache[k] = b64(F.speeds[k]); return speedCache[k]; }
+  let colourMode = 'depth', maxSpeed = 0;
+  const HZ = [[0.3,0.3,2.0],[0.6,0.5,2.0],[0.6,1.2,2.0],[1.0,2.0,2.0],[4.0,4.0,4.0]];
+  const hzCol = [0x7fc8f8, 0x4fa64f, 0xd8c400, 0xff8c1a, 0xe63c1e, 0x7a0c2e].map(c => new THREE.Color(c));
+  function hazardClass(D, V) { const DV = D * V; for (let h = 0; h < 5; h++) { const [dv, d, v] = HZ[h]; if (DV <= dv && D <= d && V <= v) return h; } return 5; }
+  const s1 = new THREE.Color(0xfff3b0), s2 = new THREE.Color(0xff8c42), s3 = new THREE.Color(0xb3001b);
+  const zmin = M.zmin;
+
+  // ---------- three ----------
+  const canvas = document.getElementById('scene');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, logarithmicDepthBuffer: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x161d28, 1);
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x161d28, W * 1.6, W * 4.5);
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.004, W * 6);
+
+  const sun = new THREE.DirectionalLight(0xfff1dc, 1.15); sun.position.set(-W * 0.6, H * 0.4, W * 0.8); scene.add(sun);
+  scene.add(new THREE.AmbientLight(0x8fa3c4, 0.55));
+  const back = new THREE.DirectionalLight(0x6f8fd6, 0.35); back.position.set(W, -H, W * 0.5); scene.add(back);
+
+  // scene coordinates: x east (km), y up (km * exaggeration), z south (km) => z = -northing
+  let exag = 8, wboost = 2;
+  function zk(m) { return (m - zmin) / 1000 * exag; }
+  function fscale() { return exag * wboost; }  // vertical scale for water thickness, buildings and people
+
+  // terrain
+  const geo = new THREE.PlaneGeometry(W, H, NX - 1, NY - 1);
+  const pos = geo.attributes.position;
+  const colors = new Float32Array(NX * NY * 3);
+  const cLow = new THREE.Color(0x3a4a37), cMid = new THREE.Color(0x6f7350), cHigh = new THREE.Color(0x9b8b63), cPond = new THREE.Color(0x4a4238);
+  const zr = Math.max(M.zmax - zmin, 1);
+  // PlaneGeometry vertices run row by row from top (+y) to bottom (-y); our grid rows run south->north.
+  function vidx(ix, iy) { return (NY - 1 - iy) * NX + ix; }
+  for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) {
+    const gi = iy * NX + ix, vi = vidx(ix, iy);
+    const e = elev[gi];
+    pos.setZ(vi, zk(e));
+    const t = Math.min(Math.max((e - zmin) / zr, 0), 1);
+    const c = t < 0.5 ? cLow.clone().lerp(cMid, t * 2) : cMid.clone().lerp(cHigh, (t - 0.5) * 2);
+    colors[vi * 3] = c.r; colors[vi * 3 + 1] = c.g; colors[vi * 3 + 2] = c.b;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geo.computeVertexNormals();
+  const terrain = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 2 }));
+  terrain.rotation.x = -Math.PI / 2; terrain.position.set(W / 2, 0, H / 2);
+  scene.add(terrain);
+
+  // water
+  const wgeo = new THREE.PlaneGeometry(W, H, NX - 1, NY - 1);
+  const wpos = wgeo.attributes.position;
+  const wcol = new Float32Array(NX * NY * 3);
+  wgeo.setAttribute('color', new THREE.BufferAttribute(wcol, 3));
+  const water = new THREE.Mesh(wgeo, new THREE.MeshPhongMaterial({ vertexColors: true, transparent: true, opacity: 0.86, shininess: 90, specular: 0x6fb6ff, depthWrite: true }));
+  water.rotation.x = -Math.PI / 2; water.position.set(W / 2, 0.0, H / 2);
+  scene.add(water);
+  const w1 = new THREE.Color(0x8fd3ff), w2 = new THREE.Color(0x1f6fd6), w3 = new THREE.Color(0x0b2f7a);
+  let curFrame = -1, maxDepth = 0;
+  const wz = new Float32Array(NX * NY);           // water surface height per grid cell (NaN = dry)
+  function applyFrame(k) {
+    const d = frame(k); let mx = 0; const sp = speedFrame(k); let ms = 0;
+    // pass 1: wet cells – surface = ground + depth (flood scale), colour by depth
+    for (let gi = 0; gi < NX * NY; gi++) {
+      const dep = d[gi] * M.dscale;
+      if (dep > 0) { if (dep > mx) mx = dep; wz[gi] = zk(elev[gi]) + dep / 1000 * fscale() + 0.0004 * exag; }
+      else wz[gi] = NaN;
+    }
+    // pass 2: dry cells next to wet ones carry the neighbouring water level (clamped to their own ground)
+    // so the surface stays flat out to the true shoreline; other dry cells are tucked deep below ground.
+    for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) {
+      const gi = iy * NX + ix, vi = vidx(ix, iy);
+      let z = wz[gi], dep = d[gi] * M.dscale;
+      if (Number.isNaN(z)) {
+        let lvl = -Infinity;
+        if (ix > 0 && !Number.isNaN(wz[gi - 1])) lvl = Math.max(lvl, wz[gi - 1]);
+        if (ix < NX - 1 && !Number.isNaN(wz[gi + 1])) lvl = Math.max(lvl, wz[gi + 1]);
+        if (iy > 0 && !Number.isNaN(wz[gi - NX])) lvl = Math.max(lvl, wz[gi - NX]);
+        if (iy < NY - 1 && !Number.isNaN(wz[gi + NX])) lvl = Math.max(lvl, wz[gi + NX]);
+        z = lvl > -Infinity ? Math.min(lvl, zk(elev[gi]) + 0.0002 * exag) : zk(elev[gi]) - 0.004 * exag;
+        dep = 0.02;
+      }
+      wpos.setZ(vi, z);
+      let c;
+      if (colourMode === 'speed' && sp) {
+        const v = sp[gi] * M.sscale; if (v > ms) ms = v;
+        const t = Math.min(v / 3, 1);
+        c = t < 0.5 ? s1.clone().lerp(s2, t * 2) : s2.clone().lerp(s3, (t - 0.5) * 2);
+      } else if (colourMode === 'hazard' && sp) {
+        const v = sp[gi] * M.sscale; if (v > ms) ms = v;
+        c = hzCol[dep > 0.05 ? hazardClass(dep, v) : 0];
+      } else {
+        if (sp) { const v = sp[gi] * M.sscale; if (v > ms) ms = v; }
+        const t = Math.min(dep / dTop, 1);
+        c = t < 0.5 ? w1.clone().lerp(w2, t * 2) : w2.clone().lerp(w3, (t - 0.5) * 2);
+      }
+      wcol[vi * 3] = c.r; wcol[vi * 3 + 1] = c.g; wcol[vi * 3 + 2] = c.b;
+    }
+    wpos.needsUpdate = true; wgeo.attributes.color.needsUpdate = true; wgeo.computeVertexNormals();
+    curFrame = k; maxDepth = mx; maxSpeed = ms;
+    if (typeof colourBuildings === 'function') colourBuildings(k);
+  }
+  function rebuildTerrain() {
+    for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) pos.setZ(vidx(ix, iy), zk(elev[iy * NX + ix]));
+    pos.needsUpdate = true; geo.computeVertexNormals();
+    linesGroup.children.forEach(l => { l.geometry.attributes.position.array.forEach(() => {}); });
+    rebuildLines(); placeBuildings(); if (curFrame >= 0) applyFrame(curFrame);
+  }
+
+  // roads + footprint (draped 1.5 m above terrain)
+  const linesGroup = new THREE.Group(); scene.add(linesGroup);
+  function sampleElev(xk, yk) {
+    const fx = Math.min(Math.max(xk / CELL - 0.5, 0), NX - 1.001), fy = Math.min(Math.max(yk / CELL - 0.5, 0), NY - 1.001);
+    const ix = Math.floor(fx), iy = Math.floor(fy), ax = fx - ix, ay = fy - iy;
+    const e00 = elev[iy * NX + ix], e10 = elev[iy * NX + ix + 1], e01 = elev[(iy + 1) * NX + ix], e11 = elev[(iy + 1) * NX + ix + 1];
+    return (e00 * (1 - ax) + e10 * ax) * (1 - ay) + (e01 * (1 - ax) + e11 * ax) * ay;
+  }
+  function toScene(xk, yk, lift) { return new THREE.Vector3(xk, zk(sampleElev(xk, yk) + (lift || 2.5)), H - yk); }
+  function rebuildLines() {
+    while (linesGroup.children.length) { const c = linesGroup.children.pop(); c.geometry.dispose(); }
+    const roadMat = new THREE.LineBasicMaterial({ color: 0xd8d1bf, transparent: true, opacity: 0.55 });
+    F.roads.forEach(r => {
+      const pts = r.pts.map(p => toScene(p[0], p[1]));
+      linesGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), roadMat));
+    });
+    const fp = M.footprint_km.map(p => toScene(p[0], p[1], 4)); fp.push(fp[0].clone());
+    linesGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(fp), new THREE.LineBasicMaterial({ color: 0xff8c4b, linewidth: 2 })));
+  }
+  rebuildLines();
+
+  // ---------- buildings (true footprint, extruded) and people (1.8 m) ----------
+  const B = F.buildings || [];
+  const cDry = new THREE.Color(0xcfc7b4), cWet = new THREE.Color(0xffb454), cDeep = new THREE.Color(0xff5d5d), cRoof = new THREE.Color(0xb8ae99);
+  const bGeo = new THREE.BoxGeometry(1, 1.1, 1); bGeo.translate(0, 0.45, 0);
+  const bMesh = new THREE.InstancedMesh(bGeo, new THREE.MeshLambertMaterial({ vertexColors: false }), Math.max(B.length, 1));
+  bMesh.count = B.length; scene.add(bMesh);
+  const bState = new Int8Array(B.length).fill(-1);
+  // people: body (cylinder) + head (sphere), two per dwelling, deterministic offsets
+  const people = [];
+  B.forEach((b, i) => { if (b[6]) { const a = (i * 2.399) % (2 * Math.PI); for (let k = 0; k < 2; k++) { const r = (b[2] + b[3]) / 2 / 1000 * 0.9 + 0.004 + k * 0.003; people.push([b[0] + Math.cos(a + k * 1.1) * r, b[1] + Math.sin(a + k * 1.1) * r]); } } });
+  const bodyGeo = new THREE.CylinderGeometry(0.22, 0.26, 1.35, 6); bodyGeo.translate(0, 0.675, 0);
+  const headGeo = new THREE.SphereGeometry(0.15, 8, 6); headGeo.translate(0, 1.6, 0);
+  const pMat = new THREE.MeshLambertMaterial({ color: 0xffd9a8 });
+  const bodyMesh = new THREE.InstancedMesh(bodyGeo, pMat, Math.max(people.length, 1)); bodyMesh.count = people.length;
+  const headMesh = new THREE.InstancedMesh(headGeo, new THREE.MeshLambertMaterial({ color: 0xf2c9a0 }), Math.max(people.length, 1)); headMesh.count = people.length;
+  scene.add(bodyMesh); scene.add(headMesh);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), vS = new THREE.Vector3(), vP = new THREE.Vector3(), yAxis = new THREE.Vector3(0, 1, 0);
+  function placeBuildings() {
+    B.forEach((b, i) => {
+      const ground = sampleElev(b[0], b[1]);
+      vP.set(b[0], zk(ground), H - b[1]); q.setFromAxisAngle(yAxis, b[4]);
+      vS.set(b[2] / 1000, b[5] / 1000 * fscale(), b[3] / 1000);
+      m4.compose(vP, q, vS); bMesh.setMatrixAt(i, m4);
+    });
+    bMesh.instanceMatrix.needsUpdate = true;
+    people.forEach((p, i) => {
+      const ground = sampleElev(p[0], p[1]);
+      vP.set(p[0], zk(ground), H - p[1]); q.identity(); vS.set(1 / 1000, 1 / 1000 * fscale(), 1 / 1000);
+      m4.compose(vP, q, vS); bodyMesh.setMatrixAt(i, m4); headMesh.setMatrixAt(i, m4);
+    });
+    bodyMesh.instanceMatrix.needsUpdate = true; headMesh.instanceMatrix.needsUpdate = true;
+  }
+  function depthAt(d, xk, yk) {
+    const fx = Math.min(Math.max(xk / CELL - 0.5, 0), NX - 1.001), fy = Math.min(Math.max(yk / CELL - 0.5, 0), NY - 1.001);
+    const ix = Math.floor(fx), iy = Math.floor(fy), ax = fx - ix, ay = fy - iy;
+    const g = iy * NX + ix;
+    return ((d[g] * (1 - ax) + d[g + 1] * ax) * (1 - ay) + (d[g + NX] * (1 - ax) + d[g + NX + 1] * ax) * ay) * M.dscale;
+  }
+  function colourBuildings(k) {
+    const d = frame(k); let changed = false;
+    B.forEach((b, i) => {
+      const dep = depthAt(d, b[0], b[1]);
+      const st = dep >= 0.5 ? 2 : (dep > 0.1 ? 1 : 0);
+      if (st !== bState[i]) { bState[i] = st; bMesh.setColorAt(i, st === 2 ? cDeep : (st === 1 ? cWet : cDry)); changed = true; }
+    });
+    if (changed && bMesh.instanceColor) bMesh.instanceColor.needsUpdate = true;
+  }
+  placeBuildings(); if (B.length) { bMesh.setColorAt(0, cDry); colourBuildings(0); }
+
+  // flood extent (all frames) and per-building maximum depth – used for framing and the street-level view
+  const bMax = new Float32Array(B.length); const bArrive = new Int32Array(B.length).fill(-1);
+  let ex0 = NX, ex1 = -1, ey0 = NY, ey1 = -1;
+  for (let k = 0; k < F.frames.length; k++) {
+    const d = frame(k);
+    for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) if (d[iy * NX + ix] * M.dscale > 0.1) { if (ix < ex0) ex0 = ix; if (ix > ex1) ex1 = ix; if (iy < ey0) ey0 = iy; if (iy > ey1) ey1 = iy; }
+    B.forEach((b, i) => { const ix = Math.min(Math.max(Math.floor(b[0] / CELL), 0), NX - 1), iy = Math.min(Math.max(Math.floor(b[1] / CELL), 0), NY - 1); const dep = d[iy * NX + ix] * M.dscale; if (dep > bMax[i]) bMax[i] = dep; if (dep > 0.05 && bArrive[i] < 0) bArrive[i] = k; });
+  }
+  if (ex1 < 0) { ex0 = 0; ex1 = NX - 1; ey0 = 0; ey1 = NY - 1; }
+  const floodBox = { x0: ex0 * CELL, x1: (ex1 + 1) * CELL, y0: ey0 * CELL, y1: (ey1 + 1) * CELL };
+
+  // ---------- debris swept along by the flood (to scale, advected by the flow) ----------
+  // Types: [name, colour, size L x H x W (m), mobilise depth (m), mobilise speed (m/s), drift factor, count]
+  // Thresholds are indicative stability limits (cf. ARR 2019 vehicle/people stability, NZSOLD Table 2.5).
+  const DEBRIS_TYPES = [
+    { name: 'log',   col: 0x6b4a2b, L: 4.0, H: 0.35, W: 0.35, dmob: 0.15, vmob: 0.3, drift: 0.85, n: 1200 },
+    { name: 'fence', col: 0xc4bba4, L: 2.5, H: 0.12, W: 1.2,  dmob: 0.30, vmob: 0.5, drift: 0.75, n: 700 },
+    { name: 'car',   col: 0xd8d8d8, L: 4.4, H: 1.5,  W: 1.8,  dmob: 0.40, vmob: 0.8, drift: 0.6,  n: 250 },
+    { name: 'tree',  col: 0x2f5d2a, L: 8.0, H: 2.5,  W: 3.5,  dmob: 0.60, vmob: 1.0, drift: 0.7,  n: 500 },
+    { name: 'shed',  col: 0x8e8a80, L: 6.0, H: 3.0,  W: 4.0,  dmob: 0.60, vmob: 0.8, drift: 0.5,  n: 80 },
+  ];
+  const rng = (seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(20260916);
+  const debris = [];   // {t: type index, x, y (km), a (angle), w (spin), st: 0 waiting | 1 drifting | 2 stranded, x0, y0}
+  function inBox(x, y) { return x > floodBox.x0 && x < floodBox.x1 && y > floodBox.y0 && y < floodBox.y1; }
+  function randBox() { return [floodBox.x0 + rng() * (floodBox.x1 - floodBox.x0), floodBox.y0 + rng() * (floodBox.y1 - floodBox.y0)]; }
+  (function seedDebris() {
+    const dw = B.filter(b => b[6] && inBox(b[0], b[1])), sm = B.filter(b => !b[6] && b[2] * b[3] < 200 && inBox(b[0], b[1]));
+    // logs and trees: scattered over the flood extent (shelterbelts, woodlots, firewood, fallen timber)
+    for (let i = 0; i < DEBRIS_TYPES[0].n; i++) { const [x, y] = randBox(); debris.push({ t: 0, x, y }); }
+    for (let i = 0; i < DEBRIS_TYPES[3].n; i++) { const [x, y] = randBox(); debris.push({ t: 3, x, y }); }
+    // fence panels: along roads (roadside fences) every ~120 m, plus some paddock fences
+    const fs = [];
+    F.roads.forEach(r => { for (let i = 1; i < r.pts.length; i++) { const [ax, ay] = r.pts[i - 1], [bx, by] = r.pts[i]; const L = Math.hypot(bx - ax, by - ay); for (let d = 0.06; d < L; d += 0.12) { const f = d / L, x = ax + (bx - ax) * f, y = ay + (by - ay) * f; if (inBox(x, y)) fs.push([x + (rng() - 0.5) * 0.02, y + (rng() - 0.5) * 0.02]); } } });
+    for (let i = fs.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [fs[i], fs[j]] = [fs[j], fs[i]]; }
+    fs.slice(0, Math.round(DEBRIS_TYPES[1].n * 0.7)).forEach(([x, y]) => debris.push({ t: 1, x, y }));
+    while (debris.filter(d => d.t === 1).length < DEBRIS_TYPES[1].n) { const [x, y] = randBox(); debris.push({ t: 1, x, y }); }
+    // cars: one beside each dwelling in the flood extent (capped); sheds: small non-dwelling buildings
+    dw.slice(0, DEBRIS_TYPES[2].n).forEach(b => { const a = rng() * 2 * Math.PI, r = (b[2] + b[3]) / 2000 + 0.006; debris.push({ t: 2, x: b[0] + Math.cos(a) * r, y: b[1] + Math.sin(a) * r }); });
+    sm.slice(0, DEBRIS_TYPES[4].n).forEach(b => debris.push({ t: 4, x: b[0], y: b[1] }));
+    debris.forEach(d => { d.x0 = d.x; d.y0 = d.y; d.a = rng() * 2 * Math.PI; d.w = (rng() - 0.5) * 0.4; d.st = 0; });
+  })();
+  const dMeshes = DEBRIS_TYPES.map((T, ti) => {
+    let g;
+    if (T.name === 'log') { g = new THREE.CylinderGeometry(0.5, 0.5, 1, 6); g.rotateZ(Math.PI / 2); }
+    else if (T.name === 'tree') { g = new THREE.ConeGeometry(0.5, 1, 6); g.rotateZ(-Math.PI / 2); }
+    else g = new THREE.BoxGeometry(1, 1, 1);
+    g.translate(0, 0.5, 0);
+    const n = debris.filter(d => d.t === ti).length;
+    const m = new THREE.InstancedMesh(g, new THREE.MeshLambertMaterial({ color: T.col }), Math.max(n, 1));
+    m.count = n; m.frustumCulled = false; scene.add(m);
+    if (T.name === 'car') { const cc = [0xd8d8d8, 0xb8322a, 0x2d4c8a, 0x3a3a3a, 0xe8e2c8]; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(cc[i % cc.length])); m.instanceColor.needsUpdate = true; }
+    return m;
+  });
+  const dirX = new Float32Array(NX * NY), dirY = new Float32Array(NX * NY); let dirFrame = -1;
+  function cellOf(x, y) { const ix = Math.min(Math.max(Math.floor(x / CELL), 0), NX - 1), iy = Math.min(Math.max(Math.floor(y / CELL), 0), NY - 1); return iy * NX + ix; }
+  function computeFlowDirection(k) {
+    // flow runs down the water-surface slope (diffusive-wave approximation); surface = ground + depth, metres
+    const d = frame(k); const S = new Float32Array(NX * NY);
+    for (let gi = 0; gi < NX * NY; gi++) S[gi] = elev[gi] + d[gi] * M.dscale;
+    const c2 = 2 * M.cell;
+    for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) {
+      const gi = iy * NX + ix;
+      const gx = (S[gi + (ix < NX - 1 ? 1 : 0)] - S[gi - (ix > 0 ? 1 : 0)]) / c2, gy = (S[gi + (iy < NY - 1 ? NX : 0)] - S[gi - (iy > 0 ? NX : 0)]) / c2;
+      const L = Math.hypot(gx, gy); dirX[gi] = L > 1e-9 ? -gx / L : 0; dirY[gi] = L > 1e-9 ? -gy / L : 0;
+    }
+    dirFrame = k;
+  }
+  let debrisOn = !reduced;
+  const debrisBox = document.getElementById('debris'); debrisBox.checked = debrisOn;
+  const dm4 = new THREE.Matrix4(), dq = new THREE.Quaternion(), dv = new THREE.Vector3(), dp = new THREE.Vector3();
+  function debrisReset() { debris.forEach(d => { d.x = d.x0; d.y = d.y0; d.st = 0; }); }
+  function debrisTick(dtSim) {
+    if (!debrisOn || curFrame < 0) { dMeshes.forEach(m => { m.visible = false; }); return; }
+    if (dirFrame !== curFrame) computeFlowDirection(curFrame);
+    const d = frame(curFrame), sp = speedFrame(curFrame); let drifting = 0, stranded = 0;
+    const idx = DEBRIS_TYPES.map(() => 0);
+    for (const o of debris) {
+      const T = DEBRIS_TYPES[o.t]; const gi = cellOf(o.x, o.y);
+      const dep = d[gi] * M.dscale; const v = sp ? sp[gi] * M.sscale : (dep > 0 ? 0.3 * Math.sqrt(9.81 * dep) : 0);
+      if (o.st !== 1 && dep >= T.dmob && v >= T.vmob) o.st = 1;
+      else if (o.st === 1 && (dep < 0.6 * T.dmob || v < 0.5 * T.vmob)) o.st = 2;
+      if (o.st === 1 && dtSim > 0) {
+        const step = v * T.drift * dtSim / 1000;   // km
+        o.x += dirX[gi] * step + (rng() - 0.5) * step * 0.3; o.y += dirY[gi] * step + (rng() - 0.5) * step * 0.3; o.a += o.w * dtSim / 60;
+        o.x = Math.min(Math.max(o.x, CELL), W - CELL); o.y = Math.min(Math.max(o.y, CELL), H - CELL);
+        drifting++;
+      } else if (o.st === 2) stranded++;
+      const m = dMeshes[o.t]; const i = idx[o.t]++;
+      const g2 = cellOf(o.x, o.y); const dep2 = d[g2] * M.dscale; const ground = sampleElev(o.x, o.y);
+      const yv = zk(ground) + (o.st === 1 ? dep2 / 1000 * fscale() : 0);
+      dp.set(o.x, yv, H - o.y); dq.setFromAxisAngle(yAxis, o.a);
+      const tilt = o.st === 2 ? 0.7 : 1.0;
+      if (o.st === 0) dv.set(0, 0, 0);   // not yet picked up: hidden
+      else dv.set(T.L / 1000, T.H / 1000 * fscale() * tilt, T.W / 1000);
+      dm4.compose(dp, dq, dv); m.setMatrixAt(i, dm4);
+    }
+    dMeshes.forEach(m => { m.visible = true; m.instanceMatrix.needsUpdate = true; });
+    document.getElementById('debrisn').textContent = drifting || stranded ? '· ' + drifting + ' drifting · ' + stranded + ' stranded' : '';
+  }
+  window.WR_DEBUG = { debris, types: DEBRIS_TYPES };   // inspection hook
+  debrisBox.addEventListener('change', () => { debrisOn = debrisBox.checked; if (!debrisOn) document.getElementById('debrisn').textContent = ''; debrisTick(0); });
+
+  // labels for every named road (priority to the roads in the evacuation-plan table), overlap-culled on screen
+  const priority = ['Carleton Road', 'Wolffs Road', 'Poyntzs Road', 'Pesters Road', 'Downs Road', 'Browns Road', 'Two Chain Road', 'Diversion Road', 'South Eyre Road', 'Thongcaster Road', 'Wrights Road', 'Dixon Road'];
+  const byName = {};
+  F.roads.forEach(r => { if (!r.name) return; let L = 0; for (let i = 1; i < r.pts.length; i++) L += Math.hypot(r.pts[i][0] - r.pts[i - 1][0], r.pts[i][1] - r.pts[i - 1][1]); (byName[r.name] = byName[r.name] || { segs: [], len: 0 }); byName[r.name].segs.push({ r, L }); byName[r.name].len += L; });
+  const names = Object.keys(byName).sort((a, b) => (priority.indexOf(a) + 1 || 99) - (priority.indexOf(b) + 1 || 99) || byName[b].len - byName[a].len);
+  const labels = [];
+  names.forEach((name, rank) => {
+    const seg = byName[name].segs.sort((a, b) => b.L - a.L)[0].r;
+    // midpoint along the longest segment (by length, not vertex count)
+    let acc = 0, half = byName[name].segs[0].L / 2, p = seg.pts[0];
+    for (let i = 1; i < seg.pts.length; i++) { const d = Math.hypot(seg.pts[i][0] - seg.pts[i - 1][0], seg.pts[i][1] - seg.pts[i - 1][1]); if (acc + d >= half) { const f = (half - acc) / d; p = [seg.pts[i - 1][0] + (seg.pts[i][0] - seg.pts[i - 1][0]) * f, seg.pts[i - 1][1] + (seg.pts[i][1] - seg.pts[i - 1][1]) * f]; break; } acc += d; }
+    const el = document.createElement('div'); el.className = 'rl' + (priority.includes(name) ? ' key' : ''); el.textContent = name.replace(/ Road$/, ' Rd').replace(/ Street$/, ' St'); document.body.appendChild(el);
+    labels.push({ el, xk: p[0], yk: p[1], lift: 6, rank, w: 0 });
+  });
+  { const c = M.footprint_km; const cx = c.reduce((s, p) => s + p[0], 0) / c.length, cy = c.reduce((s, p) => s + p[1], 0) / c.length;
+    const el = document.createElement('div'); el.className = 'rl pond'; el.textContent = 'Wrights Road ponds'; document.body.appendChild(el); labels.unshift({ el, xk: cx, yk: cy, lift: 30, rank: -2, w: 0 }); }
+  (M.breaches_km && M.breaches_km.length ? M.breaches_km : [{ name: '', km: M.breach_km }]).forEach((bk, i) => {
+    const b = bk.km; const el = document.createElement('div'); el.className = 'rl pond';
+    el.textContent = '▼ breach' + (M.breaches_km && M.breaches_km.length > 1 ? ' ' + bk.name : ''); document.body.appendChild(el);
+    labels.unshift({ el, xk: b[0], yk: b[1], lift: 20, rank: -3 - i, w: 0 });
+  });
+  const tmpV = new THREE.Vector3();
+  const placed = [];
+  function placeLabels() {
+    const w = renderer.domElement.clientWidth, h = renderer.domElement.clientHeight; placed.length = 0;
+    labels.forEach(L => {
+      tmpV.copy(toScene(L.xk, L.yk, L.lift)).project(camera);
+      let vis = tmpV.z < 1 && Math.abs(tmpV.x) < 1.05 && Math.abs(tmpV.y) < 1.05;
+      if (vis) {
+        const x = (tmpV.x + 1) / 2 * w, y = (1 - tmpV.y) / 2 * h;
+        if (!L.w) L.w = L.el.offsetWidth || 60;
+        for (let i = 0; i < placed.length; i++) { const P = placed[i]; if (Math.abs(P.x - x) < (P.w + L.w) / 2 + 6 && Math.abs(P.y - y) < 14) { vis = false; break; } }
+        if (vis) { placed.push({ x, y, w: L.w }); L.el.style.left = x + 'px'; L.el.style.top = y + 'px'; }
+      }
+      L.el.style.display = vis ? '' : 'none';
+    });
+  }
+
+  // ---------- camera / orbit ----------
+  const target = new THREE.Vector3(M.breach_km[0] + W * 0.18, 0, H - M.breach_km[1] + H * 0.08);
+  let theta = -0.9, phi = 0.62, dist = W * 0.75;
+  function updateCamera() {
+    phi = Math.min(Math.max(phi, 0.05), 1.45); dist = Math.min(Math.max(dist, 0.03), W * 3);
+    camera.position.set(target.x + dist * Math.cos(phi) * Math.sin(theta), target.y + dist * Math.sin(phi), target.z + dist * Math.cos(phi) * Math.cos(theta));
+    camera.lookAt(target);
+  }
+  let drag = null;
+  canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, b: e.button, shift: e.shiftKey }; canvas.setPointerCapture(e.pointerId); canvas.focus(); });
+  canvas.addEventListener('pointermove', e => {
+    if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+    if (drag.b === 2 || drag.shift) { const s = dist * 0.0016; const right = new THREE.Vector3(Math.cos(theta), 0, -Math.sin(theta)); const fwd = new THREE.Vector3(-Math.sin(theta), 0, -Math.cos(theta)); target.addScaledVector(right, -dx * s).addScaledVector(fwd, -dy * s); }
+    else { theta -= dx * 0.006; phi += dy * 0.006; }
+    markView(null); updateCamera();
+  });
+  canvas.addEventListener('pointerup', () => { drag = null; });
+  canvas.addEventListener('contextmenu', e => e.preventDefault());
+  canvas.addEventListener('wheel', e => { e.preventDefault(); dist *= Math.exp(e.deltaY * 0.0012); updateCamera(); }, { passive: false });
+  let pinch = null;
+  canvas.addEventListener('touchstart', e => { if (e.touches.length === 2) pinch = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); }, { passive: true });
+  canvas.addEventListener('touchmove', e => { if (e.touches.length === 2 && pinch) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); dist *= pinch / d; pinch = d; updateCamera(); } }, { passive: true });
+  canvas.addEventListener('touchend', () => { pinch = null; });
+
+  // ---------- playback ----------
+  const scrub = document.getElementById('scrub'); scrub.max = F.frames.length - 1;
+  const playBtn = document.getElementById('play'), speedSel = document.getElementById('speed');
+  let playing = false, acc = 0, last = performance.now();
+  function setFrame(k, fromScrub) {
+    k = Math.min(Math.max(k, 0), F.frames.length - 1);
+    if (k < curFrame) debrisReset();
+    if (k !== curFrame) { applyFrame(k); debrisTick(0); }
+    if (!fromScrub) scrub.value = k;
+    const th = M.times_h[k]; const ta = Math.abs(th); let hh = Math.floor(ta), mm = Math.round((ta - hh) * 60); if (mm === 60) { hh += 1; mm = 0; }
+    document.getElementById('tv').textContent = (th < -1e-6 ? '−' : '') + hh + ':' + String(mm).padStart(2, '0');
+    document.getElementById('qv').textContent = Math.round(M.q_m3s[k]).toLocaleString();
+    document.getElementById('av').textContent = M.area_km2[k].toFixed(1);
+    document.getElementById('dv').textContent = maxDepth.toFixed(1);
+    document.getElementById('sv').textContent = maxSpeed.toFixed(1);
+    document.getElementById('cursor').style.left = (k / (F.frames.length - 1) * 100) + '%';
+  }
+  function setPlaying(p) { playing = p; playBtn.textContent = p ? '❚❚' : '▶'; playBtn.setAttribute('aria-label', p ? 'Pause' : 'Play'); last = performance.now(); }
+  playBtn.addEventListener('click', () => setPlaying(!playing));
+  scrub.addEventListener('input', () => { setPlaying(false); setFrame(+scrub.value, true); });
+  const legend = {
+    depth: { ramp: '', k: 'Water depth ', lo: '0.05 m', mid: fmtD(dTop / 2), hi: dTopLabel },
+    speed: { ramp: 'linear-gradient(90deg, #fff3b0, #ff8c42 50%, #b3001b)', k: 'Flow speed ', lo: '0 m/s', mid: '1.5 m/s', hi: '3 m/s+' },
+    hazard: { ramp: 'linear-gradient(90deg, #7fc8f8 0 16.6%, #4fa64f 16.6% 33.3%, #d8c400 33.3% 50%, #ff8c1a 50% 66.6%, #e63c1e 66.6% 83.3%, #7a0c2e 83.3%)', k: 'Hazard class (ARR / NZSOLD) ', lo: 'H1 safe', mid: 'H3–H4 unsafe', hi: 'H6' },
+  };
+  function setMode(m) {
+    if (!F.speeds && m !== 'depth') return;
+    colourMode = m; const L = legend[m];
+    document.querySelectorAll('.vb.mode').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    document.getElementById('ramp').style.background = L.ramp;
+    document.getElementById('legk').firstChild.textContent = L.k;
+    document.getElementById('wnote').hidden = m !== 'depth';
+    document.getElementById('dlo').textContent = L.lo; document.getElementById('dmid').textContent = L.mid; document.getElementById('dmax').textContent = L.hi;
+    if (curFrame >= 0) applyFrame(curFrame);
+  }
+  document.querySelectorAll('.vb.mode').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
+  function fitBox(bx, pad) {
+    // centre the orbit target on the box and back the camera off until the box fits the view
+    const cx = (bx.x0 + bx.x1) / 2, cy = (bx.y0 + bx.y1) / 2;
+    target.set(cx, zk(sampleElev(cx, cy)), H - cy);
+    const span = Math.max(bx.x1 - bx.x0, (bx.y1 - bx.y0) * 1.3, 2);
+    const aspect = camera.aspect || 1.6;
+    const vfov = camera.fov * Math.PI / 180, hfov = 2 * Math.atan(Math.tan(vfov / 2) * aspect);
+    dist = span * (pad || 1.15) / (2 * Math.tan(Math.min(vfov, hfov) / 2)) * 0.9;
+  }
+  let userExag = 8;
+  function setExag(v, remember) {
+    exag = v; exagIn.value = v; document.getElementById('exagv').textContent = v;
+    document.getElementById('truescale').hidden = !(v === 1 && wboost === 1);
+    if (remember) userExag = v;
+    rebuildTerrain();
+  }
+  let userWboost = 2;
+  const wboostIn = document.getElementById('wboost');
+  function setWboost(v, remember) {
+    wboost = v; wboostIn.value = v; document.getElementById('wboostv').textContent = v;
+    document.getElementById('wnote').textContent = v === 1 ? '· true thickness' : '· thickness shown ×' + v + ' (on top of terrain ×)';
+    document.getElementById('truescale').hidden = !(v === 1 && exag === 1);
+    if (remember) userWboost = v;
+    placeBuildings(); if (curFrame >= 0) { applyFrame(curFrame); debrisTick(0); }
+  }
+  wboostIn.addEventListener('input', () => setWboost(+wboostIn.value, true));
+  function markView(id) { document.querySelectorAll('.vb:not(.mode)').forEach(b => b.classList.toggle('on', b.id === id)); }
+  function preset(n) {
+    if (n === 1) { if (exag === 1 && userExag !== 1) setExag(userExag); if (wboost === 1 && userWboost !== 1) setWboost(userWboost); theta = 0.15; phi = 0.85; fitBox(floodBox, (camera.aspect || 1.6) < 1.2 ? 1.5 : 1.15); markView('v-recenter'); }
+    if (n === 2) { if (exag === 1 && userExag !== 1) setExag(userExag); if (wboost === 1 && userWboost !== 1) setWboost(userWboost); target.set(M.breach_km[0] + 0.6, zk(sampleElev(M.breach_km[0], M.breach_km[1])), H - M.breach_km[1] + 0.3); theta = -0.7; phi = 0.32; dist = 1.6; markView('v-breach'); }
+    if (n === 3) { // true vertical scale, eye height, at a flooded dwelling; look toward the breach so the wave arrives head-on
+      if (exag !== 1) setExag(1);
+      if (wboost !== 1) setWboost(1);
+      let best = -1, bestScore = -1;
+      B.forEach((b, i) => { if (!b[6] || bMax[i] < 1.0) return; const dd = Math.hypot(b[0] - M.breach_km[0], b[1] - M.breach_km[1]); const score = Math.min(bMax[i], 3) - dd * 0.15; if (score > bestScore) { bestScore = score; best = i; } });
+      if (best < 0) B.forEach((b, i) => { if (b[6] && bMax[i] > bestScore) { bestScore = bMax[i]; best = i; } });
+      const b = best >= 0 ? B[best] : null;
+      const px = b ? b[0] : M.breach_km[0] + 1, py = b ? b[1] : M.breach_km[1];
+      target.set(px, zk(sampleElev(px, py) + 2.0), H - py);
+      // camera on the far side of the house from the breach, looking back toward the breach
+      theta = Math.atan2(px - M.breach_km[0], (H - py) - (H - M.breach_km[1]));
+      phi = 0.20; dist = 0.09; markView('v-street');
+      if (best >= 0 && bArrive[best] >= 0) { setFrame(Math.max(bArrive[best] - 4, 0)); if (!reduced) setPlaying(true); }
+    }
+    updateCamera();
+  }
+  document.getElementById('v-recenter').addEventListener('click', () => preset(1));
+  document.getElementById('v-breach').addEventListener('click', () => preset(2));
+  document.getElementById('v-street').addEventListener('click', () => preset(3));
+  window.addEventListener('keydown', e => {
+    if (/select|input/i.test(e.target.tagName)) return;
+    if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+    if (e.key === '1' || e.key === '2' || e.key === '3') preset(+e.key);
+    if (e.key === 'r' || e.key === 'R') preset(1);
+    if (e.key === 'd' || e.key === 'D') setMode('depth');
+    if (e.key === 's' || e.key === 'S') setMode('speed');
+    if (e.key === 'h' || e.key === 'H') setMode('hazard');
+    if (e.key === 'i' || e.key === 'I') toggleTitle();
+    if (e.key === 'l' || e.key === 'L') toggleSide();
+    if (e.key === 'b' || e.key === 'B') { debrisBox.checked = !debrisBox.checked; debrisBox.dispatchEvent(new Event('change')); }
+  });
+  const exagIn = document.getElementById('exag');
+  exagIn.addEventListener('input', () => { setExag(+exagIn.value, true); updateCamera(); });
+
+  // hydrograph in the timeline
+  const hyd = document.getElementById('hyd');
+  function drawHyd() {
+    const r = hyd.getBoundingClientRect(); const pr = Math.min(devicePixelRatio, 2); hyd.width = r.width * pr; hyd.height = r.height * pr;
+    const g = hyd.getContext('2d'); g.scale(pr, pr); const w = r.width, h = r.height, n = M.q_m3s.length, qm = Math.max(...M.q_m3s, 1);
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = '#2a3442'; g.lineWidth = 1; for (let i = 1; i < 4; i++) { g.beginPath(); g.moveTo(0, h * i / 4); g.lineTo(w, h * i / 4); g.stroke(); }
+    g.beginPath(); g.moveTo(0, h - 12);
+    for (let i = 0; i < n; i++) g.lineTo(i / (n - 1) * w, (h - 12) - M.q_m3s[i] / qm * (h - 18));
+    g.lineTo(w, h - 12); g.closePath(); g.fillStyle = 'rgba(31,111,214,0.35)'; g.fill();
+    g.beginPath(); for (let i = 0; i < n; i++) { const x = i / (n - 1) * w, y = (h - 12) - M.q_m3s[i] / qm * (h - 18); i ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.strokeStyle = '#8fd3ff'; g.lineWidth = 1.5; g.stroke();
+    g.fillStyle = '#9aa4b5'; g.font = '10px "IBM Plex Mono", monospace'; g.fillText((M.seismic ? 'total breach outflow, peak ' : 'breach outflow, peak ') + Math.round(M.peak_q || qm).toLocaleString() + ' m³/s', 4, 11);
+  }
+
+  // ---------- loop ----------
+  function resize() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) || canvas.height !== Math.floor(h * renderer.getPixelRatio())) { renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+    drawHyd();
+  }
+  window.addEventListener('resize', resize);
+  function tick(now) {
+    requestAnimationFrame(tick);
+    if (playing) {
+      const fps = +speedSel.value / ((M.times_h[1] - M.times_h[0]) * 60 || 2); // frames per second so that speed = sim-minutes per real second
+      const realDt = (now - last) / 1000; acc += realDt * fps; last = now;
+      debrisTick(Math.min(realDt, 0.1) * (+speedSel.value) * 60);   // sim seconds elapsed this tick
+      if (acc >= 1) { const n = Math.floor(acc); acc -= n; let k = curFrame + n; if (k > F.frames.length - 1) { k = 0; } setFrame(k); }
+    } else last = now;
+    renderer.render(scene, camera); placeLabels();
+  }
+  resize(); preset(1); setFrame(0);
+  document.getElementById('loading').hidden = true;
+  if (!reduced) setPlaying(true);
+  requestAnimationFrame(tick);
+})();
+</script>

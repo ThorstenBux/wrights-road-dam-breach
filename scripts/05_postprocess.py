@@ -19,6 +19,7 @@ def main():
     ap.add_argument("--sww", type=Path)
     ap.add_argument("--res", type=float)
     ap.add_argument("--tag", default="")
+    ap.add_argument("--baseline-sww", type=Path, help="same run without the breach (storm scenarios): breach-added metrics are differenced against it")
     a = ap.parse_args()
     site, dam = config.site(), config.dam()
     mode = config.mode_from_args(a); ms = config.mode_settings(mode)
@@ -37,9 +38,12 @@ def main():
     if not meta_path0.exists():
         meta_path0 = out_dir / f"run_meta_{mode}.json"
     pre = float(json.loads(meta_path0.read_text()).get("pre_breach_s", 0.0)) if meta_path0.exists() else 0.0
-    mx = sww.maxima(depth_threshold=thr, t_breach=pre)
+    baseline = post.SWW(a.baseline_sww) if a.baseline_sww else None
+    if baseline is not None:
+        print(f"[post] baseline (no breach): {a.baseline_sww.name}")
+    mx = sww.maxima(depth_threshold=thr, t_breach=pre, baseline=baseline)
     rasters = {}
-    for key in ("max_depth", "max_speed", "max_dv", "arrival_h", "t_peak_h", "hazard"):
+    for key in ("max_depth", "max_speed", "max_dv", "arrival_h", "t_peak_h", "hazard") + (("max_excess",) if pre > 0 else ()):
         vals = mx[key]
         if key in ("arrival_h", "t_peak_h", "hazard"):
             vals = np.where(mx["max_depth"] > thr, vals, np.nan)
@@ -47,7 +51,7 @@ def main():
             vals = np.where(mx["max_depth"] > thr, vals, 0.0)
         arr, tr = sww.grid(vals, bbox, res)
         if key not in ("arrival_h", "t_peak_h", "hazard"):
-            arr = np.where(np.isfinite(arr) & (arr > (thr if key == "max_depth" else 0)), arr, np.nan)
+            arr = np.where(np.isfinite(arr) & (arr > (thr if key in ("max_depth", "max_excess") else 0)), arr, np.nan)
         p = out_dir / f"{key}_{mode}{a.tag}.tif"
         post.write_tif(p, arr, tr); rasters[key] = p
         print(f"[post] wrote {p.name}")
@@ -64,6 +68,13 @@ def main():
                "offset_from_pond1_failure_h": round(t_off / 3600, 2), "inundated_area_km2_gt_%.2fm" % thr: round(extent_km2, 2),
                "max_depth_m": float(np.nanmax(mx["max_depth"])), "max_speed_ms": float(np.nanmax(mx["max_speed"])),
                "sim_hours": float((sww.time[-1] - pre) / 3600), "pre_breach_h": pre / 3600}
+    if pre > 0:
+        with __import__("rasterio").open(rasters["max_excess"]) as ds:
+            e = ds.read(1); summary["breach_added_area_km2_gt_%.2fm" % thr] = round(float(((e != ds.nodata) & (e > thr)).sum() * res * res / 1e6), 2)
+        summary["baseline"] = str(a.baseline_sww) if a.baseline_sww else "depth at breach time"
+        summary["note"] = ("max_depth, buildings and area include rain and river water; breach_added_area counts cells where the "
+                           "breach raised the depth by more than the threshold above the baseline (same storm without the breach)")
+
 
     gpkg = config.DATA_RAW / "osm_domain.gpkg"
     if not gpkg.exists():
@@ -81,6 +92,10 @@ def main():
         bt.to_csv(out_dir / f"buildings_{mode}{a.tag}.csv", index=False)
         summary["buildings"] = bsum
         print(json.dumps(bsum, indent=2))
+        if "max_excess" in rasters:   # buildings where the BREACH added water, on top of the storm baseline
+            ex_r = dict(rasters); ex_r["max_depth"] = rasters["max_excess"]
+            _, bsum_ex = post.building_table(bld, ex_r, dam["consequence"]["persons_per_dwelling"], dam["consequence"]["at_risk_depth_m"])
+            summary["buildings_breach_added"] = {k: v for k, v in bsum_ex.items() if k.startswith("buildings")}
     else:
         print("[post] no OSM gpkg – skipping road/building tables (run scripts/02_fetch_vectors.py)")
     (out_dir / f"post_summary_{mode}{a.tag}.json").write_text(json.dumps(summary, indent=2))

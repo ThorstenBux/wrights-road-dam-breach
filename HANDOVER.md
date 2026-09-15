@@ -14,7 +14,7 @@ Potential Impact Classification under the Building (Dam Safety) Regulations 2022
 * Storm, east breach during 10 mm/h rain with the Eyre River in flood (rainy-day combination): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
 * Index: https://thorstenbux.github.io/wrights-road-dam-breach/
 
-Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons
+Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; the description panel (key I) and the legend with the scale sliders (key L) can be minimised; debris swept along by the flood (logs, fence panels, cars, trees, sheds to scale, key B) can be shown or hidden; buttons
 Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
 flow speed (m/s) instead of depth. Building colour: amber > 0.1 m, red ≥ 0.5 m at the footprint.
 
@@ -55,6 +55,7 @@ impacts, a reproducible pipeline, and an interactive 3D animation.
 | North (cascade) | 216.7 m | 820 m³/s | 4.7 Mm³ | not run in 2D | | | 95 |
 | West (Pond 1 piping only) | 221.9 m | 235 m³/s | 1.2 Mm³ | 6.0 km² | 2 | 5 | 4 |
 | Earthquake (all embankments at once, postulated) | 210.8–221.9 m | 3,000 m³/s combined | 7.4 Mm³ | 43.4 km² | 87 | ~218 | – |
+| Storm (east breach + 10 mm/h rain + Eyre River 150 m³/s) | 210.8 m | 2,100 m³/s | 7.2 Mm³ + rain/river | 56.6 total / 43.4 added by breach | 113 total / 75 added | ~283 | – |
 
 * The east peak is within 20 % of Damwatch's "approximately 2,500 m³/s". The ordering E > S > N > W follows the
   ground level at the toe (211 m on the Wrights Road side vs 222 m on the MR4 side), now quantified from LiDAR.

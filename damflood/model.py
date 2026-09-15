@@ -32,10 +32,13 @@ def _rel(poly, x0, y0):
     return [[float(x) - x0, float(y) - y0] for x, y in poly]
 
 
-def _prepare_refinements(refine_polys, bbox, margin=60.0):
+def _prepare_refinements(refine_polys, bbox, margin=60.0, gap=150.0):
     """Clip refinement polygons to the domain (ANUGA requires interior regions strictly
     inside the bounding polygon) and make them mutually non-overlapping (earlier entries
-    take precedence).  Returns [(coords, area), ...] in absolute coordinates."""
+    take precedence).  Regions are separated by a `gap` (m) wide strip meshed at the coarse
+    background size: a gap of only ~1 m (as originally used) forced a ring of 1 m sliver
+    triangles around the site circle, which pinned the CFL time step at ~0.15 s for every
+    run.  Returns [(coords, area), ...] in absolute coordinates."""
     from shapely.geometry import Polygon, box
     W, S, E, N = bbox
     clip = box(W + margin, S + margin, E - margin, N - margin)
@@ -44,7 +47,7 @@ def _prepare_refinements(refine_polys, bbox, margin=60.0):
     for poly, area in refine_polys:
         g = Polygon(poly).buffer(0).intersection(clip)
         if taken is not None:
-            g = g.difference(taken.buffer(1.0))
+            g = g.difference(taken.buffer(gap))
         parts = [g] if g.geom_type == "Polygon" else [q for q in getattr(g, "geoms", []) if q.geom_type == "Polygon"]
         for q in parts:
             if q.area < 10 * area:
