@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wrights Road Breach Flood</title>
 <meta name="description" content="3D animation of a modelled embankment breach at the Wrights Road Storage Ponds, Waimakariri District">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +29,7 @@
     font-family: var(--font-ui); font-size: 14px; line-height: 1.4;
     overflow: hidden;
   }
-  #scene { position: fixed; inset: 0; display: block; touch-action: none; }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }  /* canvas is a replaced element: needs explicit size to fill the viewport */
   #scene:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   .hud { position: fixed; z-index: 2; pointer-events: none; }
   .hud > * { pointer-events: auto; }
@@ -44,6 +45,17 @@
   .scen a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid transparent; }
   .scen a:hover { color: var(--ink); }
   .scen a.on { color: var(--water-1); border-bottom-color: var(--water-1); }
+  /* minimise toggles */
+  .mini { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--panel-edge); background: #1f2937; color: var(--ink-2); font-family: var(--font-mono); font-size: 13px; line-height: 1; cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .mini:hover { background: #283548; color: var(--ink); }
+  .mini:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .title { position: relative; padding-right: 36px; }
+  .title.collapsed { padding: 7px 36px 8px 12px; }
+  .title.collapsed h1 { font-size: 15px; }
+  .title.collapsed .eyebrow, .title.collapsed p, .title.collapsed nav { display: none; }
+  #side-toggle { align-self: flex-end; }
+  #side.collapsed .legend { display: none; }
+  #side .mini { position: static; width: auto; padding: 0 9px; height: 26px; font-size: 11px; letter-spacing: 0.04em; }
   #help { background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: 8px 12px; color: var(--ink-2); font-size: 12px; backdrop-filter: blur(6px); }
   #help b { color: var(--ink); font-weight: 500; }
   .topright { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
@@ -99,7 +111,10 @@
   #loading[hidden] { display: none; }
 
   @media (max-width: 720px) {
-    #top { padding: 10px 12px 0; }
+    #top { padding: 10px 12px 0; flex-direction: column; align-items: stretch; gap: 8px; }
+    .title { max-width: none; }
+    .topright { align-items: flex-start; }
+    .views { flex-wrap: wrap; }
     .title h1 { font-size: 19px; }
     .title p { display: none; }
     #help { display: none; }
@@ -107,7 +122,8 @@
     #stats { left: 12px; right: 12px; bottom: 104px; }
     .stat { min-width: 0; flex: 1 1 30%; padding: 6px 9px 7px; }
     .stat .v { font-size: 20px; }
-    #side { display: none; }
+    #side { right: 12px; bottom: 104px; }
+    #side .legend { width: min(210px, calc(100vw - 24px)); }
     #timeline { left: 12px; right: 12px; bottom: 12px; grid-template-columns: auto 1fr; }
     .tright { display: none; }
     .rl { display: none; }
@@ -119,14 +135,15 @@
 <canvas id="scene" tabindex="0" aria-label="3D flood animation. Drag to orbit, scroll to zoom, space to play or pause."></canvas>
 
 <div id="top" class="hud">
-  <div class="title">
+  <div class="title" id="title-panel">
     <span class="eyebrow" id="eyebrow">Wrights Road Storage Ponds · screening model</span>
     <h1 id="h1">Breach flood animation</h1>
     <p id="desc"></p>
+    <button class="mini" id="title-min" aria-label="Minimise description" aria-expanded="true" title="Minimise / expand (key I)">–</button>
     <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
   </div>
   <div class="topright">
-    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode</div>
+    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode · <b>I/L</b> hide panels</div>
     <div class="views" role="group" aria-label="Views">
       <button id="v-recenter" class="vb" title="Frame the whole flood extent (key R)">⌖ Re-centre</button>
       <button id="v-breach" class="vb" title="Close-up of the breach (key 2)">Breach</button>
@@ -150,6 +167,7 @@
 </div>
 
 <div id="side" class="hud">
+  <button class="mini" id="side-toggle" aria-label="Minimise legend and scale sliders" aria-expanded="true" title="Minimise / expand legend and sliders (key L)">Legend –</button>
   <div class="legend">
     <div class="k" id="legk">Water depth <span id="wnote" style="text-transform: none; letter-spacing: 0; color: var(--ink-3)">· thickness shown ×2 (on top of terrain ×)</span></div>
     <div class="ramp" id="ramp"></div>
@@ -210,6 +228,28 @@
   document.getElementById('t1').textContent = M.times_h[M.times_h.length - 1].toFixed(1) + ' h';
   if (M.times_h[0] < 0) document.getElementById('t0').textContent = '−' + Math.abs(M.times_h[0]).toFixed(0) + ' h (rain + river only)';
   if (M.hydrology) document.getElementById('desc').textContent += ' Rain ' + M.hydrology.rain_mm_h + ' mm/h on the whole area; ' + (M.hydrology.river_inflows || []).map(r => r.name + ' ' + r.q_m3s + ' m³/s').join(', ') + ' already in flood; the breach opens at 0:00 after ' + M.pre_breach_h.toFixed(0) + ' h of storm.';
+
+  // ---------- collapsible panels (state remembered per browser) ----------
+  function panelToggle(id, btnId, key, label) {
+    const el = document.getElementById(id), btn = document.getElementById(btnId);
+    let saved = null; try { saved = localStorage.getItem('wr-' + key); } catch (e) { saved = null; }
+    const small = window.innerWidth < 720;
+    let collapsed = saved === null ? small : saved === '1';
+    function apply() {
+      el.classList.toggle('collapsed', collapsed);
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      btn.textContent = label ? label + (collapsed ? ' +' : ' –') : (collapsed ? '+' : '–');
+    }
+    function toggle() {   // only a deliberate toggle is remembered; the width-based default is not
+      collapsed = !collapsed; apply();
+      try { localStorage.setItem('wr-' + key, collapsed ? '1' : '0'); } catch (e) { /* private mode: ignore */ }
+    }
+    btn.addEventListener('click', toggle);
+    apply();
+    return toggle;
+  }
+  const toggleTitle = panelToggle('title-panel', 'title-min', 'title', '');
+  const toggleSide = panelToggle('side', 'side-toggle', 'side', 'Legend');
 
   // ---------- decode ----------
   const dem16 = new Uint16Array(b64(F.dem).buffer);
@@ -562,6 +602,8 @@
     if (e.key === 'd' || e.key === 'D') setMode('depth');
     if (e.key === 's' || e.key === 'S') setMode('speed');
     if (e.key === 'h' || e.key === 'H') setMode('hazard');
+    if (e.key === 'i' || e.key === 'I') toggleTitle();
+    if (e.key === 'l' || e.key === 'L') toggleSide();
   });
   const exagIn = document.getElementById('exag');
   exagIn.addEventListener('input', () => { setExag(+exagIn.value, true); updateCamera(); });

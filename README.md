@@ -16,7 +16,7 @@ Source facts with page references are in [docs/source-notes.md](docs/source-note
 * Storm (east breach + 10 mm/h rain + Eyre River in flood): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
 * Index: https://thorstenbux.github.io/wrights-road-dam-breach/
 
-Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; buttons
+Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; the description panel (key I) and the legend with the scale sliders (key L) can be minimised; buttons
 Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
 flow speed (m/s) instead of depth. Building colour: amber > 0.1 m, red ≥ 0.5 m at the footprint.
 
