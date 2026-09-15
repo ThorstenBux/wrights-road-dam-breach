@@ -121,7 +121,7 @@ def main():
             "times_h": times, "q_m3s": q, "area_km2": area, "footprint_km": fp,
             "breach_km": [round((bl[0] - W) / 1000, 3), round((bl[1] - S) / 1000, 3)],
             "offset_h": round(t_off / 3600, 2), "roads_named": sorted({r["name"] for r in roads_out if r["name"]}),
-            "peak_q": max(q), "zmin": float(Z.min()), "zmax": float(Z.max())}
+            "peak_q": float(np.nanmax(hyd["Q_out_m3s"])), "zmin": float(Z.min()), "zmax": float(Z.max())}
     wdir = out_dir / a.out; wdir.mkdir(exist_ok=True)
     meta["buildings_total"] = len(blds_out); meta["dwellings"] = int(sum(b[6] for b in blds_out))
     js = ("window.FLOOD=" + json.dumps({"meta": meta, "dem": base64.b64encode(dem_u16.tobytes()).decode(),

@@ -1,4 +1,4 @@
-# Results – Wrights Road Storage Ponds dam-breach model (shakedown, 15 Sep 2026)
+# Results – Wrights Road Storage Ponds dam-breach model (shakedown 15 Sep 2026; east run extended to Diversion Road 16 Sep 2026)
 
 Screening-level results. Method, assumptions and caveats: [SPEC.md](SPEC.md) §3 and §7.3; sources: [docs/source-notes.md](docs/source-notes.md). Time zero for all 2D results is the moment the external (downstream) breach opens; for cascade scenarios that is 2.2 h after the Pond 1 failure begins.
 
@@ -55,6 +55,73 @@ The model reaches each road ~45 min earlier and generally deeper than the 2016 s
 | Wrights Road | 1.13 | 0.57 |
 | Dixon Road | 0.64 | 0.71 |
 | Domain Road | 1.10 | 0.50 |
+
+## 2b. East breach routed to Diversion Road (extended domain, 12 h, 20 m grid)
+
+The east cascade breach re-run on the full 31.5 km × 16 km study domain (site to Diversion Road and the
+Waimakariri River; the east edge sits 1 km beyond Diversion Road so the open boundary is on the river side of
+the road). Same 20 m LiDAR grid, mesh densities, roughness and hydrograph as the shakedown; 272,000 triangles,
+12 h simulated (12 h wall-clock on one loaded Apple-silicon core). Outputs: `outputs/east/*_extended.*`;
+animation: [docs/east-extended](https://thorstenbux.github.io/wrights-road-dam-breach/east-extended/).
+
+| Metric | East, extended (12 h) | East, shakedown (4 h) | Damwatch 2012 |
+|---|---|---|---|
+| Inundated area > 0.1 m (km²) | **68.9** | 39.5 (domain ended at Browns Rd) | flood zone 73 |
+| Deepest water (m) | 2.9 | 2.9 | – |
+| Fastest flow (m/s) | 5.8 | 5.5 | – |
+| Buildings > 0.1 m / ≥ 0.5 m | 527 / 90 | 439 / 95 | households in zone 176 / at risk 40 |
+| PAR screening (2.5 persons per at-risk building) | 225 | 238 | 107 |
+| Wet area at 12 h (km²) | 15.8 (draining to the river) | – | – |
+
+### Road arrival times – east breach vs Damwatch 2016 (WIL Evacuation Plan Table 1)
+
+| Road | Damwatch arrival (h) | Model arrival (h) | Damwatch depth (m) | Model max depth (m) |
+|---|---|---|---|---|
+| Carleton Road | 1.50 | 0.83 | 0.68 | 1.06 |
+| Wolffs Road | 2.08 | 1.33 | 0.33 | 0.99 |
+| Poyntzs Road | 2.67 | 1.92 | 0.34 | 0.92 |
+| Pesters Road | 3.00 | 2.27 | 0.57 | 0.53 |
+| Downs Road | 4.17 | 3.33 | 0.3 | 1.12 |
+| Browns Road | 5.25 | **4.34** | 0.58 | 0.64 |
+| Two Chain Road | 7.33 | **5.42** | 0.46 | 0.63 |
+| Diversion Road | 9.00 | **7.51** | <0.1 | 0.43 |
+| South Eyre Road (east end, near Diversion Rd) | – | 7.90 | – | 0.23 |
+
+Reading: the full-length wave stays in the Damwatch corridor (between South Eyre Road and the Waimakariri
+terrace, along the WIL Main Race embankment) all the way to Diversion Road, and the inundated area (69 km²)
+matches the Damwatch flood zone (73 km²) closely. Arrival is ~1 h earlier at Browns and Two Chain Roads and
+~1.5 h earlier at Diversion Road, the same "faster and deeper" bias as the near-field roads (uniform n = 0.045,
+20 m grid smoothing embankments and drains, 1.1 h breach formation). The largest difference is at Diversion
+Road itself: 0.43 m here versus "<0.1 m" in 2016. At that point the model is at the far end of a 26 km
+routing on a 20 m grid with no drains, culverts or stopbank detail, and the water then leaves through the
+open east boundary; treat the Diversion Road depth as an upper-bound screening value and the arrival time as
+±1 h. The near-field rows change by ≤ 0.06 h / ≤ 0.2 m compared with the shakedown domain, confirming the
+smaller domain did not bias the earlier results. All 12 roads west of Diversion Road that Damwatch lists are
+now reached; Thongcaster, Domain and Barrett Roads (south-west of the site) stay dry in the east scenario.
+
+**Maximum depth**
+
+![east extended max_depth](outputs/east/max_depth_extended.png)
+
+**Arrival time**
+
+![east extended arrival_h](outputs/east/arrival_h_extended.png)
+
+**Hazard class**
+
+![east extended hazard](outputs/east/hazard_extended.png)
+
+**Maximum flow speed**
+
+![east extended max_speed](outputs/east/max_speed_extended.png)
+
+**Depth × velocity**
+
+![east extended max_dv](outputs/east/max_dv_extended.png)
+
+**Time of peak depth**
+
+![east extended t_peak_h](outputs/east/t_peak_h_extended.png)
 
 ## 3. Maps
 
