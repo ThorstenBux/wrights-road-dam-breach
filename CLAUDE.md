@@ -1,0 +1,16 @@
+# wrights-road-dam-breach – agent notes
+
+Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, open questions) and
+`RESULTS.md` (numbers and maps). `docs/source-notes.md` has every sourced dam fact with page references.
+
+* Env: `source /opt/miniconda3/etc/profile.d/conda.sh && conda activate damflood` (or `make env`).
+* Tests: `make test`. Pipeline: `make dem vectors breach run post compare SCENARIO=east`.
+* Config is the single source of dam parameters: `config/dam.yaml` (sourced, with page refs) and
+  `config/site.yaml` (geometry, domain, mesh, run settings). Change parameters there, not in code.
+* Site footprint and breach positions are APPROXIMATE (road-grid reconstruction); replace with drawing
+  WIL1125/30/2 when available and say so in SPEC §2.
+* The cascade trigger `cascade.pond2_trigger_mRL` (223.6) is the most consequential assumption – see SPEC §3.1.
+* Viewer: edit `webgl/index.html`, then copy to `docs/east/` and `docs/west/` (data.js stays) and push;
+  Pages rebuilds from `docs/` on `main`. Regenerate data with `scripts/07_export_webgl.py --scenario <s> --cell 60`.
+* Production runs: `01_fetch_dem.py --full`, then `--production` on scripts 04/05/06/07 (10 m, 14 h; hours per run).
+* Everything is a screening model; keep the "not a certified assessment" wording in any new output.
