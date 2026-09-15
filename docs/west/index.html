@@ -531,7 +531,7 @@
     placeBuildings(); if (curFrame >= 0) applyFrame(curFrame);
   }
   wboostIn.addEventListener('input', () => setWboost(+wboostIn.value, true));
-  function markView(id) { document.querySelectorAll('.vb').forEach(b => b.classList.toggle('on', b.id === id)); }
+  function markView(id) { document.querySelectorAll('.vb:not(.mode)').forEach(b => b.classList.toggle('on', b.id === id)); }
   function preset(n) {
     if (n === 1) { if (exag === 1 && userExag !== 1) setExag(userExag); if (wboost === 1 && userWboost !== 1) setWboost(userWboost); theta = 0.15; phi = 0.85; fitBox(floodBox, (camera.aspect || 1.6) < 1.2 ? 1.5 : 1.15); markView('v-recenter'); }
     if (n === 2) { if (exag === 1 && userExag !== 1) setExag(userExag); if (wboost === 1 && userWboost !== 1) setWboost(userWboost); target.set(M.breach_km[0] + 0.6, zk(sampleElev(M.breach_km[0], M.breach_km[1])), H - M.breach_km[1] + 0.3); theta = -0.7; phi = 0.32; dist = 1.6; markView('v-breach'); }

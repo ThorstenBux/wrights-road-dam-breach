@@ -48,28 +48,37 @@ class SWW:
             self.elev = self.elev[0]
         self.tri = Triangulation(self.x, self.y, self.volumes)
 
-    def maxima(self, depth_threshold=0.1, min_depth_for_speed=0.05, t_breach=0.0):
+    def maxima(self, depth_threshold=0.1, min_depth_for_speed=0.05, t_breach=0.0, baseline=None):
         """Per-vertex maxima over time.  `t_breach` (s) is the moment the breach opens: times are reported
-        relative to it, and arrival is the first time the depth exceeds the pre-breach depth by more than
-        `depth_threshold` (so rain or a river already flowing does not count as the breach wave arriving)."""
+        relative to it, and arrival is the first time the depth exceeds the *baseline* depth by more than
+        `depth_threshold`, so rain or a river already flowing does not count as the breach wave arriving.
+        `baseline` is an SWW of the same run WITHOUT the breach (same mesh and output times): its depth at each
+        timestep is the baseline.  Without it the depth at `t_breach` is used as a fixed baseline."""
         n = len(self.x)
-        dmax = np.zeros(n); vmax = np.zeros(n); dvmax = np.zeros(n)
+        dmax = np.zeros(n); vmax = np.zeros(n); dvmax = np.zeros(n); exmax = np.zeros(n)
         arrival = np.full(n, np.nan); tpeak = np.zeros(n)
         st, xm, ym = self.ds.variables["stage"], self.ds.variables["xmomentum"], self.ds.variables["ymomentum"]
         k0 = int(np.searchsorted(self.time, t_breach - 1e-6)) if t_breach > 0 else 0
         base = np.maximum(st[min(k0, len(self.time) - 1), :] - self.elev, 0.0) if t_breach > 0 else np.zeros(n)
+        bst = baseline.ds.variables["stage"] if baseline is not None else None
+        if bst is not None and (len(baseline.time) != len(self.time) or len(baseline.x) != n):
+            raise ValueError("baseline SWW must have the same mesh and output times as the run")
         for k, t in enumerate(self.time):
             t = t - t_breach
             d = np.maximum(st[k, :] - self.elev, 0.0)
+            if bst is not None:
+                base = np.maximum(bst[k, :] - self.elev, 0.0)
             with np.errstate(divide="ignore", invalid="ignore"):
                 v = np.where(d > min_depth_for_speed, np.hypot(xm[k, :], ym[k, :]) / np.maximum(d, 1e-6), 0.0)
             dv = d * v
             newpeak = d > dmax
             tpeak[newpeak] = t
             dmax = np.maximum(dmax, d); vmax = np.maximum(vmax, v); dvmax = np.maximum(dvmax, dv)
+            if t >= 0:
+                exmax = np.maximum(exmax, d - base)
             arr = np.isnan(arrival) & (d - base > depth_threshold) & (t >= 0)
             arrival[arr] = t
-        return {"max_depth": dmax, "max_speed": vmax, "max_dv": dvmax,
+        return {"max_depth": dmax, "max_speed": vmax, "max_dv": dvmax, "max_excess": exmax,
                 "arrival_h": arrival / 3600.0, "t_peak_h": tpeak / 3600.0,
                 "hazard": hazard_class(dmax, vmax).astype(float)}
 
@@ -129,8 +138,9 @@ def road_table(roads: gpd.GeoDataFrame, rasters: dict, names: list[str], spacing
         rec = {"road": name, "sample_points": len(pts), "points_inundated_gt_0.1m": int(wet.sum()),
                "first_arrival_h": float(np.nanmin(arr)) if np.isfinite(arr).any() else np.nan,
                "max_depth_m": float(np.nanmax(dep)) if np.isfinite(dep).any() else 0.0}
-        if wet.any():
-            i = int(np.nanargmin(np.where(wet, arr, np.nan)))
+        cand = np.where(wet, arr, np.nan)
+        if np.isfinite(cand).any():   # wet by the breach wave (rain/river-only wetting has no arrival time)
+            i = int(np.nanargmin(cand))
             rec["first_arrival_E"], rec["first_arrival_N"] = xs[i], ys[i]
         out.append(rec)
     return pd.DataFrame(out)

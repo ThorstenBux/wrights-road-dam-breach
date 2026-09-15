@@ -379,6 +379,128 @@ slightly lower than the east case because the same volume is spread over more di
 <p><img alt="quake hazard" src="img/quake_hazard_shakedown.png" /></p>
 <p><img alt="quake arrival_h" src="img/quake_arrival_h_shakedown.png" /></p>
 <p><img alt="quake t_peak_h" src="img/quake_t_peak_h_shakedown.png" /></p>
+<h2>3c. Storm scenario – breach during heavy rain with the Eyre River in flood (<code>storm</code>)</h2>
+<p>NZSOLD "rainy day" combination: the east cascade breach (identical hydrograph, peak 2,098 m³/s) opens after 2 h of
+steady 10 mm/h rain on saturated ground (no infiltration) with the Eyre River already carrying an assumed 150 m³/s
+where it enters the domain. Breach-added figures are differenced against an identical storm run without the breach,
+so rain and river water are not credited to the dam. Assumptions in <code>config/dam.yaml: scenarios.storm</code> and
+<a href="https://github.com/ThorstenBux/wrights-road-dam-breach/blob/main/docs/clg-notes.md">docs/clg-notes.md</a> (A9–A12); method SPEC §3.1 item 8. Time zero is the breach opening.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Storm: everything</th>
+<th>Storm: added by the breach</th>
+<th>East cascade, dry (reference)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inundated area &gt; 0.1 m after 4 h (km²)</td>
+<td>56.6</td>
+<td>43.4</td>
+<td>39.5</td>
+</tr>
+<tr>
+<td>Deepest water (m)</td>
+<td>2.6</td>
+<td>–</td>
+<td>2.9</td>
+</tr>
+<tr>
+<td>Buildings &gt; 0.1 m / ≥ 0.5 m</td>
+<td>608 / 113</td>
+<td>477 / 75</td>
+<td>439 / 95</td>
+</tr>
+<tr>
+<td>Buildings &gt; H2 hazard</td>
+<td>112</td>
+<td>84</td>
+<td>94</td>
+</tr>
+<tr>
+<td>PAR screening (2.5 persons per at-risk building)</td>
+<td>283</td>
+<td>–</td>
+<td>238</td>
+</tr>
+</tbody>
+</table>
+<p>Road arrival (h after the breach opens, first time the breach raises the depth by &gt; 0.1 m above the storm-only run)
+and maximum total depth:</p>
+<table>
+<thead>
+<tr>
+<th>Road</th>
+<th>Storm arrival</th>
+<th>East arrival</th>
+<th>Storm depth (m)</th>
+<th>East depth (m)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Carleton Road</td>
+<td>0.77</td>
+<td>0.77</td>
+<td>0.99</td>
+<td>1.00</td>
+</tr>
+<tr>
+<td>Wolffs Road</td>
+<td>1.32</td>
+<td>1.33</td>
+<td>1.01</td>
+<td>0.94</td>
+</tr>
+<tr>
+<td>Poyntzs Road</td>
+<td>1.83</td>
+<td>1.90</td>
+<td>1.08</td>
+<td>0.75</td>
+</tr>
+<tr>
+<td>Pesters Road</td>
+<td>2.20</td>
+<td>2.27</td>
+<td>0.70</td>
+<td>0.51</td>
+</tr>
+<tr>
+<td>Downs Road</td>
+<td>3.13</td>
+<td>3.33</td>
+<td>1.22</td>
+<td>1.18</td>
+</tr>
+<tr>
+<td>Dixon Road</td>
+<td>1.03</td>
+<td>0.96</td>
+<td>0.73</td>
+<td>0.70</td>
+</tr>
+</tbody>
+</table>
+<p>Reading: the breach wave itself is barely faster on a wet plain (0–12 min earlier at Poyntzs–Downs Road), but it
+spreads over 10 % more ground and is 0.05–0.35 m deeper where it meets the Eyre River and the ponded runoff east of
+Poyntzs Road, because the river channel and the drains are already full. What changes most is the total picture
+people would experience: 608 buildings with water against 439, and 113 rather than 95 with 0.5 m or more, since
+the storm alone already wets 40 km² of the plain in this (very heavy, saturated-ground) rainfall assumption. The
+storm-only baseline run is <code>outputs/storm/storm_shakedown_nobreach.sww</code>.</p>
+<p>Mesh note: the storm runs use a repaired mesh (95,140 triangles, no sliver triangles – see SPEC §7.3). Re-running
+the east scenario on the repaired mesh changes its inundated area from 39.5 to 39.2 km², road arrivals by ≤ 2 min
+and buildings ≥ 0.5 m from 95 to 92, so the published east results were left as they are.</p>
+<p><img alt="storm hydrograph" src="img/storm_hydrograph.png" /></p>
+<h3>Storm maps (total depth, including rain and river)</h3>
+<p><img alt="storm max_depth" src="img/storm_max_depth_shakedown.png" /></p>
+<p><img alt="storm max_speed" src="img/storm_max_speed_shakedown.png" /></p>
+<p><img alt="storm max_dv" src="img/storm_max_dv_shakedown.png" /></p>
+<p><img alt="storm hazard" src="img/storm_hazard_shakedown.png" /></p>
+<p><img alt="storm arrival_h" src="img/storm_arrival_h_shakedown.png" /></p>
+<p><img alt="storm t_peak_h" src="img/storm_t_peak_h_shakedown.png" /></p>
 <h2>4. Key finding on the cascade</h2>
 <p>With the design report's volumes and areas, Pond 1 draining into Pond 2 statically equalises at ~223.8 m RL, 0.5 m below the Pond 2 crest (224.3 m). The overtopping cascade Damwatch describes therefore requires dynamic surge or a different stage–storage shape. The model initiates the Pond 2 breach at 223.6 m RL (<code>config/dam.yaml: cascade.pond2_trigger_mRL</code>); reconcile with Appendix H before any reportable use.</p>
 <h2>5. Interactive</h2>
