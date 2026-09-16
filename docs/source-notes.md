@@ -37,6 +37,15 @@ https://www.bhsl.co.nz/wp-content/uploads/Waimakariri_Emergency-Action-Plan-Issu
   extractable from the PDF text).
 * Monitoring: TDR cable on crest, seismic triggers, automated sirens, level alarms.
 * Access via Wrights Road or Dixon Road; roads east of the ponds may be affected by a breach.
+* Emergency dewatering (s1.5, App. D.1): primary defence against a developing failure is to lower the pond
+  by opening the outflow gates (discharge from the Tub and from Pond 2) into the irrigation network; rate limited by
+  outlet-works capacity and by the network's capacity to pass and store water.
+* App. F.3: races **MR4** (~6.3 km, ~8 culverts, 4 offtakes) and **R3** (~11.8 km, ~20 culverts, 6 offtakes)
+  **both discharge to the Eyre River**; maximum dewatering flows may exceed race capacity (local flooding).
+  Culverts are the likely blockage points (F.4–F.5). Dewatering inundation maps promised (F.6) but not published.
+* Table F.1 (example): Pond 1 via MR4 at 4–5 m³/s → 7.5–9.3 h per 1 m drawdown; Pond 2 via R2+R3 at
+  11–15 m³/s → 12.2–16.6 h per 1 m. Appendices A, B, E, F are placeholders "prior to commissioning".
+  Full detail and gaps: [dewatering-pathway-evidence.md](dewatering-pathway-evidence.md).
 
 ## WIL – Emergency Evacuation Plan, DRAFT v7.2, 15 Jun 2020
 https://www.bhsl.co.nz/wp-content/uploads/2020-06-15_DRAFT_Evacuation_Plan_v7.2-1-compressed.pdf

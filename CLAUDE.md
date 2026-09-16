@@ -3,6 +3,7 @@
 Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, open questions) and
 `RESULTS.md` (numbers and maps). `docs/source-notes.md` has every sourced dam fact with page references;
 `docs/clg-notes.md` holds points for the Community Liaison Group and the assumption register (keep it current).
+`docs/dewatering-pathway-evidence.md` is the evidence note on emergency dewatering via the races to the Eyre River.
 
 * Env: `source /opt/miniconda3/etc/profile.d/conda.sh && conda activate damflood` (or `make env`).
 * Tests: `make test`. Pipeline: `make dem vectors breach run post compare SCENARIO=east`.
