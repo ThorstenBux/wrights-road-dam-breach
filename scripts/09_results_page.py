@@ -15,7 +15,7 @@ HEAD = ('<!doctype html><meta charset="utf-8"><meta name="viewport" content="wid
         'a{color:#8fd3ff}table{border-collapse:collapse;font-size:13.5px;display:block;overflow-x:auto}th,td{border:1px solid #2a3442;padding:5px 9px;'
         'text-align:left}th{background:#151b24}img{max-width:100%;border:1px solid #2a3442;border-radius:6px;margin:6px 0 18px;background:#fff}'
         'p{max-width:80ch}.nav{margin-bottom:24px;color:#9aa4b5}</style>\n'
-        '<div class="nav"><a href="../">← Animations</a> · <a href="https://github.com/ThorstenBux/wrights-road-dam-breach">Repository</a></div>\n')
+        '<div class="nav"><a href="../index.html">← Animations</a> · <a href="https://github.com/ThorstenBux/wrights-road-dam-breach">Repository</a></div>\n')
 GH = "https://github.com/ThorstenBux/wrights-road-dam-breach/blob/main/"
 
 

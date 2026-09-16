@@ -2,8 +2,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Wrights Road Breach Flood</title>
 <meta name="description" content="3D animation of a modelled embankment breach at the Wrights Road Storage Ponds, Waimakariri District">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<!-- fonts and three.js are vendored in ../vendor so the viewer works offline (file:// or a USB stick) -->
+<link rel="stylesheet" href="../vendor/fonts.css">
 <style>
   :root {
     --ground: #0d1117;
@@ -143,7 +143,7 @@
     <nav id="scen" class="scen" aria-label="Scenarios" hidden><span>Scenarios</span><a href="../east/" data-s="east">East breach</a><a href="../east-extended/" data-s="east-extended">East → Diversion Rd</a><a href="../west/" data-s="west">West breach</a><a href="../quake/" data-s="quake">Earthquake</a><a href="../storm/" data-s="storm">Storm</a><a href="../results/">Results</a></nav>
   </div>
   <div class="topright">
-    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode · <b>I/L</b> hide panels · <b>B</b> debris</div>
+    <div id="help"><b>Drag</b> orbit · <b>Scroll</b> zoom · <b>Shift-drag</b> pan · <b>Space</b> play/pause · <b>D/S/H</b> colour mode · <b>I/L</b> hide panels</div>
     <div class="views" role="group" aria-label="Views">
       <button id="v-recenter" class="vb" title="Frame the whole flood extent (key R)">⌖ Re-centre</button>
       <button id="v-breach" class="vb" title="Close-up of the breach (key 2)">Breach</button>
@@ -177,7 +177,6 @@
     <div class="row"><span class="sw" style="background: #cfc7b4; height: 8px"></span>Buildings (OSM footprints, 5 m houses · 6.5 m sheds)</div>
     <div class="row" style="margin-top: 2px; padding-left: 22px"><span style="color:#ffb454">amber</span>&nbsp;&gt; 0.1 m&nbsp;·&nbsp;<span style="color:#ff5d5d">red</span>&nbsp;≥ 0.5 m at the building</div>
     <div class="row"><span class="sw" style="background: #ffd9a8; width: 4px; height: 10px; border-radius: 2px; margin: 0 5px"></span>People, 1.8 m tall (zoom in)</div>
-    <div class="row" title="Logs, fence panels, cars, shelterbelt trees and small sheds, drawn to scale. Each is picked up when the water at its spot exceeds a depth and speed threshold for its type, drifts with the flow and strands when the water drops. Indicative only (key B)."><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="debris" style="accent-color: var(--water-1); margin: 0">Debris swept along <span id="debrisn" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3)"></span></label></div>
   </div>
   <div class="legend ctl"><label for="exag">Terrain ×</label><input type="range" id="exag" min="1" max="20" step="1" value="8"><output id="exagv">8</output><span id="truescale" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--water-1)" hidden>true scale</span></div>
   <div class="legend ctl" title="Thickness of the water, and the height of buildings and people, relative to the terrain scale. They always keep their true proportions to each other."><label for="wboost">Flood ×</label><input type="range" id="wboost" min="1" max="6" step="1" value="2"><output id="wboostv">2</output><span style="font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3)">water · buildings · people</span></div>
@@ -197,7 +196,7 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../vendor/three.min.js"></script>
 <script src="data.js"></script>
 <script>
 (function () {
@@ -448,97 +447,6 @@
   if (ex1 < 0) { ex0 = 0; ex1 = NX - 1; ey0 = 0; ey1 = NY - 1; }
   const floodBox = { x0: ex0 * CELL, x1: (ex1 + 1) * CELL, y0: ey0 * CELL, y1: (ey1 + 1) * CELL };
 
-  // ---------- debris swept along by the flood (to scale, advected by the flow) ----------
-  // Types: [name, colour, size L x H x W (m), mobilise depth (m), mobilise speed (m/s), drift factor, count]
-  // Thresholds are indicative stability limits (cf. ARR 2019 vehicle/people stability, NZSOLD Table 2.5).
-  const DEBRIS_TYPES = [
-    { name: 'log',   col: 0x6b4a2b, L: 4.0, H: 0.35, W: 0.35, dmob: 0.15, vmob: 0.3, drift: 0.85, n: 1200 },
-    { name: 'fence', col: 0xc4bba4, L: 2.5, H: 0.12, W: 1.2,  dmob: 0.30, vmob: 0.5, drift: 0.75, n: 700 },
-    { name: 'car',   col: 0xd8d8d8, L: 4.4, H: 1.5,  W: 1.8,  dmob: 0.40, vmob: 0.8, drift: 0.6,  n: 250 },
-    { name: 'tree',  col: 0x2f5d2a, L: 8.0, H: 2.5,  W: 3.5,  dmob: 0.60, vmob: 1.0, drift: 0.7,  n: 500 },
-    { name: 'shed',  col: 0x8e8a80, L: 6.0, H: 3.0,  W: 4.0,  dmob: 0.60, vmob: 0.8, drift: 0.5,  n: 80 },
-  ];
-  const rng = (seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(20260916);
-  const debris = [];   // {t: type index, x, y (km), a (angle), w (spin), st: 0 waiting | 1 drifting | 2 stranded, x0, y0}
-  function inBox(x, y) { return x > floodBox.x0 && x < floodBox.x1 && y > floodBox.y0 && y < floodBox.y1; }
-  function randBox() { return [floodBox.x0 + rng() * (floodBox.x1 - floodBox.x0), floodBox.y0 + rng() * (floodBox.y1 - floodBox.y0)]; }
-  (function seedDebris() {
-    const dw = B.filter(b => b[6] && inBox(b[0], b[1])), sm = B.filter(b => !b[6] && b[2] * b[3] < 200 && inBox(b[0], b[1]));
-    // logs and trees: scattered over the flood extent (shelterbelts, woodlots, firewood, fallen timber)
-    for (let i = 0; i < DEBRIS_TYPES[0].n; i++) { const [x, y] = randBox(); debris.push({ t: 0, x, y }); }
-    for (let i = 0; i < DEBRIS_TYPES[3].n; i++) { const [x, y] = randBox(); debris.push({ t: 3, x, y }); }
-    // fence panels: along roads (roadside fences) every ~120 m, plus some paddock fences
-    const fs = [];
-    F.roads.forEach(r => { for (let i = 1; i < r.pts.length; i++) { const [ax, ay] = r.pts[i - 1], [bx, by] = r.pts[i]; const L = Math.hypot(bx - ax, by - ay); for (let d = 0.06; d < L; d += 0.12) { const f = d / L, x = ax + (bx - ax) * f, y = ay + (by - ay) * f; if (inBox(x, y)) fs.push([x + (rng() - 0.5) * 0.02, y + (rng() - 0.5) * 0.02]); } } });
-    for (let i = fs.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [fs[i], fs[j]] = [fs[j], fs[i]]; }
-    fs.slice(0, Math.round(DEBRIS_TYPES[1].n * 0.7)).forEach(([x, y]) => debris.push({ t: 1, x, y }));
-    while (debris.filter(d => d.t === 1).length < DEBRIS_TYPES[1].n) { const [x, y] = randBox(); debris.push({ t: 1, x, y }); }
-    // cars: one beside each dwelling in the flood extent (capped); sheds: small non-dwelling buildings
-    dw.slice(0, DEBRIS_TYPES[2].n).forEach(b => { const a = rng() * 2 * Math.PI, r = (b[2] + b[3]) / 2000 + 0.006; debris.push({ t: 2, x: b[0] + Math.cos(a) * r, y: b[1] + Math.sin(a) * r }); });
-    sm.slice(0, DEBRIS_TYPES[4].n).forEach(b => debris.push({ t: 4, x: b[0], y: b[1] }));
-    debris.forEach(d => { d.x0 = d.x; d.y0 = d.y; d.a = rng() * 2 * Math.PI; d.w = (rng() - 0.5) * 0.4; d.st = 0; });
-  })();
-  const dMeshes = DEBRIS_TYPES.map((T, ti) => {
-    let g;
-    if (T.name === 'log') { g = new THREE.CylinderGeometry(0.5, 0.5, 1, 6); g.rotateZ(Math.PI / 2); }
-    else if (T.name === 'tree') { g = new THREE.ConeGeometry(0.5, 1, 6); g.rotateZ(-Math.PI / 2); }
-    else g = new THREE.BoxGeometry(1, 1, 1);
-    g.translate(0, 0.5, 0);
-    const n = debris.filter(d => d.t === ti).length;
-    const m = new THREE.InstancedMesh(g, new THREE.MeshLambertMaterial({ color: T.col }), Math.max(n, 1));
-    m.count = n; m.frustumCulled = false; scene.add(m);
-    if (T.name === 'car') { const cc = [0xd8d8d8, 0xb8322a, 0x2d4c8a, 0x3a3a3a, 0xe8e2c8]; for (let i = 0; i < n; i++) m.setColorAt(i, new THREE.Color(cc[i % cc.length])); m.instanceColor.needsUpdate = true; }
-    return m;
-  });
-  const dirX = new Float32Array(NX * NY), dirY = new Float32Array(NX * NY); let dirFrame = -1;
-  function cellOf(x, y) { const ix = Math.min(Math.max(Math.floor(x / CELL), 0), NX - 1), iy = Math.min(Math.max(Math.floor(y / CELL), 0), NY - 1); return iy * NX + ix; }
-  function computeFlowDirection(k) {
-    // flow runs down the water-surface slope (diffusive-wave approximation); surface = ground + depth, metres
-    const d = frame(k); const S = new Float32Array(NX * NY);
-    for (let gi = 0; gi < NX * NY; gi++) S[gi] = elev[gi] + d[gi] * M.dscale;
-    const c2 = 2 * M.cell;
-    for (let iy = 0; iy < NY; iy++) for (let ix = 0; ix < NX; ix++) {
-      const gi = iy * NX + ix;
-      const gx = (S[gi + (ix < NX - 1 ? 1 : 0)] - S[gi - (ix > 0 ? 1 : 0)]) / c2, gy = (S[gi + (iy < NY - 1 ? NX : 0)] - S[gi - (iy > 0 ? NX : 0)]) / c2;
-      const L = Math.hypot(gx, gy); dirX[gi] = L > 1e-9 ? -gx / L : 0; dirY[gi] = L > 1e-9 ? -gy / L : 0;
-    }
-    dirFrame = k;
-  }
-  let debrisOn = !reduced;
-  const debrisBox = document.getElementById('debris'); debrisBox.checked = debrisOn;
-  const dm4 = new THREE.Matrix4(), dq = new THREE.Quaternion(), dv = new THREE.Vector3(), dp = new THREE.Vector3();
-  function debrisReset() { debris.forEach(d => { d.x = d.x0; d.y = d.y0; d.st = 0; }); }
-  function debrisTick(dtSim) {
-    if (!debrisOn || curFrame < 0) { dMeshes.forEach(m => { m.visible = false; }); return; }
-    if (dirFrame !== curFrame) computeFlowDirection(curFrame);
-    const d = frame(curFrame), sp = speedFrame(curFrame); let drifting = 0, stranded = 0;
-    const idx = DEBRIS_TYPES.map(() => 0);
-    for (const o of debris) {
-      const T = DEBRIS_TYPES[o.t]; const gi = cellOf(o.x, o.y);
-      const dep = d[gi] * M.dscale; const v = sp ? sp[gi] * M.sscale : (dep > 0 ? 0.3 * Math.sqrt(9.81 * dep) : 0);
-      if (o.st !== 1 && dep >= T.dmob && v >= T.vmob) o.st = 1;
-      else if (o.st === 1 && (dep < 0.6 * T.dmob || v < 0.5 * T.vmob)) o.st = 2;
-      if (o.st === 1 && dtSim > 0) {
-        const step = v * T.drift * dtSim / 1000;   // km
-        o.x += dirX[gi] * step + (rng() - 0.5) * step * 0.3; o.y += dirY[gi] * step + (rng() - 0.5) * step * 0.3; o.a += o.w * dtSim / 60;
-        o.x = Math.min(Math.max(o.x, CELL), W - CELL); o.y = Math.min(Math.max(o.y, CELL), H - CELL);
-        drifting++;
-      } else if (o.st === 2) stranded++;
-      const m = dMeshes[o.t]; const i = idx[o.t]++;
-      const g2 = cellOf(o.x, o.y); const dep2 = d[g2] * M.dscale; const ground = sampleElev(o.x, o.y);
-      const yv = zk(ground) + (o.st === 1 ? dep2 / 1000 * fscale() : 0);
-      dp.set(o.x, yv, H - o.y); dq.setFromAxisAngle(yAxis, o.a);
-      const tilt = o.st === 2 ? 0.7 : 1.0;
-      if (o.st === 0) dv.set(0, 0, 0);   // not yet picked up: hidden
-      else dv.set(T.L / 1000, T.H / 1000 * fscale() * tilt, T.W / 1000);
-      dm4.compose(dp, dq, dv); m.setMatrixAt(i, dm4);
-    }
-    dMeshes.forEach(m => { m.visible = true; m.instanceMatrix.needsUpdate = true; });
-    document.getElementById('debrisn').textContent = drifting || stranded ? '· ' + drifting + ' drifting · ' + stranded + ' stranded' : '';
-  }
-  window.WR_DEBUG = { debris, types: DEBRIS_TYPES };   // inspection hook
-  debrisBox.addEventListener('change', () => { debrisOn = debrisBox.checked; if (!debrisOn) document.getElementById('debrisn').textContent = ''; debrisTick(0); });
-
   // labels for every named road (priority to the roads in the evacuation-plan table), overlap-culled on screen
   const priority = ['Carleton Road', 'Wolffs Road', 'Poyntzs Road', 'Pesters Road', 'Downs Road', 'Browns Road', 'Two Chain Road', 'Diversion Road', 'South Eyre Road', 'Thongcaster Road', 'Wrights Road', 'Dixon Road'];
   const byName = {};
@@ -607,8 +515,7 @@
   let playing = false, acc = 0, last = performance.now();
   function setFrame(k, fromScrub) {
     k = Math.min(Math.max(k, 0), F.frames.length - 1);
-    if (k < curFrame) debrisReset();
-    if (k !== curFrame) { applyFrame(k); debrisTick(0); }
+    if (k !== curFrame) applyFrame(k);
     if (!fromScrub) scrub.value = k;
     const th = M.times_h[k]; const ta = Math.abs(th); let hh = Math.floor(ta), mm = Math.round((ta - hh) * 60); if (mm === 60) { hh += 1; mm = 0; }
     document.getElementById('tv').textContent = (th < -1e-6 ? '−' : '') + hh + ':' + String(mm).padStart(2, '0');
@@ -661,7 +568,7 @@
     document.getElementById('wnote').textContent = v === 1 ? '· true thickness' : '· thickness shown ×' + v + ' (on top of terrain ×)';
     document.getElementById('truescale').hidden = !(v === 1 && exag === 1);
     if (remember) userWboost = v;
-    placeBuildings(); if (curFrame >= 0) { applyFrame(curFrame); debrisTick(0); }
+    placeBuildings(); if (curFrame >= 0) applyFrame(curFrame);
   }
   wboostIn.addEventListener('input', () => setWboost(+wboostIn.value, true));
   function markView(id) { document.querySelectorAll('.vb:not(.mode)').forEach(b => b.classList.toggle('on', b.id === id)); }
@@ -697,7 +604,6 @@
     if (e.key === 'h' || e.key === 'H') setMode('hazard');
     if (e.key === 'i' || e.key === 'I') toggleTitle();
     if (e.key === 'l' || e.key === 'L') toggleSide();
-    if (e.key === 'b' || e.key === 'B') { debrisBox.checked = !debrisBox.checked; debrisBox.dispatchEvent(new Event('change')); }
   });
   const exagIn = document.getElementById('exag');
   exagIn.addEventListener('input', () => { setExag(+exagIn.value, true); updateCamera(); });
@@ -728,8 +634,7 @@
     requestAnimationFrame(tick);
     if (playing) {
       const fps = +speedSel.value / ((M.times_h[1] - M.times_h[0]) * 60 || 2); // frames per second so that speed = sim-minutes per real second
-      const realDt = (now - last) / 1000; acc += realDt * fps; last = now;
-      debrisTick(Math.min(realDt, 0.1) * (+speedSel.value) * 60);   // sim seconds elapsed this tick
+      acc += (now - last) / 1000 * fps; last = now;
       if (acc >= 1) { const n = Math.floor(acc); acc -= n; let k = curFrame + n; if (k > F.frames.length - 1) { k = 0; } setFrame(k); }
     } else last = now;
     renderer.render(scene, camera); placeLabels();
