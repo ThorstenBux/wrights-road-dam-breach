@@ -94,7 +94,10 @@ carry that caveat.
 3. **Breach invert** = natural ground at the embankment toe from LiDAR (no foundation scour), with a scour
    sensitivity (+1 m). Because the ponds are partly below ground, this – not the 8–12 m "embankment height" –
    controls the releasable volume and head, and it differs strongly between the up-slope (west, north) and
-   down-slope (east, south) sides.
+   down-slope (east, south) sides. **This is the assumption that separates the model from the Damwatch 2016
+   north-breach times**: a north breach cut down to the Pond 2 floor (`--invert 210.8`) releases the east-size
+   outflow and reproduces the 2016 north arrivals, whereas the toe-level breach is 0.6–4 h later (RESULTS §2c).
+   Carry both as a bounding pair until Appendix H is available.
 4. **Level-pool routing**: the pool drains through a trapezoidal breach that grows linearly (or sinusoidally)
    to its final size over t_f; broad-crested weir flow Q = 1.7 b H^1.5 + 1.4 z H^2.5 (SI); 1 s time step; no
    tailwater submergence (conservative for outflow).
@@ -125,7 +128,9 @@ carry that caveat.
    the river do not count as the breach wave; maximum depths are absolute. The design report (s3) cites WDC mapping
    showing a major Eyre flood reaching the north embankment, but the river is ~7 km north of the ponds, outside both
    model domains, so that interaction is not represented. Emergency dewatering of the ponds is via control gates
-   G2/G3/G6 into the irrigation races (report s3.0, Table 6), not into the Eyre River.
+   G2/G3/G6 into the irrigation races (report s3.0, Table 6); per the EAP (App. F.3) the MR4 and R3 races discharge
+   to the Eyre River, so a controlled dewatering ultimately reaches the Eyre (not modelled here; see
+   `docs/dewatering-pathway-evidence.md`).
 
 ### 3.2 2D flood routing (D2–D4) – `damflood/model.py`
 
@@ -137,7 +142,7 @@ carry that caveat.
 * **Domain**: shakedown 18 km x 11.5 km (site to Browns/Two Chain Road) at 20 m DEM; full domain 31.5 km x 16 km
   (site to Diversion Road and the Waimakariri River, covering the Damwatch 59–73 km² flood zones; the east edge is
   1 km beyond Diversion Road, which runs at 1560.6–1561.3 km E, so the open boundary is not on the road). The full
-  domain is run either as the **extended** tier (20 m, shakedown mesh, 12 h – used for the east run in RESULTS §2b)
+  domain is run either as the **extended** tier (20 m, shakedown mesh, 12 h – used for the east and north runs in RESULTS §2b/§2c)
   or as **production** (10 m, fine mesh, 14 h).
 * **Mesh**: coarse triangles ~4,000 m² (shakedown) / ~1,200 m² (production); refined to 900 / 200 m² within
   2.5 km of the site and 2,000 / 600 m² in the flow corridor. Flow algorithm DE0 (shakedown) / DE1 (production).

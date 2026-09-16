@@ -1,0 +1,174 @@
+[run] hydrograph time offset: simulation t=0 s (breach opens) corresponds to t=7818 s in hydrograph.csv
+[run] burned ponds into DEM -> /Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/northern-breach-simulation-361327/outputs/north/dem_burned_extended.tif
+WARNING: Could not import mpi4py - defining sequential interface
+[model] 3 refinement regions after clipping: areas [1500.0, 3000.0, 3000.0]
+Resource usage: memory=0.0MB resident=0.0MB stacksize=0.0MB
+#@# sys_platform, darwin
+#@# start_memory, 0.0
+#@# start_resident, 0.0
+#@# start_stacksize, 0.0
+#@# maximum_triangle_area, 6000.0
+#@# minimum_triangle_angle, 28.0
+#@# startMesh, '2026-09-16_15:30:37'
+Domain: Initialising
+Domain: Expose mesh attributes
+Domain: Expose quantity names and types
+Domain: Build Quantities
+Domain: Set up communication buffers 
+Domain: Set up triangle/node full flags 
+Domain: Set defaults
+Domain: Set work arrays
+Domain: Done
+Domain: Using discontinuous elevation solver DE0
+Domain: Using discontinuous elevation solver DE0
+[model] mesh: 201202 triangles in 1s; geo_reference xll=1531000.0 yll=5187000.0
+[model] inlet 'breach_north' area 6632 m2 over 8 triangles
+[model] t=  0.00 h  Q=     0.0 m3/s  V= 0.000 Mm3  wet=  0.00 km2  dmax= 0.00 m  wall=     0s
+[model] t=  0.08 h  Q=     0.0 m3/s  V= 0.000 Mm3  wet=  0.00 km2  dmax= 0.00 m  wall=     0s
+/Users/thorstenbux/miniconda3/envs/damflood/lib/python3.12/site-packages/anuga/shallow_water/shallow_water_domain.py:3086: UserWarning: 8838 negative cells set to zero depth, adding 4.21e-07 m^3 (100% of the 4.2e-07 m^3 in the domain): possible loss of conservation. 
+Consider using domain.report_water_volume_statistics() to check the extent of the problem
+  warnings.warn(msg)
+[model] t=  0.17 h  Q=     0.2 m3/s  V= 0.000 Mm3  wet=  0.00 km2  dmax= 0.04 m  wall=     0s
+[model] t=  0.25 h  Q=     4.1 m3/s  V= 0.001 Mm3  wet=  0.00 km2  dmax= 0.63 m  wall=     0s
+[model] t=  0.33 h  Q=    13.2 m3/s  V= 0.003 Mm3  wet=  0.02 km2  dmax= 0.50 m  wall=     1s
+[model] t=  0.42 h  Q=    28.7 m3/s  V= 0.009 Mm3  wet=  0.06 km2  dmax= 0.65 m  wall=     3s
+[model] t=  0.50 h  Q=    51.1 m3/s  V= 0.021 Mm3  wet=  0.12 km2  dmax= 0.80 m  wall=     4s
+[model] t=  0.58 h  Q=    80.8 m3/s  V= 0.041 Mm3  wet=  0.20 km2  dmax= 0.94 m  wall=     6s
+[model] t=  0.67 h  Q=   117.7 m3/s  V= 0.070 Mm3  wet=  0.30 km2  dmax= 1.08 m  wall=     8s
+[model] t=  0.75 h  Q=   161.4 m3/s  V= 0.112 Mm3  wet=  0.42 km2  dmax= 1.21 m  wall=    10s
+[model] t=  0.83 h  Q=   211.5 m3/s  V= 0.168 Mm3  wet=  0.55 km2  dmax= 1.33 m  wall=    13s
+[model] t=  0.92 h  Q=   267.0 m3/s  V= 0.239 Mm3  wet=  0.69 km2  dmax= 1.46 m  wall=    16s
+[model] t=  1.00 h  Q=   326.7 m3/s  V= 0.328 Mm3  wet=  0.83 km2  dmax= 1.95 m  wall=    19s
+[model] t=  1.08 h  Q=   389.5 m3/s  V= 0.436 Mm3  wet=  1.06 km2  dmax= 2.13 m  wall=    23s
+[model] t=  1.17 h  Q=   454.0 m3/s  V= 0.562 Mm3  wet=  1.33 km2  dmax= 2.21 m  wall=    26s
+[model] t=  1.25 h  Q=   518.7 m3/s  V= 0.708 Mm3  wet=  1.62 km2  dmax= 2.28 m  wall=    30s
+[model] t=  1.33 h  Q=   582.2 m3/s  V= 0.873 Mm3  wet=  2.02 km2  dmax= 2.34 m  wall=    34s
+[model] t=  1.42 h  Q=   643.3 m3/s  V= 1.057 Mm3  wet=  2.43 km2  dmax= 2.39 m  wall=    38s
+[model] t=  1.50 h  Q=   700.6 m3/s  V= 1.259 Mm3  wet=  2.91 km2  dmax= 2.44 m  wall=    43s
+[model] t=  1.58 h  Q=   753.1 m3/s  V= 1.477 Mm3  wet=  3.45 km2  dmax= 2.48 m  wall=    47s
+[model] t=  1.67 h  Q=   800.0 m3/s  V= 1.710 Mm3  wet=  4.08 km2  dmax= 2.51 m  wall=    52s
+[model] t=  1.75 h  Q=   760.3 m3/s  V= 1.949 Mm3  wet=  4.77 km2  dmax= 2.54 m  wall=    57s
+[model] t=  1.83 h  Q=   677.3 m3/s  V= 2.164 Mm3  wet=  5.34 km2  dmax= 2.55 m  wall=    61s
+[model] t=  1.92 h  Q=   605.4 m3/s  V= 2.356 Mm3  wet=  5.90 km2  dmax= 2.53 m  wall=    65s
+[model] t=  2.00 h  Q=   543.0 m3/s  V= 2.529 Mm3  wet=  6.47 km2  dmax= 2.49 m  wall=    69s
+[model] t=  2.08 h  Q=   488.6 m3/s  V= 2.683 Mm3  wet=  7.10 km2  dmax= 2.45 m  wall=    73s
+[model] t=  2.17 h  Q=   441.0 m3/s  V= 2.822 Mm3  wet=  7.74 km2  dmax= 2.41 m  wall=    77s
+[model] t=  2.25 h  Q=   399.3 m3/s  V= 2.948 Mm3  wet=  8.52 km2  dmax= 2.38 m  wall=    81s
+[model] t=  2.33 h  Q=   362.4 m3/s  V= 3.062 Mm3  wet=  9.25 km2  dmax= 2.34 m  wall=    85s
+[model] t=  2.42 h  Q=   329.9 m3/s  V= 3.166 Mm3  wet= 10.04 km2  dmax= 2.31 m  wall=    88s
+[model] t=  2.50 h  Q=   301.1 m3/s  V= 3.261 Mm3  wet= 10.83 km2  dmax= 2.28 m  wall=    92s
+[model] t=  2.58 h  Q=   275.4 m3/s  V= 3.347 Mm3  wet= 11.60 km2  dmax= 2.25 m  wall=    95s
+[model] t=  2.67 h  Q=   252.6 m3/s  V= 3.426 Mm3  wet= 12.36 km2  dmax= 2.22 m  wall=    99s
+[model] t=  2.75 h  Q=   232.1 m3/s  V= 3.499 Mm3  wet= 13.09 km2  dmax= 2.20 m  wall=   102s
+[model] t=  2.83 h  Q=   213.8 m3/s  V= 3.566 Mm3  wet= 13.79 km2  dmax= 2.17 m  wall=   106s
+[model] t=  2.92 h  Q=   197.4 m3/s  V= 3.627 Mm3  wet= 14.46 km2  dmax= 2.15 m  wall=   109s
+[model] t=  3.00 h  Q=   182.5 m3/s  V= 3.684 Mm3  wet= 15.07 km2  dmax= 2.13 m  wall=   112s
+[model] t=  3.08 h  Q=   169.1 m3/s  V= 3.737 Mm3  wet= 15.62 km2  dmax= 2.11 m  wall=   116s
+[model] t=  3.17 h  Q=   157.0 m3/s  V= 3.786 Mm3  wet= 16.08 km2  dmax= 2.09 m  wall=   119s
+[model] t=  3.25 h  Q=   146.0 m3/s  V= 3.831 Mm3  wet= 16.50 km2  dmax= 2.08 m  wall=   123s
+[model] t=  3.33 h  Q=   136.0 m3/s  V= 3.874 Mm3  wet= 16.97 km2  dmax= 2.06 m  wall=   126s
+[model] t=  3.42 h  Q=   126.9 m3/s  V= 3.913 Mm3  wet= 17.41 km2  dmax= 2.05 m  wall=   129s
+[model] t=  3.50 h  Q=   118.5 m3/s  V= 3.950 Mm3  wet= 17.75 km2  dmax= 2.04 m  wall=   133s
+[model] t=  3.58 h  Q=   110.9 m3/s  V= 3.984 Mm3  wet= 18.13 km2  dmax= 2.02 m  wall=   136s
+[model] t=  3.67 h  Q=   104.0 m3/s  V= 4.016 Mm3  wet= 18.52 km2  dmax= 2.01 m  wall=   140s
+[model] t=  3.75 h  Q=    97.6 m3/s  V= 4.047 Mm3  wet= 18.82 km2  dmax= 2.00 m  wall=   143s
+[model] t=  3.83 h  Q=    91.7 m3/s  V= 4.075 Mm3  wet= 19.10 km2  dmax= 1.99 m  wall=   146s
+[model] t=  3.92 h  Q=    86.3 m3/s  V= 4.102 Mm3  wet= 19.43 km2  dmax= 1.97 m  wall=   150s
+[model] t=  4.00 h  Q=    81.3 m3/s  V= 4.127 Mm3  wet= 19.73 km2  dmax= 1.96 m  wall=   153s
+[model] t=  4.08 h  Q=    76.7 m3/s  V= 4.151 Mm3  wet= 19.90 km2  dmax= 1.95 m  wall=   157s
+[model] t=  4.17 h  Q=    72.4 m3/s  V= 4.173 Mm3  wet= 19.99 km2  dmax= 1.94 m  wall=   160s
+[model] t=  4.25 h  Q=    68.4 m3/s  V= 4.194 Mm3  wet= 20.15 km2  dmax= 1.94 m  wall=   163s
+[model] t=  4.33 h  Q=    64.8 m3/s  V= 4.214 Mm3  wet= 20.27 km2  dmax= 1.93 m  wall=   167s
+[model] t=  4.42 h  Q=    61.3 m3/s  V= 4.233 Mm3  wet= 20.46 km2  dmax= 1.92 m  wall=   170s
+[model] t=  4.50 h  Q=    58.2 m3/s  V= 4.251 Mm3  wet= 20.53 km2  dmax= 1.91 m  wall=   173s
+[model] t=  4.58 h  Q=    55.2 m3/s  V= 4.268 Mm3  wet= 20.60 km2  dmax= 1.91 m  wall=   177s
+[model] t=  4.67 h  Q=    52.5 m3/s  V= 4.284 Mm3  wet= 20.67 km2  dmax= 1.90 m  wall=   180s
+[model] t=  4.75 h  Q=    49.9 m3/s  V= 4.299 Mm3  wet= 20.67 km2  dmax= 1.89 m  wall=   183s
+[model] t=  4.83 h  Q=    47.5 m3/s  V= 4.314 Mm3  wet= 20.70 km2  dmax= 1.89 m  wall=   187s
+[model] t=  4.92 h  Q=    45.2 m3/s  V= 4.328 Mm3  wet= 20.76 km2  dmax= 1.88 m  wall=   190s
+[model] t=  5.00 h  Q=    43.1 m3/s  V= 4.341 Mm3  wet= 20.84 km2  dmax= 1.87 m  wall=   193s
+[model] t=  5.08 h  Q=    41.1 m3/s  V= 4.354 Mm3  wet= 20.99 km2  dmax= 1.87 m  wall=   196s
+[model] t=  5.17 h  Q=    39.3 m3/s  V= 4.366 Mm3  wet= 21.10 km2  dmax= 1.86 m  wall=   200s
+[model] t=  5.25 h  Q=    37.5 m3/s  V= 4.377 Mm3  wet= 21.26 km2  dmax= 1.86 m  wall=   203s
+[model] t=  5.33 h  Q=    35.9 m3/s  V= 4.388 Mm3  wet= 21.52 km2  dmax= 1.85 m  wall=   206s
+[model] t=  5.42 h  Q=    34.3 m3/s  V= 4.399 Mm3  wet= 21.74 km2  dmax= 1.85 m  wall=   210s
+[model] t=  5.50 h  Q=    32.9 m3/s  V= 4.409 Mm3  wet= 21.98 km2  dmax= 1.84 m  wall=   213s
+[model] t=  5.58 h  Q=    31.5 m3/s  V= 4.419 Mm3  wet= 22.22 km2  dmax= 1.84 m  wall=   216s
+[model] t=  5.67 h  Q=    30.2 m3/s  V= 4.428 Mm3  wet= 22.45 km2  dmax= 1.84 m  wall=   219s
+[model] t=  5.75 h  Q=    29.0 m3/s  V= 4.437 Mm3  wet= 22.66 km2  dmax= 1.83 m  wall=   223s
+[model] t=  5.83 h  Q=    27.8 m3/s  V= 4.445 Mm3  wet= 22.75 km2  dmax= 1.83 m  wall=   226s
+[model] t=  5.92 h  Q=    26.7 m3/s  V= 4.453 Mm3  wet= 22.91 km2  dmax= 1.82 m  wall=   229s
+[model] t=  6.00 h  Q=    25.7 m3/s  V= 4.461 Mm3  wet= 23.07 km2  dmax= 1.82 m  wall=   233s
+[model] t=  6.08 h  Q=    24.7 m3/s  V= 4.469 Mm3  wet= 23.26 km2  dmax= 1.82 m  wall=   236s
+[model] t=  6.17 h  Q=    23.8 m3/s  V= 4.476 Mm3  wet= 23.47 km2  dmax= 1.81 m  wall=   239s
+[model] t=  6.25 h  Q=    22.9 m3/s  V= 4.483 Mm3  wet= 23.75 km2  dmax= 1.81 m  wall=   242s
+[model] t=  6.33 h  Q=    22.0 m3/s  V= 4.490 Mm3  wet= 24.00 km2  dmax= 1.81 m  wall=   246s
+[model] t=  6.42 h  Q=    21.2 m3/s  V= 4.496 Mm3  wet= 24.26 km2  dmax= 1.80 m  wall=   249s
+[model] t=  6.50 h  Q=    20.5 m3/s  V= 4.503 Mm3  wet= 24.45 km2  dmax= 1.80 m  wall=   252s
+[model] t=  6.58 h  Q=    19.7 m3/s  V= 4.509 Mm3  wet= 24.75 km2  dmax= 1.80 m  wall=   256s
+[model] t=  6.67 h  Q=    19.1 m3/s  V= 4.514 Mm3  wet= 24.89 km2  dmax= 1.79 m  wall=   259s
+[model] t=  6.75 h  Q=    18.4 m3/s  V= 4.520 Mm3  wet= 25.01 km2  dmax= 1.79 m  wall=   262s
+[model] t=  6.83 h  Q=    17.8 m3/s  V= 4.525 Mm3  wet= 25.26 km2  dmax= 1.79 m  wall=   266s
+[model] t=  6.92 h  Q=    17.2 m3/s  V= 4.531 Mm3  wet= 25.39 km2  dmax= 1.78 m  wall=   269s
+[model] t=  7.00 h  Q=    16.6 m3/s  V= 4.536 Mm3  wet= 25.62 km2  dmax= 1.78 m  wall=   272s
+[model] t=  7.08 h  Q=    16.1 m3/s  V= 4.541 Mm3  wet= 25.78 km2  dmax= 1.78 m  wall=   276s
+[model] t=  7.17 h  Q=    15.5 m3/s  V= 4.545 Mm3  wet= 25.88 km2  dmax= 1.78 m  wall=   279s
+[model] t=  7.25 h  Q=    15.0 m3/s  V= 4.550 Mm3  wet= 25.98 km2  dmax= 1.77 m  wall=   282s
+[model] t=  7.33 h  Q=    14.6 m3/s  V= 4.554 Mm3  wet= 26.01 km2  dmax= 1.77 m  wall=   286s
+[model] t=  7.42 h  Q=    14.1 m3/s  V= 4.559 Mm3  wet= 26.13 km2  dmax= 1.77 m  wall=   289s
+[model] t=  7.50 h  Q=    13.7 m3/s  V= 4.563 Mm3  wet= 26.23 km2  dmax= 1.77 m  wall=   292s
+[model] t=  7.58 h  Q=    13.2 m3/s  V= 4.567 Mm3  wet= 26.30 km2  dmax= 1.76 m  wall=   296s
+[model] t=  7.67 h  Q=    12.8 m3/s  V= 4.571 Mm3  wet= 26.38 km2  dmax= 1.76 m  wall=   299s
+[model] t=  7.75 h  Q=    12.5 m3/s  V= 4.575 Mm3  wet= 26.44 km2  dmax= 1.76 m  wall=   302s
+[model] t=  7.83 h  Q=    12.1 m3/s  V= 4.578 Mm3  wet= 26.46 km2  dmax= 1.76 m  wall=   306s
+[model] t=  7.92 h  Q=    11.7 m3/s  V= 4.582 Mm3  wet= 26.54 km2  dmax= 1.76 m  wall=   309s
+[model] t=  8.00 h  Q=    11.4 m3/s  V= 4.585 Mm3  wet= 26.56 km2  dmax= 1.75 m  wall=   312s
+[model] t=  8.08 h  Q=    11.1 m3/s  V= 4.589 Mm3  wet= 26.61 km2  dmax= 1.75 m  wall=   316s
+[model] t=  8.17 h  Q=    10.7 m3/s  V= 4.592 Mm3  wet= 26.75 km2  dmax= 1.75 m  wall=   319s
+[model] t=  8.25 h  Q=    10.4 m3/s  V= 4.595 Mm3  wet= 26.93 km2  dmax= 1.75 m  wall=   323s
+[model] t=  8.33 h  Q=    10.2 m3/s  V= 4.598 Mm3  wet= 27.12 km2  dmax= 1.75 m  wall=   326s
+[model] t=  8.42 h  Q=     9.9 m3/s  V= 4.601 Mm3  wet= 27.24 km2  dmax= 1.74 m  wall=   329s
+[model] t=  8.50 h  Q=     9.6 m3/s  V= 4.604 Mm3  wet= 27.36 km2  dmax= 1.74 m  wall=   333s
+[model] t=  8.58 h  Q=     9.3 m3/s  V= 4.607 Mm3  wet= 27.45 km2  dmax= 1.74 m  wall=   336s
+[model] t=  8.67 h  Q=     9.1 m3/s  V= 4.610 Mm3  wet= 27.47 km2  dmax= 1.74 m  wall=   339s
+[model] t=  8.75 h  Q=     8.8 m3/s  V= 4.612 Mm3  wet= 27.47 km2  dmax= 1.74 m  wall=   343s
+[model] t=  8.83 h  Q=     8.6 m3/s  V= 4.615 Mm3  wet= 27.50 km2  dmax= 1.74 m  wall=   346s
+[model] t=  8.92 h  Q=     8.4 m3/s  V= 4.618 Mm3  wet= 27.58 km2  dmax= 1.73 m  wall=   350s
+[model] t=  9.00 h  Q=     8.2 m3/s  V= 4.620 Mm3  wet= 27.61 km2  dmax= 1.73 m  wall=   353s
+[model] t=  9.08 h  Q=     8.0 m3/s  V= 4.623 Mm3  wet= 27.73 km2  dmax= 1.73 m  wall=   356s
+[model] t=  9.17 h  Q=     7.8 m3/s  V= 4.625 Mm3  wet= 27.79 km2  dmax= 1.73 m  wall=   360s
+[model] t=  9.25 h  Q=     7.6 m3/s  V= 4.627 Mm3  wet= 27.97 km2  dmax= 1.73 m  wall=   363s
+[model] t=  9.33 h  Q=     7.4 m3/s  V= 4.629 Mm3  wet= 28.06 km2  dmax= 1.73 m  wall=   367s
+[model] t=  9.42 h  Q=     7.2 m3/s  V= 4.632 Mm3  wet= 28.18 km2  dmax= 1.73 m  wall=   370s
+[model] t=  9.50 h  Q=     7.0 m3/s  V= 4.634 Mm3  wet= 28.27 km2  dmax= 1.72 m  wall=   373s
+[model] t=  9.58 h  Q=     6.9 m3/s  V= 4.636 Mm3  wet= 28.19 km2  dmax= 1.72 m  wall=   377s
+[model] t=  9.67 h  Q=     6.7 m3/s  V= 4.638 Mm3  wet= 28.15 km2  dmax= 1.72 m  wall=   380s
+[model] t=  9.75 h  Q=     6.5 m3/s  V= 4.640 Mm3  wet= 28.06 km2  dmax= 1.72 m  wall=   384s
+[model] t=  9.83 h  Q=     6.4 m3/s  V= 4.642 Mm3  wet= 28.04 km2  dmax= 1.72 m  wall=   387s
+[model] t=  9.92 h  Q=     6.2 m3/s  V= 4.644 Mm3  wet= 28.05 km2  dmax= 1.72 m  wall=   391s
+[model] t= 10.00 h  Q=     6.1 m3/s  V= 4.646 Mm3  wet= 28.06 km2  dmax= 1.72 m  wall=   394s
+[model] t= 10.08 h  Q=     5.9 m3/s  V= 4.647 Mm3  wet= 28.07 km2  dmax= 1.71 m  wall=   397s
+[model] t= 10.17 h  Q=     5.8 m3/s  V= 4.649 Mm3  wet= 28.05 km2  dmax= 1.71 m  wall=   401s
+[model] t= 10.25 h  Q=     5.7 m3/s  V= 4.651 Mm3  wet= 28.06 km2  dmax= 1.71 m  wall=   404s
+[model] t= 10.33 h  Q=     5.5 m3/s  V= 4.652 Mm3  wet= 28.13 km2  dmax= 1.71 m  wall=   408s
+[model] t= 10.42 h  Q=     5.4 m3/s  V= 4.652 Mm3  wet= 28.17 km2  dmax= 1.71 m  wall=   411s
+[model] t= 10.50 h  Q=     5.3 m3/s  V= 4.644 Mm3  wet= 28.18 km2  dmax= 1.71 m  wall=   415s
+[model] t= 10.58 h  Q=     5.2 m3/s  V= 4.622 Mm3  wet= 28.11 km2  dmax= 1.71 m  wall=   418s
+[model] t= 10.67 h  Q=     5.1 m3/s  V= 4.589 Mm3  wet= 27.96 km2  dmax= 1.71 m  wall=   422s
+[model] t= 10.75 h  Q=     5.0 m3/s  V= 4.545 Mm3  wet= 27.63 km2  dmax= 1.71 m  wall=   425s
+[model] t= 10.83 h  Q=     4.9 m3/s  V= 4.493 Mm3  wet= 27.24 km2  dmax= 1.70 m  wall=   428s
+[model] t= 10.92 h  Q=     4.8 m3/s  V= 4.433 Mm3  wet= 26.83 km2  dmax= 1.70 m  wall=   432s
+[model] t= 11.00 h  Q=     4.7 m3/s  V= 4.367 Mm3  wet= 26.42 km2  dmax= 1.70 m  wall=   435s
+[model] t= 11.08 h  Q=     4.6 m3/s  V= 4.299 Mm3  wet= 25.96 km2  dmax= 1.70 m  wall=   439s
+[model] t= 11.17 h  Q=     4.5 m3/s  V= 4.229 Mm3  wet= 25.53 km2  dmax= 1.70 m  wall=   442s
+[model] t= 11.25 h  Q=     4.4 m3/s  V= 4.158 Mm3  wet= 25.12 km2  dmax= 1.70 m  wall=   446s
+[model] t= 11.33 h  Q=     4.3 m3/s  V= 4.089 Mm3  wet= 24.64 km2  dmax= 1.70 m  wall=   449s
+[model] t= 11.42 h  Q=     4.2 m3/s  V= 4.020 Mm3  wet= 24.23 km2  dmax= 1.70 m  wall=   453s
+[model] t= 11.50 h  Q=     4.1 m3/s  V= 3.952 Mm3  wet= 23.79 km2  dmax= 1.70 m  wall=   456s
+[model] t= 11.58 h  Q=     4.0 m3/s  V= 3.885 Mm3  wet= 23.41 km2  dmax= 1.70 m  wall=   459s
+[model] t= 11.67 h  Q=     3.9 m3/s  V= 3.819 Mm3  wet= 22.94 km2  dmax= 1.70 m  wall=   463s
+[model] t= 11.75 h  Q=     3.9 m3/s  V= 3.755 Mm3  wet= 22.50 km2  dmax= 1.69 m  wall=   466s
+[model] t= 11.83 h  Q=     0.0 m3/s  V= 3.691 Mm3  wet= 22.07 km2  dmax= 1.69 m  wall=   470s
+[model] t= 11.92 h  Q=     0.0 m3/s  V= 3.628 Mm3  wet= 21.63 km2  dmax= 1.69 m  wall=   473s
+[model] t= 12.00 h  Q=     0.0 m3/s  V= 3.567 Mm3  wet= 21.16 km2  dmax= 1.69 m  wall=   477s
+[run] done -> /Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/northern-breach-simulation-361327/outputs/north/north_extended.sww

@@ -1,0 +1,22 @@
+{
+  "scenario": "north",
+  "mode": "extended",
+  "time_zero": "external breach initiation",
+  "offset_from_pond1_failure_h": 2.17,
+  "inundated_area_km2_gt_0.10m": 49.35,
+  "max_depth_m": 1.9240875244140625,
+  "max_speed_ms": 2.8028743267059326,
+  "sim_hours": 12.0,
+  "pre_breach_h": 0.0,
+  "buildings": {
+    "buildings": 5991,
+    "buildings_inundated_gt_0.1m": 680,
+    "buildings_at_risk_depth_ge_0.5m": 30,
+    "buildings_at_risk_hazard_gt_H2": 31,
+    "dwelling_like_at_risk_gt_H2": 31,
+    "PAR_estimate_gtH2_x_persons": 77.5,
+    "PAR_estimate_depth0.5_x_persons": 75.0,
+    "persons_per_dwelling": 2.5,
+    "note": "Screening estimate from OSM building footprints; NZSOLD PAR requires occupancy per Table 2.7 and no evacuation credit."
+  }
+}

@@ -10,9 +10,16 @@ The Damwatch Design Report (Issue 6, 26 Oct 2021, section 3.0 and Table 6, PDF p
 emergency dewatering is done by opening the control gates that discharge outside the ponds – gates
 G2, G3 and G6 – into the irrigation races (MR4, R2, R3), plus gate G5 between Pond 1 and the Tub.
 The gates must be capable of opening after a Safety Evaluation Earthquake and its aftershocks (s9.3,
-PDF p109). **Emergency dewatering is therefore into the race network, not into the Eyre River.**
-Questions for the CLG: what is the dewatering rate through the gates, how long does it take to draw
-the ponds down to a safe level, and what happens in the races and at their outfalls during that time?
+PDF p109). The Emergency Action Plan (Issue 6, Jun 2020, App. F.3) adds that the MR4 and R3 races
+**both discharge to the Eyre River**, so emergency dewatering reaches the Eyre via the race network
+(EAP Table F.1 example: Pond 1 via MR4 at 4–5 m³/s, Pond 2 via R2+R3 at 11–15 m³/s, i.e. 7.5–16.6 h per
+metre of drawdown). The EAP warns that dewatering flows may exceed race capacity and that culverts are
+the likely blockage points; the gate steps, race capacities and dewatering inundation maps are deferred
+"prior to commissioning" and unpublished. Evidence: [dewatering-pathway-evidence.md](dewatering-pathway-evidence.md).
+Questions for the CLG: what are the as-built gate and race capacities, how long does a full drawdown of
+8.2 M m³ take against plausible failure-development times, are MR4/R3 built, what happens at the culverts
+and the Eyre outfalls during dewatering (fine weather and coincident with a 1 % AEP Eyre flood), and will
+the F.6 dewatering inundation maps be released?
 
 ### 2. Eyre River flooding and the north embankment
 The same report (s3, PDF p32) cites preliminary Waimakariri District Council flood mapping showing that
@@ -21,6 +28,34 @@ report concludes this would not endanger the ponds. Our model domains do not rea
 the ponds (it runs ~7 km north), so this interaction is not represented; the storm scenario only
 includes the Eyre where it crosses the breach flood corridor ~10 km east. Worth asking for the WDC
 mapping and the design basis for the north embankment under external flooding.
+
+### 3. Could a breach or emergency dewatering put water on North Eyre Road?
+Asked 16 Sep 2026. Screening answer from the model outputs and the LiDAR: **no credible pathway**.
+North Eyre Road starts ~9 km east of the ponds and runs 1.7–2.9 km *north* of the Eyre River, on ground
+4–12 m above the river bed at the same easting (e.g. road 126.8 m vs river 118.5 m at E 1548.9k). The plain
+falls east-south-east at ~6 m/km, so everything released from the ponds moves away from the road:
+
+* Breach wave: maximum depth along North Eyre Road is zero at every sample point in the extended east run
+  and in the shakedown east, quake and storm runs; the northern edge of the wave stays 1.5–2 km south of
+  South Eyre Road all the way to Downs Road (4–5 km south of North Eyre Road).
+* Dewatering through gates G2/G3/G6: the receiving races MR4/R2/R3 and the mapped drains near the site fall
+  from ~221 m to ~195 m over 3.5 km heading east-south-east, into the same corridor as the breach wave. No
+  mapped race or drain crosses the Eyre; a race-bank failure would spill down the same gradient.
+* Eastern end (Swannanoa/Diversion Road): the wave arrives at 0.2–0.4 m; ground rises ~9 m over the 4.8 km
+  from Diversion Road to the east end of North Eyre Road, and the Old Eyre Bed (38–41 m) sits above the wet
+  cells. Where breach water touches the diverted Eyre channel it is downstream of the old-bed offtake.
+
+The only chain that is not physically impossible is a river-flood story: a major Eyre flood reaches the north
+embankment (WDC mapping, report s3), the north embankment fails into the flooded foreground (contrary to the
+report's conclusion), the released water (north hydrograph peak 817 m³/s, 4.7 Mm³, not 2D-routed, heavily
+attenuated over 6 km of near-flat plain) joins the Eyre flood, and the combined flow overtops the low north
+bank between Eyrewell and Swannanoa (road ~49–52 m vs river ~50 m at E 1559–1560k), where the Eyre flooded
+historically before the 1860s diversion. That overtopping would happen with or without the dam; the dam's
+increment is marginal. **Message for the CLG:** North Eyre Road is outside any credible breach or dewatering
+footprint; its flood risk is an Eyre River question that this model does not cover (domain stops short of
+the river at the site). Follow-ups: WDC Eyre flood mapping (point 2), dewatering rate and race outfalls
+(point 1), and optionally a 2D run of the north breach on the extended domain to quantify how much reaches
+the Eyre.
 
 ## Assumptions in the model that real data would improve
 
@@ -39,4 +74,6 @@ mapping and the design basis for the north embankment under external flooding.
 | A11 | Storm: 2 h of rain and river before the breach | storm | choose the timing from a design storm hyetograph |
 | A12 | Storm: the Waimakariri River is not in flood (domain edge is transmissive) | storm | Waimakariri flood level at the confluence for the same storm |
 | A13 | 2.5 persons per dwelling; OSM footprints classify "dwellings" | consequences | 2012 doorstep survey (Damwatch), LINZ building outlines, census |
-| A14 | Shakedown grid 20 m, 4 h; no production (10 m, 14 h) runs yet | all | production runs once A1–A4 are settled |
+| A14 | Shakedown grid 20 m, 4 h (east and north also on the full domain, 12 h); no production (10 m, 14 h) runs yet | all | production runs once A1–A4 are settled |
+| A15 | The north (Dixon Road) breach releases Pond 2 only; Pond 1 is assumed to sit on the west 30 % of the footprint. A direct Pond 1 breach on the north side (`north_p1`) was checked and is smaller (473 m³/s), so this is not what sets the 2016 north times | north | drawing WIL1125/30/2 (which pond the north embankment retains) |
+| A16 | Breach invert = natural ground at the toe (no headcut into the ~6 m of pond that lies below ground). On the north side this gives 817 m³/s and arrivals 0.6–4 h *later* than Damwatch 2016; a breach cut down to the Pond 2 floor (210.8 m) gives the east-size 2,100 m³/s outflow and reproduces the 2016 north times and severity (RESULTS §2c). The two are carried as a bounding pair; the full-depth case governs the north-side PIC | north (also south/west in principle) | Appendix H breach parameters; engineer's judgement on headcut erosion through the in-situ gravels; floor levels and cut/fill from WIL1125/30/2 |
