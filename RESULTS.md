@@ -180,9 +180,85 @@ invert, which limits the head to 6.9 m and the peak to 817 m³/s (40 % of the ea
 plain. The 2016 study evidently assumed a much larger or faster north outflow – e.g. a breach that also
 releases Pond 1 directly (FSL 226.5 m, 3.7 m higher head), a lower breach invert scoured into the foundation,
 or a shorter formation time. Which pond the north embankment retains along its length and the 2016 north breach
-parameters are therefore the first things to reconcile with Appendix H (assumption register A1, A4 and A15 in
-`docs/clg-notes.md`); a `--scour 1 --time-factor 0.5` sensitivity on the north hydrograph is the quick model-side
+parameters are therefore the first things to reconcile with Appendix H (assumption register A1, A4, A15 and A16 in
+`docs/clg-notes.md`; sensitivities below); a `--scour 1 --time-factor 0.5` sensitivity on the north hydrograph is the quick model-side
 check. Depths at the far roads (Browns, Two Chain, Diversion) match the 2016 values within 0.1 m.
+
+### Reconciling the north arrival times – breach sensitivities (4 h domain)
+
+Six variants of the north hydrograph were routed on the shakedown domain to see which breach assumption
+would reproduce the 2016 table (`outputs/north/*_shakedown_<tag>.*`, `outputs/north_p1/`). Times are hours
+after the Pond 2 (or Pond 1) breach opens; depths are maxima at the road.
+
+| Case | Change | Peak (m³/s) | Pond 1 failure → breach opens (h) | Carleton Rd | Wolffs Rd | Poyntzs Rd | Pesters Rd | Downs Rd | Area (km²) | Bldgs ≥ 0.5 m |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Damwatch 2016 | – | ~2,500 quoted | ? | 0.83 h / 0.71 m | 1.17 / 0.59 | 1.58 / 0.41 | 1.83 / 0.55 | 2.50 / 0.33 | 66 (full) | 35 households |
+| base | as reported above | 817 | 2.17 | 1.40 / 0.60 | 2.10 / 0.71 | 2.85 / 0.68 | 3.32 / 0.70 | not in 4 h | 20.4 | 17 |
+| scour1 | invert 1 m below the toe | 997 | 2.17 | 1.28 / 0.65 | 1.94 / 0.76 | 2.67 / 0.74 | 3.10 / 0.74 | not in 4 h | 24.1 | 40 |
+| fast | formation time × 0.5 | 1,090 | 1.61 | 1.00 / 0.66 | 1.57 / 0.73 | 2.29 / 0.68 | 2.73 / 0.69 | 3.91 / 0.75 | 24.8 | 31 |
+| wide | breach width × 2 | 979 | 1.68 | 1.25 / 0.66 | 1.90 / 0.77 | 2.62 / 0.77 | 3.06 / 0.76 | not in 4 h | 25.2 | 51 |
+| fastwide | width × 2 and time × 0.5 | 1,597 | 1.10 | 0.90 / 0.77 | 1.41 / 0.84 | 2.07 / 0.78 | 2.49 / 0.77 | 3.57 / 0.92 | 31.1 | 80 |
+| **full** | **invert at the Pond 2 floor (210.8 m), i.e. the east-size hydrograph** | **2,098** | 2.17 | **0.95 / 0.88** | **1.47 / 0.96** | **2.07 / 0.97** | **2.42 / 0.92** | **3.37 / 1.16** | 39.4 | 203 |
+| pond1 | Pond 1 pipes directly through the north embankment, no cascade | 473 | 0.00 | 1.25 / 0.48 | 1.98 / 0.52 | 2.87 / 0.44 | 3.45 / 0.50 | not in 4 h | 12.4 | 2 |
+
+The full-depth case was then routed on the 12 h full domain (`outputs/north/*_extended_full.*`):
+
+| Road | Damwatch 2016 north | Model, toe-level invert (base) | Model, full-depth invert |
+|---|---|---|---|
+| Carleton Road | 0.83 h / 0.71 m | 1.42 / 0.64 | **1.00 / 0.90** |
+| Wolffs Road | 1.17 / 0.59 | 2.09 / 0.71 | 1.50 / 0.98 |
+| Poyntzs Road | 1.58 / 0.41 | 2.89 / 0.69 | 2.08 / 0.99 |
+| Pesters Road | 1.83 / 0.55 | 3.33 / 0.65 | 2.42 / 0.87 |
+| Downs Road | 2.50 / 0.33 | 4.50 / 0.83 | 3.42 / 1.17 |
+| Browns Road | 3.50 / 0.50 | 5.88 / 0.41 | 4.50 / 0.59 |
+| Two Chain Road | 4.33 / 0.37 | 7.42 / 0.38 | 5.69 / 0.53 |
+| Diversion Road | 5.58 / <0.1 | 9.62 / 0.32 | 7.68 / 0.44 |
+| Inundated area (km²) | 66 | 49.4 | **74.3** |
+| Buildings ≥ 0.5 m / PAR screening | 35 households / 95 | 30 / 75 | 201 / ~500 |
+
+What this shows:
+
+1. **Breach size, not routing, is the difference.** Scour, formation time and width within the usual Froehlich
+   sensitivity range move Carleton Road by at most 0.5 h and leave Downs Road beyond 3.5 h. Only a breach with
+   the east-size outflow (~2,100 m³/s) gets within 0.1–0.9 h of the 2016 north times, and it also reproduces
+   the 2016 finding that the north breach is about as severe as the east at Carleton Road (2016: 0.71 m north
+   vs 0.68 m east; model full-depth north 0.88 m vs east 1.00 m).
+2. **The reconciling assumption is the breach invert.** This model stops the breach at natural ground at the
+   embankment toe (216.7 m on the north side), which leaves the 6 m of Pond 2 that sit below natural ground
+   (floor 210.8 m) in the pond. The 2016 study evidently let the north breach cut down to (or near) the pond
+   floor, releasing the full 7.2 Mm³ at the same peak as the east breach; that is also the only reading under
+   which "approximately 2,500 m³/s" applies to every side. Physically it means the outflow headcuts through
+   ~6 m of the natural gravel between the pond floor and the toe, which is a judgement for the reviewing
+   engineer (erodibility of the in-situ gravels, duration of flow, whether the liner/floor detail resists it).
+3. A direct Pond 1 breach through the north embankment (`north_p1`) is *not* the explanation: the Pond 1 toe on
+   that side is even higher (219.4 m) and the outflow smaller (473 m³/s), though it starts 2.2 h earlier because
+   there is no cascade.
+4. **A residual remains.** With the full-depth breach the model is still 0.2–0.9 h later than 2016 near the site
+   and 1.0–2.1 h later at Browns, Two Chain and Diversion Roads, whereas the east run with the *same* hydrograph is
+   0.7–1.5 h *earlier* than the 2016 east times. The 2016 north wave therefore travelled faster than the 2016 east
+   wave over the same plain, which breach size cannot explain; it points to a different flow path or terrain
+   representation in the 2016 north model (e.g. a route along the Eyre-side terraces or the Main Race with
+   lower effective roughness) and can only be settled from the Appendix H maps. The 2016 depths at the far roads
+   (0.3–0.5 m) sit between the two model cases, and the 2016 north flood zone (66 km²) lies between the base
+   (49 km²) and full-depth (74 km²) extents, so the 2016 north breach was probably somewhat smaller than the
+   east-size hydrograph but much larger than the toe-level breach.
+5. The full-depth PAR screening (~500) is far above the 2012 survey figure (95) because OSM footprints count
+   every building, including sheds, and the north band crosses the West Eyreton lifestyle blocks; the east
+   extended run shows the same inflation (225 vs 107). Use the building counts for ranking only.
+
+**Recommendation for the certified assessment:** treat the north-side breach invert (toe level vs pond floor)
+as a bounding pair until drawing WIL1125/30/2 (floor levels, cut/fill on the north side) and Appendix H (2016
+breach parameters) are available. For the PIC the full-depth case governs on the north side: 203 buildings
+≥ 0.5 m on the 4 h domain against 17 for the toe-level breach. Assumption register: A15/A16 in
+`docs/clg-notes.md`.
+
+**Maximum depth – full-depth north breach, 12 h full domain**
+
+![north full extended max_depth](outputs/north/max_depth_extended_full.png)
+
+**Maximum depth – full-depth north breach, 4 h domain**
+
+![north full max_depth](outputs/north/max_depth_shakedown_full.png)
 
 **Maximum depth (12 h, full domain)**
 

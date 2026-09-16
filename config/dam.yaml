@@ -45,7 +45,10 @@ breach_defaults:
   duration_h: 14
   weir_coeff_rect: 1.7
   weir_coeff_tri: 1.4
-  breach_invert: dem_at_toe   # final breach bottom = natural ground at the toe from LiDAR (no foundation scour)
+  breach_invert: dem_at_toe   # final breach bottom = natural ground at the toe from LiDAR (no foundation scour).
+                              # On the up-slope sides the pond floor (210.8) is ~6 m BELOW the toe; a breach that headcuts to the
+                              # floor (03 --invert 210.8) releases the full volume at the east-size peak and is what reproduces the
+                              # Damwatch 2016 north times (RESULTS s2c, assumption A16). Engineer to decide which bound applies.
   breach_invert_scour_m: 0.0  # optional extra scour below natural ground (sensitivity: 1.0)
   inlet_polygon_size_m: [80, 30]   # ANUGA inlet patch (along embankment x outward)
 
@@ -75,6 +78,18 @@ scenarios:
     breach_location_nztm: [1534829, 5197507]   # mid north embankment (approx.)
     outward_dir: [0.282, 0.959]
     damwatch_2012: {flood_zone_km2: 66, households_in_zone: 198, households_at_risk: 35, PAR: 95, PIC_regs2008: HIGH, PIC_nzsold2000: MEDIUM}
+  north_p1:
+    # Sensitivity for reconciling the Damwatch 2016 north arrival times (RESULTS s2c): the north embankment also
+    # retains Pond 1 along its western ~30 %, so a north breach could release Pond 1 directly (FSL 226.5 m,
+    # 3.7 m more head than Pond 2) without the cascade delay. Breach point on the Pond 1 part of the north
+    # embankment (assumed position, see site.yaml pond1_share_of_width).
+    description: "Sensitivity: sunny-day piping failure of Pond 1 directly through the Pond 1 part of the NORTH embankment (Dixon Road side), no cascade. Only Pond 1 volume released."
+    cascade: false
+    pond: pond1
+    mode: piping
+    breach_location_nztm: [1534468, 5197613]   # north embankment, 15 % of the way from the NW corner (approx.)
+    outward_dir: [0.282, 0.959]
+    damwatch_2012: null
   west:
     description: "Sunny-day piping failure of Pond 1 directly through the WEST embankment (MR4 race side). Only Pond 1 volume released."
     cascade: false

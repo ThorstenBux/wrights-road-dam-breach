@@ -48,7 +48,9 @@ def main():
         raise SystemExit(f"Hydrograph not found: {hyd} – run scripts/03_breach_hydrograph.py --scenario {a.scenario}")
     Q_raw = read_hydrograph_csv(hyd)
     # Start the 2D simulation when water first leaves the ponds (cascade: Pond 2 breach initiation).
-    summ_path = out_dir / "breach_summary.json"
+    summ_path = out_dir / f"breach_summary{a.tag}.json"   # tagged sensitivity hydrographs carry their own timing
+    if not summ_path.exists():
+        summ_path = out_dir / "breach_summary.json"
     t0 = float(json.loads(summ_path.read_text()).get("t_init_s") or 0.0) if summ_path.exists() else 0.0
     hydro = sc.get("hydrology") or {}
     pre = float(hydro.get("pre_breach_h", 0.0)) * 3600   # spin-up before the breach opens (storm scenarios)

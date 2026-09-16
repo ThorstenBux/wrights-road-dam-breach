@@ -94,7 +94,10 @@ carry that caveat.
 3. **Breach invert** = natural ground at the embankment toe from LiDAR (no foundation scour), with a scour
    sensitivity (+1 m). Because the ponds are partly below ground, this – not the 8–12 m "embankment height" –
    controls the releasable volume and head, and it differs strongly between the up-slope (west, north) and
-   down-slope (east, south) sides.
+   down-slope (east, south) sides. **This is the assumption that separates the model from the Damwatch 2016
+   north-breach times**: a north breach cut down to the Pond 2 floor (`--invert 210.8`) releases the east-size
+   outflow and reproduces the 2016 north arrivals, whereas the toe-level breach is 0.6–4 h later (RESULTS §2c).
+   Carry both as a bounding pair until Appendix H is available.
 4. **Level-pool routing**: the pool drains through a trapezoidal breach that grows linearly (or sinusoidally)
    to its final size over t_f; broad-crested weir flow Q = 1.7 b H^1.5 + 1.4 z H^2.5 (SI); 1 s time step; no
    tailwater submergence (conservative for outflow).
