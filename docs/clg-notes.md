@@ -39,4 +39,5 @@ mapping and the design basis for the north embankment under external flooding.
 | A11 | Storm: 2 h of rain and river before the breach | storm | choose the timing from a design storm hyetograph |
 | A12 | Storm: the Waimakariri River is not in flood (domain edge is transmissive) | storm | Waimakariri flood level at the confluence for the same storm |
 | A13 | 2.5 persons per dwelling; OSM footprints classify "dwellings" | consequences | 2012 doorstep survey (Damwatch), LINZ building outlines, census |
-| A14 | Shakedown grid 20 m, 4 h; no production (10 m, 14 h) runs yet | all | production runs once A1–A4 are settled |
+| A14 | Shakedown grid 20 m, 4 h (east and north also on the full domain, 12 h); no production (10 m, 14 h) runs yet | all | production runs once A1–A4 are settled |
+| A15 | The north (Dixon Road) breach releases Pond 2 only, with its invert at the LiDAR toe (216.7 m); Pond 1 is assumed to sit on the west 30 % of the footprint. Gives a 817 m³/s peak and road arrivals 0.6–4 h *later* than the Damwatch 2016 north times | north | drawing WIL1125/30/2 (which pond the north embankment retains) and the 2016 north-breach parameters in Appendix H |

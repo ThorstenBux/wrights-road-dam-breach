@@ -9,6 +9,9 @@ Potential Impact Classification under the Building (Dam Safety) Regulations 2022
 ## Live animations (GitHub Pages)
 
 * East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
+* East breach routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/east-extended/
+* North embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/north/
+* North breach routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/north-extended/
 * West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
 * Earthquake, all embankments at once (postulated seismic failure): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
 * Storm, east breach during 10 mm/h rain with the Eyre River in flood (rainy-day combination): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
@@ -52,7 +55,7 @@ impacts, a reproducible pipeline, and an interactive 3D animation.
 |---|---|---|---|---|---|---|---|
 | East (Pond 1 → Pond 2 cascade, overtopping) | 210.8 m | **2,100 m³/s** | 7.2 Mm³ | 39.5 km² | 95 | ~235 | 107 |
 | South (cascade) | 215.4 m | 1,070 m³/s | 5.3 Mm³ | not run in 2D | | | 54 |
-| North (cascade) | 216.7 m | 820 m³/s | 4.7 Mm³ | not run in 2D | | | 95 |
+| North (cascade) | 216.7 m | 820 m³/s | 4.7 Mm³ | 20.4 (4 h) / 49.4 (12 h, full domain) | 17 / 30 | ~43 / ~75 | 95 |
 | West (Pond 1 piping only) | 221.9 m | 235 m³/s | 1.2 Mm³ | 6.0 km² | 2 | 5 | 4 |
 | Earthquake (all embankments at once, postulated) | 210.8–221.9 m | 3,000 m³/s combined | 7.4 Mm³ | 43.4 km² | 87 | ~218 | – |
 | Storm (east breach + 10 mm/h rain + Eyre River 150 m³/s) | 210.8 m | 2,100 m³/s | 7.2 Mm³ + rain/river | 56.6 total / 43.4 added by breach | 113 total / 75 added | ~283 | – |
@@ -117,7 +120,10 @@ data/                   not committed (downloaded by scripts 01/02)
 
 20 m grid, ≥ 1,500 m² triangles, uniform roughness, no culvert/bridge/race-structure assumptions, approximate
 footprint and breach positions, buildings not in the terrain, depth at building centroid rather than surveyed
-floor level, 4 h horizon on an 18 km domain (Browns Road onward not reached), south/north scenarios not routed.
+floor level, 4 h horizon on an 18 km domain (Browns Road onward not reached), south scenario not routed.
 The east scenario has since been re-run on the full domain to Diversion Road (`--mode extended`, 12 h, still 20 m):
-see RESULTS §2b. The 20 m grid / uniform roughness limitations still apply, and the extended run took 12 h
-wall-clock on a heavily loaded machine (expect ~4–6 h on an idle core); west/quake/storm remain shakedown-only.
+see RESULTS §2b; the north scenario has been routed both ways (4 h shakedown and 12 h extended, RESULTS §2c) and
+reaches Diversion Road ~4 h later than the Damwatch 2016 table – the opposite bias to the east run, see §2c for the
+likely reasons. The 20 m grid / uniform roughness limitations still apply. The east extended run took 12 h
+wall-clock on a heavily loaded machine (expect ~4–6 h on an idle core); the north runs took minutes because the
+wet area stays small; west/quake/storm remain shakedown-only.
