@@ -125,7 +125,9 @@ carry that caveat.
    the river do not count as the breach wave; maximum depths are absolute. The design report (s3) cites WDC mapping
    showing a major Eyre flood reaching the north embankment, but the river is ~7 km north of the ponds, outside both
    model domains, so that interaction is not represented. Emergency dewatering of the ponds is via control gates
-   G2/G3/G6 into the irrigation races (report s3.0, Table 6), not into the Eyre River.
+   G2/G3/G6 into the irrigation races (report s3.0, Table 6); per the EAP (App. F.3) the MR4 and R3 races discharge
+   to the Eyre River, so a controlled dewatering ultimately reaches the Eyre (not modelled here; see
+   `docs/dewatering-pathway-evidence.md`).
 
 ### 3.2 2D flood routing (D2–D4) – `damflood/model.py`
 

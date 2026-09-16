@@ -10,9 +10,16 @@ The Damwatch Design Report (Issue 6, 26 Oct 2021, section 3.0 and Table 6, PDF p
 emergency dewatering is done by opening the control gates that discharge outside the ponds – gates
 G2, G3 and G6 – into the irrigation races (MR4, R2, R3), plus gate G5 between Pond 1 and the Tub.
 The gates must be capable of opening after a Safety Evaluation Earthquake and its aftershocks (s9.3,
-PDF p109). **Emergency dewatering is therefore into the race network, not into the Eyre River.**
-Questions for the CLG: what is the dewatering rate through the gates, how long does it take to draw
-the ponds down to a safe level, and what happens in the races and at their outfalls during that time?
+PDF p109). The Emergency Action Plan (Issue 6, Jun 2020, App. F.3) adds that the MR4 and R3 races
+**both discharge to the Eyre River**, so emergency dewatering reaches the Eyre via the race network
+(EAP Table F.1 example: Pond 1 via MR4 at 4–5 m³/s, Pond 2 via R2+R3 at 11–15 m³/s, i.e. 7.5–16.6 h per
+metre of drawdown). The EAP warns that dewatering flows may exceed race capacity and that culverts are
+the likely blockage points; the gate steps, race capacities and dewatering inundation maps are deferred
+"prior to commissioning" and unpublished. Evidence: [dewatering-pathway-evidence.md](dewatering-pathway-evidence.md).
+Questions for the CLG: what are the as-built gate and race capacities, how long does a full drawdown of
+8.2 M m³ take against plausible failure-development times, are MR4/R3 built, what happens at the culverts
+and the Eyre outfalls during dewatering (fine weather and coincident with a 1 % AEP Eyre flood), and will
+the F.6 dewatering inundation maps be released?
 
 ### 2. Eyre River flooding and the north embankment
 The same report (s3, PDF p32) cites preliminary Waimakariri District Council flood mapping showing that

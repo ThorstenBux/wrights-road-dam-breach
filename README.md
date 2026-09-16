@@ -6,7 +6,7 @@ Open tools only: LINZ LiDAR (no API key), OpenStreetMap, ANUGA 2D shallow-water 
 
 **Read [SPEC.md](SPEC.md) first**, then [RESULTS.md](RESULTS.md) (key numbers and all maps) and [HANDOVER.md](HANDOVER.md) – what is needed, what has been assumed, and what a certified
 assessment under the Building (Dam Safety) Regulations 2022 additionally requires.
-Source facts with page references are in [docs/source-notes.md](docs/source-notes.md); points to raise with the Community Liaison Group and the assumption register are in [docs/clg-notes.md](docs/clg-notes.md).
+Source facts with page references are in [docs/source-notes.md](docs/source-notes.md); points to raise with the Community Liaison Group and the assumption register are in [docs/clg-notes.md](docs/clg-notes.md). Evidence on the emergency dewatering pathway to the Eyre River is in [docs/dewatering-pathway-evidence.md](docs/dewatering-pathway-evidence.md).
 
 ## Live animations (GitHub Pages)
 
