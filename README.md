@@ -11,6 +11,9 @@ Source facts with page references are in [docs/source-notes.md](docs/source-note
 ## Live animations (GitHub Pages)
 
 * East embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/east/
+* East breach routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/east-extended/
+* North embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/north/
+* North breach routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/north-extended/
 * West embankment breach: https://thorstenbux.github.io/wrights-road-dam-breach/west/
 * Earthquake (all embankments at once): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
 * Storm (east breach + 10 mm/h rain + Eyre River in flood): https://thorstenbux.github.io/wrights-road-dam-breach/storm/

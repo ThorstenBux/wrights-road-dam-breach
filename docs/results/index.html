@@ -1,7 +1,7 @@
 <!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wrights Road breach model – results</title>
 <style>body{font-family:"IBM Plex Sans",system-ui,sans-serif;background:#0d1117;color:#e7ebf1;margin:0;padding:32px 20px 64px;max-width:1100px;margin-inline:auto;line-height:1.5}h1{font-size:26px}h2{margin-top:40px;border-bottom:1px solid #2a3442;padding-bottom:6px}a{color:#8fd3ff}table{border-collapse:collapse;font-size:13.5px;display:block;overflow-x:auto}th,td{border:1px solid #2a3442;padding:5px 9px;text-align:left}th{background:#151b24}img{max-width:100%;border:1px solid #2a3442;border-radius:6px;margin:6px 0 18px;background:#fff}p{max-width:80ch}.nav{margin-bottom:24px;color:#9aa4b5}</style>
 <div class="nav"><a href="../">← Animations</a> · <a href="https://github.com/ThorstenBux/wrights-road-dam-breach">Repository</a></div>
-<h1>Results – Wrights Road Storage Ponds dam-breach model (shakedown 15 Sep 2026; east run extended to Diversion Road 16 Sep 2026)</h1>
+<h1>Results – Wrights Road Storage Ponds dam-breach model (shakedown 15 Sep 2026; east and north runs extended to Diversion Road 16 Sep 2026)</h1>
 <p>Screening-level results. Method, assumptions and caveats: <a href="https://github.com/ThorstenBux/wrights-road-dam-breach/blob/main/SPEC.md">SPEC.md</a> §3 and §7.3; sources: <a href="https://github.com/ThorstenBux/wrights-road-dam-breach/blob/main/docs/source-notes.md">docs/source-notes.md</a>. Time zero for all 2D results is the moment the external (downstream) breach opens; for cascade scenarios that is 2.2 h after the Pond 1 failure begins.</p>
 <h2>1. Breach outflow (all four scenarios)</h2>
 <table>
@@ -365,6 +365,198 @@ now reached; Thongcaster, Domain and Barrett Roads (south-west of the site) stay
 <p><img alt="east extended max_dv" src="img/east_max_dv_extended.png" /></p>
 <p><strong>Time of peak depth</strong></p>
 <p><img alt="east extended t_peak_h" src="img/east_t_peak_h_extended.png" /></p>
+<h2>2c. North breach (Dixon Road side): 4 h shakedown and 12 h routing to Diversion Road (20 m grid)</h2>
+<p>The north cascade breach (Pond 1 → Pond 2 → NORTH embankment, 4.7 Mm³ released, peak 817 m³/s, invert
+216.7 m) routed in 2D in two steps: the 18 × 11.5 km shakedown domain for 4 h (95,000 triangles, current
+repaired mesh) and the full 31.5 × 16 km domain to Diversion Road for 12 h (201,000 triangles). Same 20 m
+LiDAR grid, mesh densities, roughness (n = 0.045) and hydrograph basis as the east runs. Outputs:
+<code>outputs/north/*_shakedown.*</code> and <code>outputs/north/*_extended.*</code>; animations:
+<a href="https://thorstenbux.github.io/wrights-road-dam-breach/north/">docs/north</a> (4 h, 60 m cells) and
+<a href="https://thorstenbux.github.io/wrights-road-dam-breach/north-extended/">docs/north-extended</a> (12 h, 80 m cells,
+10-min frames). Wall-clock on one core: ~2 min (shakedown) and ~10 min (extended) – far less than the east runs
+because the lower peak keeps the wet area and velocities small.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>North, shakedown (4 h)</th>
+<th>North, extended (12 h)</th>
+<th>Damwatch 2012 (north)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inundated area &gt; 0.1 m (km²)</td>
+<td>20.4</td>
+<td><strong>49.4</strong></td>
+<td>flood zone 66</td>
+</tr>
+<tr>
+<td>Deepest water (m)</td>
+<td>2.3</td>
+<td>1.9</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Fastest flow (m/s)</td>
+<td>3.1</td>
+<td>2.8</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Buildings &gt; 0.1 m / ≥ 0.5 m</td>
+<td>373 / 17</td>
+<td>680 / 30</td>
+<td>households in zone 198 / at risk 35</td>
+</tr>
+<tr>
+<td>PAR screening (2.5 persons per at-risk building)</td>
+<td>43</td>
+<td>75</td>
+<td>95</td>
+</tr>
+<tr>
+<td>Wet area at end of run (km²)</td>
+<td>18.1</td>
+<td>21.2 (peak 28.3 at 9.5 h, draining to the river)</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<h3>Road arrival times – north breach vs Damwatch 2016 (WIL Evacuation Plan Table 1)</h3>
+<p>Times are hours after the Pond 2 breach opens (2.2 h after the Pond 1 failure begins). Shakedown and extended
+values agree within 0.04 h / 0.05 m where both reach a road; the extended values are listed.</p>
+<table>
+<thead>
+<tr>
+<th>Road</th>
+<th>Damwatch arrival (h)</th>
+<th>Model arrival (h)</th>
+<th>Damwatch depth (m)</th>
+<th>Model max depth (m)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dixon Road</td>
+<td>–</td>
+<td>0.30</td>
+<td>–</td>
+<td>1.21</td>
+</tr>
+<tr>
+<td>Domain Road</td>
+<td>–</td>
+<td>0.58</td>
+<td>–</td>
+<td>1.10</td>
+</tr>
+<tr>
+<td>Wrights Road (north end)</td>
+<td>–</td>
+<td>0.63</td>
+<td>–</td>
+<td>1.17</td>
+</tr>
+<tr>
+<td>Carleton Road</td>
+<td>0.83</td>
+<td>1.42</td>
+<td>0.71</td>
+<td>0.64</td>
+</tr>
+<tr>
+<td>Wolffs Road</td>
+<td>1.17</td>
+<td>2.09</td>
+<td>0.59</td>
+<td>0.71</td>
+</tr>
+<tr>
+<td>Poyntzs Road</td>
+<td>1.58</td>
+<td>2.89</td>
+<td>0.41</td>
+<td>0.69</td>
+</tr>
+<tr>
+<td>Pesters Road</td>
+<td>1.83</td>
+<td>3.33</td>
+<td>0.55</td>
+<td>0.65</td>
+</tr>
+<tr>
+<td>Downs Road</td>
+<td>2.50</td>
+<td><strong>4.50</strong></td>
+<td>0.33</td>
+<td>0.83</td>
+</tr>
+<tr>
+<td>Browns Road</td>
+<td>3.50</td>
+<td><strong>5.88</strong></td>
+<td>0.50</td>
+<td>0.41</td>
+</tr>
+<tr>
+<td>Two Chain Road</td>
+<td>4.33</td>
+<td><strong>7.42</strong></td>
+<td>0.37</td>
+<td>0.38</td>
+</tr>
+<tr>
+<td>South Eyre Road (east end)</td>
+<td>–</td>
+<td>8.79</td>
+<td>–</td>
+<td>0.47</td>
+</tr>
+<tr>
+<td>Diversion Road</td>
+<td>5.58</td>
+<td><strong>9.62</strong></td>
+<td>&lt;0.1</td>
+<td>0.32</td>
+</tr>
+</tbody>
+</table>
+<p>Reading: the outflow crosses Dixon Road within 20 min, turns east with the fall of the plain and runs in a
+band 1–3 km wide <strong>north of the east-breach corridor</strong> (between the Main Race and South Eyre Road), crosses
+Downs Road near Pashbys Road at 4.5 h, splits into two arms either side of Hetherton Road, and reaches Diversion
+Road at 9.6 h before draining to the Waimakariri River. Thongcaster and Barrett Roads stay dry. The inundated
+area (49 km²) is three-quarters of the Damwatch north flood zone (66 km²) and the at-risk building count (30)
+close to the 35 households at risk, so the extent is broadly consistent.</p>
+<p>The <strong>arrival times are the opposite of the east case</strong>: the model is ~0.6 h later than Damwatch at Carleton
+Road and the gap grows to ~4 h at Diversion Road, whereas the east run is ~0.7–1.5 h <em>earlier</em> than Damwatch
+everywhere. Damwatch's 2016 north-breach times are the fastest in their table (Carleton Road 0:50 vs 1:30 for
+the east breach) even though the north toe is 6 m higher than the east toe and the north embankment is
+furthest from the corridor. In this model the north breach is a Pond 2 overtopping cascade with a 217 m
+invert, which limits the head to 6.9 m and the peak to 817 m³/s (40 % of the east peak) on a gentle 1:250
+plain. The 2016 study evidently assumed a much larger or faster north outflow – e.g. a breach that also
+releases Pond 1 directly (FSL 226.5 m, 3.7 m higher head), a lower breach invert scoured into the foundation,
+or a shorter formation time. Which pond the north embankment retains along its length and the 2016 north breach
+parameters are therefore the first things to reconcile with Appendix H (assumption register A1, A4 and A15 in
+<code>docs/clg-notes.md</code>); a <code>--scour 1 --time-factor 0.5</code> sensitivity on the north hydrograph is the quick model-side
+check. Depths at the far roads (Browns, Two Chain, Diversion) match the 2016 values within 0.1 m.</p>
+<p><strong>Maximum depth (12 h, full domain)</strong></p>
+<p><img alt="north extended max_depth" src="img/north_max_depth_extended.png" /></p>
+<p><strong>Arrival time</strong></p>
+<p><img alt="north extended arrival_h" src="img/north_arrival_h_extended.png" /></p>
+<p><strong>Hazard class</strong></p>
+<p><img alt="north extended hazard" src="img/north_hazard_extended.png" /></p>
+<p><strong>Maximum flow speed</strong></p>
+<p><img alt="north extended max_speed" src="img/north_max_speed_extended.png" /></p>
+<p><strong>Depth × velocity</strong></p>
+<p><img alt="north extended max_dv" src="img/north_max_dv_extended.png" /></p>
+<p><strong>Time of peak depth</strong></p>
+<p><img alt="north extended t_peak_h" src="img/north_t_peak_h_extended.png" /></p>
+<p><strong>Shakedown domain (4 h): maximum depth, arrival time, hazard class</strong></p>
+<p><img alt="north max_depth" src="img/north_max_depth_shakedown.png" /></p>
+<p><img alt="north arrival_h" src="img/north_arrival_h_shakedown.png" /></p>
+<p><img alt="north hazard" src="img/north_hazard_shakedown.png" /></p>
 <h2>3. Maps</h2>
 <h3>East breach</h3>
 <p><strong>Maximum depth</strong></p>
@@ -660,6 +852,9 @@ and buildings ≥ 0.5 m from 95 to 92, so the published east results were left a
 <h2>5. Interactive</h2>
 <ul>
 <li>East: https://thorstenbux.github.io/wrights-road-dam-breach/east/</li>
+<li>East routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/east-extended/</li>
+<li>North: https://thorstenbux.github.io/wrights-road-dam-breach/north/</li>
+<li>North routed to Diversion Road: https://thorstenbux.github.io/wrights-road-dam-breach/north-extended/</li>
 <li>West: https://thorstenbux.github.io/wrights-road-dam-breach/west/</li>
 <li>Earthquake (all embankments): https://thorstenbux.github.io/wrights-road-dam-breach/quake/</li>
 <li>Storm (east breach + rain + Eyre River in flood): https://thorstenbux.github.io/wrights-road-dam-breach/storm/</li>

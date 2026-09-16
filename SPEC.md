@@ -139,7 +139,7 @@ carry that caveat.
 * **Domain**: shakedown 18 km x 11.5 km (site to Browns/Two Chain Road) at 20 m DEM; full domain 31.5 km x 16 km
   (site to Diversion Road and the Waimakariri River, covering the Damwatch 59–73 km² flood zones; the east edge is
   1 km beyond Diversion Road, which runs at 1560.6–1561.3 km E, so the open boundary is not on the road). The full
-  domain is run either as the **extended** tier (20 m, shakedown mesh, 12 h – used for the east run in RESULTS §2b)
+  domain is run either as the **extended** tier (20 m, shakedown mesh, 12 h – used for the east and north runs in RESULTS §2b/§2c)
   or as **production** (10 m, fine mesh, 14 h).
 * **Mesh**: coarse triangles ~4,000 m² (shakedown) / ~1,200 m² (production); refined to 900 / 200 m² within
   2.5 km of the site and 2,000 / 600 m² in the flow corridor. Flow algorithm DE0 (shakedown) / DE1 (production).
