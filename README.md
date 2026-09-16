@@ -23,6 +23,18 @@ Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space
 Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
 flow speed (m/s) instead of depth. Building colour: amber > 0.1 m, red ≥ 0.5 m at the footprint.
 
+### Offline viewing (no internet at the venue)
+
+The site is self-contained: three.js and the fonts are in `docs/vendor/`, the animation data is in each
+`docs/<scenario>/data.js`, and every link is an explicit `index.html`, so the whole thing runs from a local folder.
+
+1. `make offline` writes `wrights-road-dam-breach-offline.zip` (~30 MB, ~120 MB unzipped) from `docs/`, or just copy the `docs/`
+   folder (or download the repo ZIP from GitHub and take its `docs/` folder).
+2. Copy it to the presentation laptop or a USB stick, unzip, and double-click `START-HERE.html` (or
+   `docs/index.html`) in Chrome, Edge, Firefox or Safari. No server is needed.
+3. Test it once at the venue laptop before the session; the 3D viewer needs WebGL, which any laptop from the
+   last ten years has. The `Repository` links on the pages are the only thing that needs internet.
+
 ## Quick start
 
 ```bash

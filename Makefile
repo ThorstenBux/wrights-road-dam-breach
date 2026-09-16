@@ -5,7 +5,7 @@ PY ?= python
 SCENARIO ?= east
 MODE ?= shakedown        # shakedown | extended (full domain to Diversion Road, 20 m) | production
 
-.PHONY: env test dem vectors breach run post all clean
+.PHONY: env test dem vectors breach run post all clean offline offline-install
 
 env:
 	conda env create -f environment.yml || conda env update -f environment.yml
@@ -32,6 +32,13 @@ post:
 	$(PY) scripts/05_postprocess.py --scenario $(SCENARIO) --mode $(MODE)
 
 all: dem vectors breach run post
+
+# Self-contained copy of the site for venues without internet (see scripts/10_offline_bundle.sh).
+offline:
+	scripts/10_offline_bundle.sh
+
+offline-install:
+	scripts/10_offline_bundle.sh --install --open
 
 clean:
 	rm -rf outputs/* data/derived/*
