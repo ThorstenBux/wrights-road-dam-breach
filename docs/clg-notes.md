@@ -22,6 +22,34 @@ the ponds (it runs ~7 km north), so this interaction is not represented; the sto
 includes the Eyre where it crosses the breach flood corridor ~10 km east. Worth asking for the WDC
 mapping and the design basis for the north embankment under external flooding.
 
+### 3. Could a breach or emergency dewatering put water on North Eyre Road?
+Asked 16 Sep 2026. Screening answer from the model outputs and the LiDAR: **no credible pathway**.
+North Eyre Road starts ~9 km east of the ponds and runs 1.7–2.9 km *north* of the Eyre River, on ground
+4–12 m above the river bed at the same easting (e.g. road 126.8 m vs river 118.5 m at E 1548.9k). The plain
+falls east-south-east at ~6 m/km, so everything released from the ponds moves away from the road:
+
+* Breach wave: maximum depth along North Eyre Road is zero at every sample point in the extended east run
+  and in the shakedown east, quake and storm runs; the northern edge of the wave stays 1.5–2 km south of
+  South Eyre Road all the way to Downs Road (4–5 km south of North Eyre Road).
+* Dewatering through gates G2/G3/G6: the receiving races MR4/R2/R3 and the mapped drains near the site fall
+  from ~221 m to ~195 m over 3.5 km heading east-south-east, into the same corridor as the breach wave. No
+  mapped race or drain crosses the Eyre; a race-bank failure would spill down the same gradient.
+* Eastern end (Swannanoa/Diversion Road): the wave arrives at 0.2–0.4 m; ground rises ~9 m over the 4.8 km
+  from Diversion Road to the east end of North Eyre Road, and the Old Eyre Bed (38–41 m) sits above the wet
+  cells. Where breach water touches the diverted Eyre channel it is downstream of the old-bed offtake.
+
+The only chain that is not physically impossible is a river-flood story: a major Eyre flood reaches the north
+embankment (WDC mapping, report s3), the north embankment fails into the flooded foreground (contrary to the
+report's conclusion), the released water (north hydrograph peak 817 m³/s, 4.7 Mm³, not 2D-routed, heavily
+attenuated over 6 km of near-flat plain) joins the Eyre flood, and the combined flow overtops the low north
+bank between Eyrewell and Swannanoa (road ~49–52 m vs river ~50 m at E 1559–1560k), where the Eyre flooded
+historically before the 1860s diversion. That overtopping would happen with or without the dam; the dam's
+increment is marginal. **Message for the CLG:** North Eyre Road is outside any credible breach or dewatering
+footprint; its flood risk is an Eyre River question that this model does not cover (domain stops short of
+the river at the site). Follow-ups: WDC Eyre flood mapping (point 2), dewatering rate and race outfalls
+(point 1), and optionally a 2D run of the north breach on the extended domain to quantify how much reaches
+the Eyre.
+
 ## Assumptions in the model that real data would improve
 
 | # | Assumption | Used in | What would replace it |
