@@ -23,3 +23,15 @@ Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, op
 * Scenarios with a `hydrology:` block (the `storm` rainy-day case) add uniform rain and river inlets in script 04 and a
   `pre_breach_h` spin-up; all reported times are relative to the breach opening (post.maxima `t_breach`).
 * Everything is a screening model; keep the "not a certified assessment" wording in any new output.
+
+## Offline copy (presentations without internet)
+
+* `docs/` is fully self-contained: viewer data in `docs/<scenario>/data.js`, three.js + fonts in `docs/vendor/`,
+  every link an explicit `index.html`. Keep it that way: never add a CDN `<script>`/`<link>` to `webgl/index.html`, and
+  write links as `east/index.html`, never `east/`. `scripts/10_offline_bundle.sh` refuses to package if either rule is broken.
+* To refresh the presenter's local copy after any change to `docs/` (new scenario, viewer edit, new `data.js`):
+  merge/checkout the latest `main` (or the branch under review), copy `webgl/index.html` into every `docs/<scenario>/`,
+  then run `make offline-install` (= `scripts/10_offline_bundle.sh --install --open`). That rewrites
+  `~/Desktop/wrights-road-dam-breach-offline/` and the zip next to it, and opens `START-HERE.html` in the default browser.
+  `make offline` only writes the zip (git-ignored) in the repo root. Pass `--install <dir>` for a USB stick.
+* Last refreshed for Thorsten on 2026-09-17 from this branch after merging `main` (7 scenarios incl. north/north-extended).
