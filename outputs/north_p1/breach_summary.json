@@ -1,0 +1,30 @@
+{
+  "peak_Q_m3s": 473.20225663383866,
+  "time_to_peak_s": 3825.0,
+  "t_init_s": 0.0,
+  "volume_released_m3": 1808988.4451506943,
+  "duration_gt_1pct_peak_s": 20270.0,
+  "final_level_m": 219.4281385801343,
+  "max_level_m": 226.5,
+  "scenario": "north_p1",
+  "description": "Sensitivity: sunny-day piping failure of Pond 1 directly through the Pond 1 part of the NORTH embankment (Dixon Road side), no cascade. Only Pond 1 volume released.",
+  "breach_invert_mRL": 219.38773180465788,
+  "breach_invert_source": "LiDAR toe (dem_full_20m.tif)",
+  "toe_samples_m": [
+    219.45,
+    219.42,
+    219.41,
+    219.39
+  ],
+  "scour_m": 0.0,
+  "froehlich_1995_peak_check_m3s": 485.54077676978324,
+  "pond2_trigger_mRL": null,
+  "pond2_max_level_mRL": 226.5,
+  "damwatch_2012_2016_peak_m3s": 2500,
+  "breach_notes": [
+    "pond1 external breach (piping): V_w=1.818e+06 m3, h_b=7.11 m, B_avg=29.4 m; B_bot=24.4 m, z=0.7, t_f=1.06 h"
+  ],
+  "width_factor": 1.0,
+  "time_factor": 1.0,
+  "method": "Froehlich (2008) parameters; level-pool routing; broad-crested weir; no tailwater submergence"
+}

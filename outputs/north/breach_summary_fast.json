@@ -1,0 +1,31 @@
+{
+  "peak_Q_m3s": 1089.9444065484797,
+  "time_to_peak_s": 8855.0,
+  "t_init_s": 5786.0,
+  "volume_released_m3": 4669482.39569761,
+  "duration_gt_1pct_peak_s": 26969.0,
+  "final_level_m": 216.89360967541916,
+  "max_level_m": 223.6743791365081,
+  "scenario": "north",
+  "description": "Sunny-day cascade: Pond 1 -> Pond 2; Pond 2 overtops and fails through the NORTH embankment (Dixon Road side).",
+  "breach_invert_mRL": 216.77374595422415,
+  "breach_invert_source": "LiDAR toe (dem_full_20m.tif)",
+  "toe_samples_m": [
+    216.81,
+    216.77,
+    216.78,
+    216.85
+  ],
+  "scour_m": 0.0,
+  "froehlich_1995_peak_check_m3s": 595.3296749196674,
+  "pond2_trigger_mRL": 223.6,
+  "pond2_max_level_mRL": 223.6743791365081,
+  "damwatch_2012_2016_peak_m3s": 2500,
+  "breach_notes": [
+    "Pond 1 -> Pond 2 dividing breach (piping): V_w=1.024e+06 m3, h_b=3.70 m, B_avg=23.8 m; B_bot=21.3 m, z=0.7, t_f=0.77 h",
+    "pond2 external breach (overtopping, initiates when Pond 2 reaches 223.6 m RL; crest 224.3 m): V_w=4.310e+06 m3, h_b=6.83 m, B_avg=50.3 m; B_bot=43.5 m, z=1.0, t_f=0.85 h"
+  ],
+  "width_factor": 1.0,
+  "time_factor": 0.5,
+  "method": "Froehlich (2008) parameters; level-pool routing; broad-crested weir; no tailwater submergence"
+}

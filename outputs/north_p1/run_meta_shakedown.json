@@ -1,0 +1,60 @@
+{
+  "scenario": "north_p1",
+  "mode": "shakedown",
+  "bbox": [
+    1532500,
+    5189500,
+    1550500,
+    5201000
+  ],
+  "pre_breach_s": 0.0,
+  "hydrology": null,
+  "river_inlet_polygons": [],
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/northern-breach-simulation-361327/data/derived/dem_shakedown_20m.tif",
+  "hydrograph": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/northern-breach-simulation-361327/outputs/north_p1/hydrograph.csv",
+  "triangles": 95329,
+  "manning_n": 0.045,
+  "finaltime_s": 14400.0,
+  "yieldstep_s": 120,
+  "inlet_polygon": [
+    [
+      1534509.1963788166,
+      5197611.309327824
+    ],
+    [
+      1534432.445864421,
+      5197633.878300775
+    ],
+    [
+      1534440.9092292774,
+      5197662.659743672
+    ],
+    [
+      1534517.659743673,
+      5197640.090770721
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1534509.1963788166,
+        5197611.309327824
+      ],
+      [
+        1534432.445864421,
+        5197633.878300775
+      ],
+      [
+        1534440.9092292774,
+        5197662.659743672
+      ],
+      [
+        1534517.659743673,
+        5197640.090770721
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 0.0,
+  "started": "2026-09-16 17:31:24"
+}
