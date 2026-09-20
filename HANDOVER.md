@@ -16,8 +16,8 @@ Potential Impact Classification under the Building (Dam Safety) Regulations 2022
 * Earthquake, all embankments at once (postulated seismic failure): https://thorstenbux.github.io/wrights-road-dam-breach/quake/
 * Storm, east breach during 10 mm/h rain with the Eyre River in flood (rainy-day combination): https://thorstenbux.github.io/wrights-road-dam-breach/storm/
 * Index: https://thorstenbux.github.io/wrights-road-dam-breach/
-* Exploratory race / dewatering / shelterbelt runs (six viewers under `docs/exploratory/`, linked from the index below Storm –
-  live once the branch is merged): see §8.
+* Exploratory race / dewatering / shelterbelt runs (six viewers under `docs/exploratory/`, linked from the index below Storm):
+  see §8.
 
 Controls: drag to orbit, scroll to zoom (down to 30 m), shift-drag to pan, space to play/pause; the description panel (key I) and the legend with the scale sliders (key L) can be minimised; buttons
 Re-centre / Breach / Street level; sliders for terrain and flood vertical scale; checkbox to colour the water by
@@ -202,8 +202,8 @@ fetched on demand.
 
 ### 8.4 State and next steps
 
-* Branch `claude/tree-shelters-water-races-a8b3c5`; at the time of writing nothing was committed or pushed – check `git status`.
-  The exploratory section on the index page goes live only when `docs/` reaches `main`.
+* Merged to `main` on 20 Sep 2026 (PR #8, branch `claude/tree-shelters-water-races-a8b3c5`); the exploratory section on the index
+  page and the six viewers under https://thorstenbux.github.io/wrights-road-dam-breach/exploratory/ are live.
 * Next, in order of value: (1) decide whether shelterbelts go into the main model – if so add the canopy friction as an option of
   script 04 / `model.build_domain`, re-run the scenarios, update RESULTS / SPEC §3.2 / A6; (2) tree-block animation for the
   full-domain runs (generalise script 14 to standard scenario runs); (3) a debris-blockage upper bound for belts across the flow
