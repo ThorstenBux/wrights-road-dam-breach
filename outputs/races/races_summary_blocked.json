@@ -1,0 +1,37 @@
+{
+  "note": "exploratory screening \u2013 not a certified assessment",
+  "dewater": {
+    "races": {
+      "MR4": {
+        "length_km": 5.623770137643519,
+        "front_reached_km": 1.7097094065737348,
+        "reached_end": false,
+        "median_peak_depth_in_race_m": 0.7049713134765625,
+        "hours_to_end": null,
+        "dewater_q_m3s": 5.0,
+        "bankfull_est_m3s": 10.889960768393335
+      },
+      "R2": {
+        "length_km": 7.6823068237662095,
+        "front_reached_km": 7.6823068237662095,
+        "reached_end": true,
+        "median_peak_depth_in_race_m": 0.7392120361328125,
+        "hours_to_end": 3.8333333333333335,
+        "dewater_q_m3s": 10.0,
+        "bankfull_est_m3s": 47.60285822084005
+      },
+      "R3": {
+        "length_km": 15.009411725736623,
+        "front_reached_km": 5.3177703202173525,
+        "reached_end": false,
+        "median_peak_depth_in_race_m": 0.3470001220703125,
+        "hours_to_end": null,
+        "dewater_q_m3s": 5.0,
+        "bankfull_est_m3s": 5.550356607521901
+      }
+    },
+    "wet_area_total_km2": 0.4728,
+    "wet_area_outside_races_km2": 0.1925,
+    "max_depth_outside_races_m": 0.6935738182655768
+  }
+}

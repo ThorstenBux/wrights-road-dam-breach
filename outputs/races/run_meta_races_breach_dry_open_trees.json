@@ -1,0 +1,49 @@
+{
+  "case": "breach_dry",
+  "crossings": "open",
+  "scenario": "east",
+  "bbox": [
+    1532500,
+    5193500,
+    1546500,
+    5203000
+  ],
+  "t_breach_s": 21600.0,
+  "finaltime_s": 36000.0,
+  "yieldstep_s": 300,
+  "triangles": 124121,
+  "races": {
+    "MR4": {
+      "length_km": 5.625377508959658,
+      "crossings": 16,
+      "median_depth_m": 1.7149364370347513,
+      "mean_slope": 0.000733789712684606,
+      "bankfull_Q_m3s": 10.889960768393335,
+      "dewater_q_m3s": 5.0
+    },
+    "R2": {
+      "length_km": 7.683427859446963,
+      "crossings": 16,
+      "median_depth_m": 1.7324897302804771,
+      "mean_slope": 0.007076920488147069,
+      "bankfull_Q_m3s": 47.60285822084005,
+      "dewater_q_m3s": 10.0
+    },
+    "R3": {
+      "length_km": 15.019176454059652,
+      "crossings": 75,
+      "median_depth_m": 0.8467538980709435,
+      "mean_slope": 0.004215527757237087,
+      "bankfull_Q_m3s": 5.550356607521901,
+      "dewater_q_m3s": 5.0
+    },
+    "shelterbelts": {
+      "canopy_km2": 3.594,
+      "manning_n": 0.2,
+      "triangles_with_trees": 13883,
+      "median_n_where_trees": 0.0914752711877377
+    }
+  },
+  "started": "2026-09-19 21:15:57",
+  "note": "Exploratory screening run, not a certified assessment. Race names, the R2/R3 split, culvert treatment (open cut or fully blocked) and bed levels (LiDAR water surface) are assumptions."
+}

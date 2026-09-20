@@ -1,0 +1,42 @@
+# Water races + dewatering in 2D – EXPLORATORY set-up (scripts/12_run_races.py).
+# Kept apart from dam.yaml / site.yaml on purpose: nothing in the main pipeline (scripts 01-10) reads this file.
+# Screening model, not a certified assessment.
+
+domain:
+  # near-field domain: the ponds, the three races to where they leave / end, and the east-breach corridor to ~Carleton Rd
+  bbox_nztm: [1532500, 5193500, 1546500, 5203000]
+  dem_res_m: 2.0               # the 1 m LiDAR resolves the races (R2 ~9 m wide, 1.3-2 m deep; R3 ~5 m, ~1 m)
+  max_area_m2: 3000            # uniform background mesh (= shakedown corridor size); the races refine themselves
+
+races:
+  # Chains of OSM ways (osm_domain.gpkg 'waterways', unnamed; tagged stream/drain) followed downstream from
+  # `start_osm_id`. Names are our ASSUMED match to the EAP App. F.3 races – to be confirmed by WIL:
+  #   MR4 "about 6.3 km ... discharging to the Eyre"  -> the race heading north from the NW corner (6.1 km in the domain)
+  #   R3  "about 11.8 km ... discharging to the Eyre" -> the Dixon Road drain from the Wrights/Dixon corner (16 km mapped)
+  #   R2  (EAP Table F.1; "R2 race south" in the design report) -> the race along the south side, ESE from Wrights Rd
+  # The chains start just outside the (approximate) pond footprint; the ponds post-date the LiDAR.
+  MR4: {start_osm_id: "809026039", dewater_q_m3s: 5.0,  bed_width_m: 4.0}
+  R2:  {start_osm_id: "885343375", dewater_q_m3s: 10.0, bed_width_m: 6.0}
+  R3:  {start_osm_id: "903988636", dewater_q_m3s: 5.0,  bed_width_m: 3.0}   # ~2 m on the LiDAR; 3 m is the narrowest the mesh carries
+  # EAP Table F.1 (high): Pond 1 -> MR4 5 m3/s; Pond 2 -> R2+R3 15 m3/s. The R2/R3 split (10/5) is OUR assumption.
+
+conditioning:
+  station_m: 5.0               # thalweg stations = breakline vertex spacing -> ~5 m triangles along the races
+  snap_search_m: 14.0          # OSM lines sit up to ~15 m off the LiDAR channel: snap to the lowest cell across
+  crossing_hump_m: 0.4         # thalweg rise above the downstream-falling envelope that counts as a crossing/structure
+  # crossings: 'open'    = cut the race bed through road / track fills (culverts and bridges flow freely)
+  #            'blocked' = leave the LiDAR surface (every culvert blocked: the race ponds and spills at each crossing)
+
+run:
+  dewater_h: 6.0
+  after_breach_h: 4.0
+  yieldstep_s: 300
+  flow_algorithm: DE0
+  manning_n: 0.045
+  race_manning_n: 0.030        # applied within `bed_width` + 3 m of the race centreline
+
+shelterbelts:                  # optional (--shelterbelts): tall trees from LiDAR canopy height = DSM - DEM
+  dsm_collection: canterbury/canterbury_2020-2023/dsm_1m/2193
+  min_height_m: 6.0            # the belts here are > 10 m (median 13.8 m in the domain); crops / pivots stay below
+  manning_n: 0.20              # dense conifer belt with fences and trapped debris at < 1 m flow depth (bracket 0.12-0.30;
+                               # dam.yaml by_landcover has 0.12). Applied as an equivalent n per triangle (n^2 area-weighted).

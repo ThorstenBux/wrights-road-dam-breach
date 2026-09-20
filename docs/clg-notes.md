@@ -21,6 +21,15 @@ Questions for the CLG: what are the as-built gate and race capacities, how long 
 and the Eyre outfalls during dewatering (fine weather and coincident with a 1 % AEP Eyre flood), and will
 the F.6 dewatering inundation maps be released?
 
+*Screening runs (exploratory, Sep 2026 – [races-and-shelterbelts-2d.md](races-and-shelterbelts-2d.md),
+[dewatering-drawdown-sensitivity.md](dewatering-drawdown-sensitivity.md)):* with the races taken from the LiDAR and every culvert
+flowing freely, the race we take to be MR4 carries 5 m³/s and the south race (R2) carries 10 m³/s easily, but the Dixon Road
+drain (our R3) cannot carry 5 m³/s – it spills along Dixon Road. With every culvert blocked the flat MR4 stalls 1.7 km from the
+ponds. Six hours of dewatering removes only ~5 % of the stored water, so if the ponds still fail the breach flood is almost
+unchanged (peak −6 %), and races already running full make no measurable difference to it. Extra questions for the CLG: which
+mapped race is which, is R3 to be enlarged, and what is the intended split of Pond 2's flow between R2 and R3? Official
+information requests for the F.6 maps (ECan, WDC, Canterbury CDEM) are being drafted separately.
+
 ### 2. Eyre River flooding and the north embankment
 The same report (s3, PDF p32) cites preliminary Waimakariri District Council flood mapping showing that
 a major Eyre River flood north of the ponds "would extend to the North embankment of the ponds". The
@@ -66,7 +75,7 @@ the Eyre.
 | A3 | Design levels ("RL") are on the same datum as the LiDAR (NZVD2016) | all | datum statement from Damwatch |
 | A4 | Pond 2 overtopping cascade starts at RL 223.6 (static equalisation only reaches ~223.8, 0.5 m below crest) | east/south/north/storm | Appendix H (breach analysis) of the design report |
 | A5 | Froehlich (2008) breach parameters; NZSOLD cites Froehlich 2016 | all | engineer-confirmed coefficients |
-| A6 | Uniform roughness n = 0.045; culverts, bridges and race crossings not represented | 2D routing | LCDB land cover; WDC/ECan asset data for culverts and bridges |
+| A6 | Uniform roughness n = 0.045; culverts, bridges and race crossings not represented. Exploratory runs (A17, A19) show shelterbelts delay the far field by 15–40 min at Diversion Road and that full races do not change the breach flood | 2D routing | LCDB land cover; LiDAR canopy layer (built, optional); WDC/ECan asset data for culverts and bridges |
 | A7 | Earthquake: every embankment and the dividing embankment fail at once, formation time halved, no liquefaction | quake | GNS site-specific hazard, Damwatch seismic stability results (s7.3.3), engineer's view on credible seismic failure modes |
 | A8 | Earthquake: no warning time (sirens, TDR crest cable assumed lost) | quake | EAP resilience of the warning system |
 | A9 | Storm: 10 mm/h steady rain with zero infiltration on the whole plain | storm | NIWA HIRDS rainfall for the site; soil infiltration (S-map) |
@@ -77,3 +86,6 @@ the Eyre.
 | A14 | Shakedown grid 20 m, 4 h (east and north also on the full domain, 12 h); no production (10 m, 14 h) runs yet | all | production runs once A1–A4 are settled |
 | A15 | The north (Dixon Road) breach releases Pond 2 only; Pond 1 is assumed to sit on the west 30 % of the footprint. A direct Pond 1 breach on the north side (`north_p1`) was checked and is smaller (473 m³/s), so this is not what sets the 2016 north times | north | drawing WIL1125/30/2 (which pond the north embankment retains) |
 | A16 | Breach invert = natural ground at the toe (no headcut into the ~6 m of pond that lies below ground). On the north side this gives 817 m³/s and arrivals 0.6–4 h *later* than Damwatch 2016; a breach cut down to the Pond 2 floor (210.8 m) gives the east-size 2,100 m³/s outflow and reproduces the 2016 north times and severity (RESULTS §2c). The two are carried as a bounding pair; the full-depth case governs the north-side PIC | north (also south/west in principle) | Appendix H breach parameters; engineer's judgement on headcut erosion through the in-situ gravels; floor levels and cut/fill from WIL1125/30/2 |
+| A17 | Exploratory race runs: MR4 / R2 / R3 matched to unnamed OSM waterways; beds = LiDAR water surface; culverts either open cuts or fully blocked; Pond 2 dewatering split 10 / 5 m³/s between R2 / R3; constant EAP Table F.1 example rates | exploratory dewatering / race runs (not in RESULTS) | WIL race GIS, cross-sections, gate ratings and culvert inventory; EAP App. F detail |
+| A18 | Exploratory dewatering-then-breach: the ponds are assumed to fail anyway, the Pond 2 breach initiating 0.56 m below the level it would reach unbreached (where 223.6 sits for full ponds) | exploratory dewatering sensitivity | engineer's view on failure development under a falling pool; Appendix H |
+| A19 | Exploratory shelterbelts: trees = LiDAR canopy ≥ 6 m, Manning n 0.12–0.30 under canopy as an area-weighted equivalent per triangle; no trunk / fence / debris blockage | exploratory shelterbelt runs (not in RESULTS) | field check of belt density and fencing; literature values for flow through shelterbelts; LCDB for other land cover |
