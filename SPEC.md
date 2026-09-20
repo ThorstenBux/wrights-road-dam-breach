@@ -192,6 +192,9 @@ carry that caveat.
 3. Datum of design levels; confirmation of Pond 1 (west) / Pond 2 (east) layout and dividing-embankment position.
 4. Whether a LINZ Data Service API key and an LRIS (LCDB) account can be created for the project.
 5. Compute: run production on a Mac (hours per run) or on a Linux box/cloud with MPI.
+6. Exploratory (HANDOVER §8): should tree shelterbelts (LiDAR canopy, built and tested) become part of the roughness in the
+   reported runs, and should emergency dewatering down the races be reported as its own scenario? The latter needs WIL's race
+   identification, capacities, culvert inventory and the R2/R3 flow split.
 
 ## 7. First results (Phase 0 shakedown, 15 Sep 2026)
 

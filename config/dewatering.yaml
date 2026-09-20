@@ -1,0 +1,15 @@
+# Emergency dewatering before a breach – EXPLORATORY sensitivity (scripts/11_dewatering_sensitivity.py).
+# Kept apart from dam.yaml on purpose: nothing in the main pipeline (scripts 01-10) reads this file.
+# Source: Emergency Action Plan Issue 6 (Jun 2020), App. F.2 Table F.1 "example drawdown times" – see
+# docs/dewatering-pathway-evidence.md. The table is labelled an example; as-built gate and race capacities
+# are unknown (SPEC s6 / clg-notes point 1).
+
+rate_cases:                  # net pond outflow while dewatering, m3/s
+  low:  {pond1_m3s: 4.0, pond2_m3s: 11.0}    # MR4 4 m3/s; R2+R3 11 m3/s
+  high: {pond1_m3s: 5.0, pond2_m3s: 15.0}    # MR4 5 m3/s; R2+R3 15 m3/s
+
+durations_h: [0, 1, 2, 3, 4, 6, 8, 12, 18, 24]   # hours of dewatering before the breach initiates
+
+# Pond 2 overtopping-breach initiation levels to test (m RL). 223.6 is the project default
+# (dam.yaml cascade.pond2_trigger_mRL, the most consequential assumption – SPEC s3.1); 224.3 is the crest.
+trigger_levels_mRL: [223.0, 223.2, 223.4, 223.6]

@@ -1,0 +1,71 @@
+{
+  "note": "exploratory screening \u2013 not a certified assessment",
+  "runs": {
+    "_trees012": {
+      "shelterbelts": {
+        "tree_n": 0.12,
+        "triangles_with_trees": 27132,
+        "share_of_triangles": 0.1348495541793819,
+        "median_n_where_trees": 0.058822576796582274,
+        "max_n": 0.11999054128970903
+      },
+      "flooded_area_km2": 64.7695,
+      "flooded_area_none_km2": 64.7405,
+      "arrival_delay_min_percentiles_5_50_95": [
+        0.0,
+        4.999995231628418,
+        15.0
+      ],
+      "arrival_delay_min_median_in_far_field": 9.999990463256836,
+      "depth_change_m_percentiles_5_50_95": [
+        -0.023159176111221313,
+        0.00013113021850585938,
+        0.05445714741945266
+      ]
+    },
+    "_trees020": {
+      "shelterbelts": {
+        "tree_n": 0.2,
+        "triangles_with_trees": 28822,
+        "share_of_triangles": 0.14324907307084422,
+        "median_n_where_trees": 0.0773087326345792,
+        "max_n": 0.19998258443607364
+      },
+      "flooded_area_km2": 64.7093,
+      "flooded_area_none_km2": 64.7405,
+      "arrival_delay_min_percentiles_5_50_95": [
+        0.0,
+        9.999990463256836,
+        30.0
+      ],
+      "arrival_delay_min_median_in_far_field": 19.623513221740723,
+      "depth_change_m_percentiles_5_50_95": [
+        -0.05040848255157471,
+        0.00022208690643310547,
+        0.10579673945903778
+      ]
+    },
+    "_trees030": {
+      "shelterbelts": {
+        "tree_n": 0.3,
+        "triangles_with_trees": 29643,
+        "share_of_triangles": 0.14732954940805756,
+        "median_n_where_trees": 0.10351524695942178,
+        "max_n": 0.2999731027217416
+      },
+      "flooded_area_km2": 64.4039,
+      "flooded_area_none_km2": 64.7405,
+      "arrival_delay_min_percentiles_5_50_95": [
+        0.0,
+        13.405051231384277,
+        45.0
+      ],
+      "arrival_delay_min_median_in_far_field": 26.138019561767578,
+      "depth_change_m_percentiles_5_50_95": [
+        -0.08334719911217689,
+        0.000189170241355896,
+        0.12973629236221312
+      ]
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "note": "exploratory screening \u2013 not a certified assessment",
+  "dewater": {
+    "races": {
+      "MR4": {
+        "length_km": 5.623770137643519,
+        "front_reached_km": 5.623770137643519,
+        "reached_end": true,
+        "median_peak_depth_in_race_m": 0.46077728271484375,
+        "hours_to_end": 3.4166666666666665,
+        "dewater_q_m3s": 5.0,
+        "bankfull_est_m3s": 10.889960768393335
+      },
+      "R2": {
+        "length_km": 7.6823068237662095,
+        "front_reached_km": 7.6823068237662095,
+        "reached_end": true,
+        "median_peak_depth_in_race_m": 0.8944015502929688,
+        "hours_to_end": 2.25,
+        "dewater_q_m3s": 10.0,
+        "bankfull_est_m3s": 47.60285822084005
+      },
+      "R3": {
+        "length_km": 15.009411725736623,
+        "front_reached_km": 5.887181534903359,
+        "reached_end": false,
+        "median_peak_depth_in_race_m": 0.447265625,
+        "hours_to_end": null,
+        "dewater_q_m3s": 5.0,
+        "bankfull_est_m3s": 5.550356607521901
+      }
+    },
+    "wet_area_total_km2": 0.4907,
+    "wet_area_outside_races_km2": 0.1151,
+    "max_depth_outside_races_m": 0.6664634704357013
+  },
+  "full_vs_dry_races": {
+    "a": "full",
+    "b": "dry",
+    "flooded_area_km2": {
+      "full": 26.2926,
+      "dry": 26.0232
+    },
+    "arrival_a_minus_b_min_percentiles_5_50_95": [
+      -8.487997462910243,
+      0.0,
+      0.0
+    ],
+    "share_of_flooded_cells_arriving_5min_earlier_in_a": 0.12367898966350421,
+    "share_arriving_5min_later_in_a": 0.0011733736809195544,
+    "share_arriving_30min_later_in_a": 0.0,
+    "depth_a_minus_b_m_percentiles_5_50_95": [
+      9.6608782769181e-07,
+      0.0023904583445073513,
+      0.01665853965678252
+    ],
+    "flooded_only_in_a_km2": 0.3844,
+    "flooded_only_in_b_km2": 0.115
+  },
+  "trees_vs_none": {
+    "a": "trees",
+    "b": "none",
+    "flooded_area_km2": {
+      "trees": 26.3141,
+      "none": 26.0232
+    },
+    "arrival_a_minus_b_min_percentiles_5_50_95": [
+      0.0,
+      0.0,
+      15.0
+    ],
+    "share_of_flooded_cells_arriving_5min_earlier_in_a": 0.0018235518738164446,
+    "share_arriving_5min_later_in_a": 0.21911066777846183,
+    "share_arriving_30min_later_in_a": 6.624013216854606e-05,
+    "depth_a_minus_b_m_percentiles_5_50_95": [
+      -0.029749835768370758,
+      1.52587890625e-05,
+      0.08672457609441153
+    ],
+    "flooded_only_in_a_km2": 0.6499,
+    "flooded_only_in_b_km2": 0.359
+  },
+  "full_vs_dry_races_trees": {
+    "a": "full",
+    "b": "dry",
+    "flooded_area_km2": {
+      "full": 26.7484,
+      "dry": 26.3141
+    },
+    "arrival_a_minus_b_min_percentiles_5_50_95": [
+      -7.996505571174565,
+      0.0,
+      0.0
+    ],
+    "share_of_flooded_cells_arriving_5min_earlier_in_a": 0.12391846255879371,
+    "share_arriving_5min_later_in_a": 0.0011739683943314098,
+    "share_arriving_30min_later_in_a": 0.0,
+    "depth_a_minus_b_m_percentiles_5_50_95": [
+      8.590488505433316e-07,
+      0.0024055158830833534,
+      0.017279423233685524
+    ],
+    "flooded_only_in_a_km2": 0.5126,
+    "flooded_only_in_b_km2": 0.0783
+  }
+}

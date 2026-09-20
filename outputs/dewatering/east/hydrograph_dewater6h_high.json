@@ -1,0 +1,20 @@
+{
+  "t_init_s": 7831.0,
+  "note": "Screening-level sensitivity, not a certified assessment. Dewatering rates are EAP Table F.1 examples.",
+  "hours": 6.0,
+  "q_pond1_m3s": 5.0,
+  "q_pond2_m3s": 15.0,
+  "pond1_level_mRL": 226.13725872431064,
+  "pond2_level_mRL": 222.3451306821467,
+  "volume_dewatered_m3": 432000.0,
+  "pond1_to_pond2_m3": 897865.4196028725,
+  "pond2_peak_level_unbreached_mRL": 223.58262040423378,
+  "pond2_equalised_level_mRL": 223.39983775627536,
+  "trigger_mRL": 223.6,
+  "cascade": false,
+  "effective_trigger_mRL": 223.02761635074782,
+  "peak_Q_m3s": 1973.4651776987503,
+  "volume_released_m3": 6749015.608302976,
+  "t_init_h": 2.1752777777777776,
+  "time_to_peak_h": 3.3316666666666666
+}

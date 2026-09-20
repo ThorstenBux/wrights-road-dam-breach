@@ -1,0 +1,60 @@
+{
+  "scenario": "east",
+  "breach_invert_mRL": 210.80213260499406,
+  "default_trigger_mRL": 223.6,
+  "rate_cases": {
+    "low": {
+      "pond1_m3s": 4.0,
+      "pond2_m3s": 11.0
+    },
+    "high": {
+      "pond1_m3s": 5.0,
+      "pond2_m3s": 15.0
+    }
+  },
+  "durations_h": [
+    0.0,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0,
+    12.0,
+    18.0,
+    24.0
+  ],
+  "pond2_assumed_to_fail_anyway": false,
+  "breach_margin_below_peak_m": null,
+  "hours_of_dewatering_that_prevent_the_cascade_by_trigger_mRL": {
+    "routed_no_tailwater": {
+      "low": {
+        "223.0": 15.912872384025189,
+        "223.2": 13.219684976086812,
+        "223.4": 10.500845308072618,
+        "223.6": 7.758352544307767
+      },
+      "high": {
+        "223.0": 11.946894253605597,
+        "223.2": 9.914783565671806,
+        "223.4": 7.881058333744484,
+        "223.6": 5.81938682342723
+      }
+    },
+    "static_equalisation": {
+      "low": {
+        "223.0": 15.33590341743586,
+        "223.2": 11.687926060107543,
+        "223.4": 7.996983256253928,
+        "223.6": 4.269667768621714
+      },
+      "high": {
+        "223.0": 11.507597607127714,
+        "223.2": 8.762809622926385,
+        "223.4": 5.997735574424861,
+        "223.6": 3.2024169631060313
+      }
+    }
+  },
+  "note": "Screening-level sensitivity, not a certified assessment. Dewatering rates are EAP Table F.1 examples."
+}

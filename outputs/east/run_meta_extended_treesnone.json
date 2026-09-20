@@ -1,0 +1,46 @@
+{
+  "scenario": "east",
+  "mode": "extended",
+  "bbox": [
+    1531000,
+    5187000,
+    1562500,
+    5203000
+  ],
+  "pre_breach_s": 0.0,
+  "hydrology": null,
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/epic-albattani-5d87a3/data/derived/dem_full_20m.tif",
+  "triangles": 201202,
+  "manning_n": 0.045,
+  "shelterbelts": {
+    "tree_n": 0.045,
+    "triangles_with_trees": 0,
+    "share_of_triangles": 0.0,
+    "median_n_where_trees": null,
+    "max_n": 0.045000000000000005
+  },
+  "finaltime_s": 43200,
+  "yieldstep_s": 300,
+  "inlet_polygon": [
+    [
+      1535190.23029817,
+      5196796.806940446
+    ],
+    [
+      1535212.946470817,
+      5196873.514016392
+    ],
+    [
+      1535241.7116242968,
+      5196864.99545165
+    ],
+    [
+      1535218.9954516497,
+      5196788.288375704
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-19 22:30:48",
+  "note": "Exploratory run with tree shelterbelts as roughness \u2013 screening model, not a certified assessment."
+}
