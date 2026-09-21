@@ -210,3 +210,28 @@ fetched on demand.
   (low sill or n ≈ 0.3+ on refined strips); (4) the dewatering scenario with WIL's race / culvert data and the R2/R3 split, plus
   the 1 % AEP Eyre coincidence case of EAP F.6; (5) follow up the official information requests.
 
+
+### 8.5 Wet worst case: rain, Eyre in flood, breach or earthquake, with trees / races (20 Sep 2026)
+
+The question Thorsten is asked most. Write-up with all numbers: [docs/wet-worstcase-trees-races.md](docs/wet-worstcase-trees-races.md).
+Still exploratory and separate (new files only, except a `--rain-mm-h` flag on script 12 and the tree-friction block of
+script 16 moved into `shelterbelts.fraction_friction`). Screening model, not a certified assessment.
+
+* **Findings**: a wet plain brings the flood to Diversion Road ~1.25 h sooner (7.5 → 6.25 h east; 6.1 h for the earthquake
+  case) and lets nearly all of the released volume reach the far end; shelterbelts still delay it by 24–30 min there and do not
+  redirect it; the breach meets the Eyre only in its last ~4 km before Diversion Road and raises the river flood by ≤ 0.23 m –
+  no reach spills only because of the breach; blocked vs open culverts change the breach flood only within a paddock or two of a crossing (±0.02 m, 0–4 min; 0.3 of 28 km²), less so when wet; race dewatering flow into the Eyre (10 m³/s on 150) is noise; the Eyre's own tight
+  spot is 4.1–5.4 km below the north domain edge, where R3 joins (LiDAR capacity < 150 m³/s).
+* **Files**: `config/wet.yaml`, `damflood/wet.py` (spin-up inlet timing, Eyre line / refinement strip / bank lines, transect
+  discharge from an SWW), `scripts/18_run_wet_worstcase.py` (switches `--scenario`, `--hydrology storm`, `--river-q-factor`,
+  `--race-outfalls`, `--tree-n|--no-trees`, `--no-breach`; tags `_wet|_dry[_q2][_races]_trees<nnn>[_nobreach]`),
+  `scripts/19_wet_compare.py`, `scripts/20_eyre_capacity.py`, `scripts/21_races_wet_compare.py`, `tests/test_wet.py`.
+* **Gotchas**: (1) script 04 applies `pre_breach_h` only to the single-breach inlet (line 93 does not) – do not run a
+  `breaches:` + `hydrology:` scenario through 04 without fixing that; script 18 delays every inlet. (2) Breach-added results
+  need a no-breach baseline with the SAME roughness (trees also hold back rain runoff: storm-only wet area 100 → 109 km² at
+  n = 0.30); the baselines live in `outputs/east/` and serve quake too. (3) Script 18 adds an Eyre refinement strip, so its
+  mesh (227,624 triangles) differs from script 16's – compare 18 with 18. (4) Wet extended runs take 1–1.5 h each, 8 in
+  parallel on the 10-core machine is fine (~700 MB SWW each). (5) Parallel script-12 runs all rewrite
+  `outputs/races/races_conditioning.gpkg` – stagger the starts.
+* **Open**: Eyre at the north embankment (extend the domain ~7 km north + a real Eyre hydrograph from ECan); HIRDS storm and
+  infiltration instead of 10 mm/h with none; debris-dam bound for belts; stopbank crest survey for the tight Eyre reach.

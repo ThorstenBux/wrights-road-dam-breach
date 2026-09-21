@@ -56,6 +56,8 @@ def main():
     ap.add_argument("--yieldstep-s", type=float, default=None)
     ap.add_argument("--shelterbelts", action="store_true",
                     help="add tree shelterbelts (LiDAR canopy height) as extra roughness; outputs get the _trees suffix")
+    ap.add_argument("--rain-mm-h", type=float, default=0.0,
+                    help="steady rain on the whole domain for the whole run, no infiltration (wet worst case); outputs get the _wet suffix")
     ap.add_argument("--mesh-only", action="store_true")
     ap.add_argument("--tag", default="")
     a = ap.parse_args()
@@ -70,6 +72,8 @@ def main():
     out_dir = config.OUTPUTS / "races"; out_dir.mkdir(parents=True, exist_ok=True)
     if a.shelterbelts:
         a.tag += "_trees"
+    if a.rain_mm_h > 0:
+        a.tag += "_wet"
     name = f"races_{a.case}_{a.crossings}{a.tag}"
 
     dem_path = config.DATA_DERIVED / f"dem_races_{dom['dem_res_m']:g}m.tif"
@@ -158,8 +162,10 @@ def main():
         model.add_inlet(domain, offset, poly, Qb, label=f"breach_{a.scenario}")
         Qs.append(Qb)
     Q = lambda t: sum(q(t) for q in Qs)
+    if a.rain_mm_h > 0:
+        model.add_rain(domain, a.rain_mm_h / 1000.0 / 3600.0)
 
-    meta = {"case": a.case, "crossings": a.crossings, "scenario": a.scenario, "bbox": bbox, "t_breach_s": dewater_s,
+    meta = {"case": a.case, "rain_mm_h": a.rain_mm_h, "crossings": a.crossings, "scenario": a.scenario, "bbox": bbox, "t_breach_s": dewater_s,
             "finaltime_s": finaltime, "yieldstep_s": yieldstep, "triangles": int(domain.number_of_triangles),
             "races": summary, "started": time.strftime("%Y-%m-%d %H:%M:%S"),
             "note": "Exploratory screening run, not a certified assessment. Race names, the R2/R3 split, culvert "

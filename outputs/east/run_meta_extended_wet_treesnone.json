@@ -1,0 +1,119 @@
+{
+  "scenario": "east",
+  "mode": "extended",
+  "bbox": [
+    1531000,
+    5187000,
+    1562500,
+    5203000
+  ],
+  "pre_breach_s": 7200.0,
+  "hydrology": {
+    "pre_breach_h": 2.0,
+    "rain_mm_h": 10.0,
+    "infiltration_mm_h": 0.0,
+    "river_inflows": [
+      {
+        "name": "Eyre River",
+        "q_m3s": 150,
+        "location_nztm": {
+          "shakedown": [
+            1543457,
+            5200792
+          ],
+          "production": [
+            1536906,
+            5202713
+          ]
+        },
+        "flow_dir": {
+          "shakedown": [
+            0.854,
+            -0.52
+          ],
+          "production": [
+            0.697,
+            -0.718
+          ]
+        }
+      }
+    ]
+  },
+  "hydrology_from": "storm",
+  "inflows": [
+    {
+      "name": "Eyre River",
+      "q_m3s": 150.0
+    }
+  ],
+  "breach": true,
+  "eyre_refined": true,
+  "river_inlet_polygons": [
+    [
+      [
+        1536884.2644818984,
+        5202677.963344155
+      ],
+      [
+        1536941.6662363703,
+        5202733.686217228
+      ],
+      [
+        1536962.5623137727,
+        5202712.1605593
+      ],
+      [
+        1536905.1605593008,
+        5202656.437686227
+      ]
+    ]
+  ],
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/diversion-road-simulation-scope-15f662/data/derived/dem_full_20m.tif",
+  "triangles": 227624,
+  "manning_n": 0.045,
+  "shelterbelts": null,
+  "finaltime_s": 50400.0,
+  "yieldstep_s": 300,
+  "inlet_polygon": [
+    [
+      1535190.23029817,
+      5196796.806940446
+    ],
+    [
+      1535212.946470817,
+      5196873.514016392
+    ],
+    [
+      1535241.7116242968,
+      5196864.99545165
+    ],
+    [
+      1535218.9954516497,
+      5196788.288375704
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1535190.23029817,
+        5196796.806940446
+      ],
+      [
+        1535212.946470817,
+        5196873.514016392
+      ],
+      [
+        1535241.7116242968,
+        5196864.99545165
+      ],
+      [
+        1535218.9954516497,
+        5196788.288375704
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-20 16:04:04",
+  "note": "Exploratory wet worst-case run \u2013 screening model, not a certified assessment."
+}

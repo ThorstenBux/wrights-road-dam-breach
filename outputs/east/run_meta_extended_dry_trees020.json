@@ -1,0 +1,71 @@
+{
+  "scenario": "east",
+  "mode": "extended",
+  "bbox": [
+    1531000,
+    5187000,
+    1562500,
+    5203000
+  ],
+  "pre_breach_s": 0.0,
+  "hydrology": null,
+  "hydrology_from": null,
+  "inflows": [],
+  "breach": true,
+  "eyre_refined": true,
+  "river_inlet_polygons": [],
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/diversion-road-simulation-scope-15f662/data/derived/dem_full_20m.tif",
+  "triangles": 227624,
+  "manning_n": 0.045,
+  "shelterbelts": {
+    "tree_n": 0.2,
+    "triangles_with_trees": 32278,
+    "share_of_triangles": 0.14180402769479492,
+    "median_n_where_trees": 0.07955015847343758,
+    "max_n": 0.2
+  },
+  "finaltime_s": 43200.0,
+  "yieldstep_s": 300,
+  "inlet_polygon": [
+    [
+      1535190.23029817,
+      5196796.806940446
+    ],
+    [
+      1535212.946470817,
+      5196873.514016392
+    ],
+    [
+      1535241.7116242968,
+      5196864.99545165
+    ],
+    [
+      1535218.9954516497,
+      5196788.288375704
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1535190.23029817,
+        5196796.806940446
+      ],
+      [
+        1535212.946470817,
+        5196873.514016392
+      ],
+      [
+        1535241.7116242968,
+        5196864.99545165
+      ],
+      [
+        1535218.9954516497,
+        5196788.288375704
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-20 16:56:31",
+  "note": "Exploratory wet worst-case run \u2013 screening model, not a certified assessment."
+}

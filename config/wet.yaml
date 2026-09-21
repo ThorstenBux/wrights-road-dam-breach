@@ -1,0 +1,24 @@
+# Wet worst case – EXPLORATORY set-up (scripts/18_run_wet_worstcase.py, 19_wet_compare.py, 20_eyre_capacity.py).
+# Kept apart from dam.yaml / site.yaml on purpose: nothing in the main pipeline (scripts 01-10) reads this file.
+# The rain, the Eyre flood flow and the spin-up come from the `hydrology:` block of the `storm` scenario in dam.yaml.
+# Screening model, not a certified assessment.
+
+eyre:
+  name: Eyre River               # OSM 'waterways' name; ~29 km of it lie inside the full domain
+  refine_half_width_m: 400       # mesh refinement strip along the river (the braided bed is 100-300 m wide)
+  refine_area_m2: 1000           # vs 3000 in the corridor and 6000 elsewhere
+  bank_offset_m: 250             # bank lines for the spill accounting, parallel to the OSM centreline
+  section_spacing_m: 250         # scripts/20_eyre_capacity.py
+  section_half_width_m: 400
+  thalweg_search_m: 200          # the OSM centreline wanders inside the braided bed
+  capacity_dem_res_m: 2.0
+  manning_n: 0.035               # gravel-bed braided river in flood (bracket 0.030-0.045)
+
+race_outfalls:
+  # Dewatering flow that reaches the Eyre (--race-outfalls). Rates: EAP Table F.1 (high) as split in races.yaml.
+  # MR4: the mapped chain ends ~225 m from the Eyre at [1536065, 5203236], just NORTH of the domain edge and
+  #      upstream of the river inlet -> its flow is added to the river inlet.
+  # R3:  the mapped chain meets the Eyre at [1542769, 5201337], 11.1 km along the race.
+  # R2:  the mapped chain ends 5.4 km from the Eyre (mapping artefact, see docs/races-and-shelterbelts-2d.md) -> not included.
+  - {name: MR4, q_m3s: 5.0, to_river_inlet: Eyre River}
+  - {name: R3,  q_m3s: 5.0, location_nztm: [1542769, 5201337], flow_dir: [0.67, -0.74]}
