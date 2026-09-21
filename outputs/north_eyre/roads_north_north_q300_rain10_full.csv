@@ -1,0 +1,23 @@
+road,sample_points,points_inundated_gt_0.1m,first_arrival_h,max_depth_m,first_arrival_E,first_arrival_N,note
+Carleton Road,1001.0,118.0,0.83,0.79,1537688.89,5197250.45,
+Wolffs Road,416.0,122.0,1.33,0.8,1540136.38,5196547.95,
+Poyntzs Road,711.0,139.0,1.91,0.7,1542615.06,5195700.62,
+Pesters Road,291.0,96.0,2.17,0.58,1544141.43,5195472.6,
+Downs Road,446.0,93.0,2.92,0.77,1547814.05,5193652.31,
+Browns Road,552.0,147.0,3.75,0.35,1552074.36,5192497.28,
+Two Chain Road,548.0,130.0,4.5,0.33,1555360.31,5191766.34,
+Diversion Road,98.0,62.0,5.88,0.3,1561307.36,5191048.92,
+Wrights Road,759.0,38.0,0.33,1.46,1535381.79,5197394.86,
+Dixon Road,285.0,162.0,0.17,2.27,1534938.09,5197500.05,
+South Eyre Road,1465.0,80.0,5.25,0.14,1558350.56,5193798.37,
+Thongcaster Road,674.0,0.0,,0.01,,,
+Domain Road,280.0,25.0,0.33,1.48,1535355.97,5197586.42,
+Barrett Road,348.0,0.0,,0.0,,,
+Kennedy Road,,,,,,,not in roads layer
+North Eyre Road,866.0,0.0,,0.01,,,
+Dixons Road,,,,,,,not in roads layer
+Harmans Gorge Road,254.0,0.0,,0.0,,,
+Depot Road,481.0,0.0,,0.0,,,
+Warren Road,149.0,0.0,,0.0,,,
+Steffens Road,420.0,0.0,,0.0,,,
+Tram Road,887.0,0.0,,0.0,,,

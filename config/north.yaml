@@ -1,0 +1,57 @@
+# Eyre River flood at the north embankment – EXPLORATORY set-up (scripts/22-25, damflood/north.py).
+# Kept apart from dam.yaml / site.yaml on purpose: nothing in the main pipeline (scripts 01-10) reads this file.
+# Domain override: the full domain of site.yaml extended north and west so that the Eyre beside the ponds, the
+# ground between the river and the north (Dixon Road) embankment and the river's north bank towards North Eyre
+# Road are inside the model. Everything else (mesh classes, breach hydrographs, pond block, roughness) as the
+# wet worst case (config/wet.yaml, scripts/18). Screening model, not a certified assessment.
+
+domain:
+  # site.yaml full domain is [1531000, 5187000, 1562500, 5203000]; the Eyre is at N ~5204.4 km at the ponds'
+  # easting. The terrain check (scripts/23) shows that the only ground from which water can run to the north
+  # embankment is the old Waimakariri fan surface WEST of the ponds, which meets the Eyre's right bank near Oxford
+  # (E 1521-1527 km). The west edge therefore sits where the Eyre leaves the foothills; the north edge is 7 km
+  # further north (North Eyre Road lies 1.7-2.9 km north of the river).
+  bbox_nztm: [1518000, 5187000, 1562500, 5210000]
+  dem_res_m: 20
+  dem_name: dem_north_20m.tif            # data/derived/
+  gaps_name: dem_north_20m_gaps.tif      # 1 = no LiDAR return in the 1 m source (filled by interpolation)
+  osm_name: osm_north.gpkg               # data/raw/
+  tag: north                             # output tag: outputs/<scenario>/<scenario>_north_<...>.sww
+
+mesh:                                    # as site.yaml mesh.extended
+  max_area_m2: 6000
+  site_area_m2: 1500
+  corridor_area_m2: 3000
+  flow_algorithm: DE0
+  # the fan surface between the Eyre near Oxford and the north embankment, refined like the breach corridor
+  foreground_polygon_nztm: [[1519000, 5209500], [1527000, 5207500], [1540000, 5204500], [1540000, 5197200], [1533000, 5196500], [1524000, 5201500], [1519000, 5206000]]
+  foreground_area_m2: 3000
+
+run:
+  finaltime_h: 12                        # hours AFTER the breach opens
+  yieldstep_s: 300
+
+eyre:
+  name: Eyre River
+  # terrain check (scripts/23_eyre_north_terrain.py)
+  reach_chainage_from_site_km: 19        # sections from this far up-river of the point nearest the ponds ...
+  reach_chainage_below_site_km: 6        # ... to this far below it
+  flows_m3s: [100, 150, 300, 500, 800, 1200]   # SENSITIVITY values, no return period attached (see docs note)
+
+embankment:
+  # north embankment = footprint NW -> NE corner (site.yaml, APPROXIMATE); crest levels from dam.yaml
+  sample_spacing_m: 20
+  toe_offset_m: 40                       # natural ground sampled this far outside the footprint line
+  gauge_offsets_m: [40, 150]             # rows of depth gauges north of the embankment for the 2D runs
+
+hydrograph:
+  # River inflow at the upstream (west) edge as a hydrograph, not a constant. Shape only – the PEAK is the
+  # quantity without a sourced AEP; the runs bracket it. Gamma-type rise/recession typical of a foothill
+  # catchment of this size; base flow small because the middle Eyre is normally dry.
+  inlet_chainage_m: 500                  # along the Eyre from where it enters the domain (it leaves the foothills there)
+  inlet_size_m: [200, 60]                # inflow patch across x along the river (the breach patch of 80 x 30 m is too small for a river)
+  pre_breach_h: 8.0                      # river (and rain) before the breach opens
+  base_m3s: 5.0
+  time_to_peak_h: 5.0                    # at the inlet, from the start of the run
+  shape: 3.0                             # gamma shape parameter (larger = more peaked)
+  peaks_m3s: {low: 150, mid: 300, high: 600}    # replaced/confirmed by docs/eyre-flood-north-embankment.md §2

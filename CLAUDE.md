@@ -35,3 +35,7 @@ Read `HANDOVER.md` first (what/why/how), then `SPEC.md` (method, assumptions, op
   `scripts/18_run_wet_worstcase.py` → 05 with `--tag` and `--baseline-sww <same run with --no-breach>` → `scripts/19_wet_compare.py`;
   `scripts/20_eyre_capacity.py` for the river sections. The baseline must have the same roughness as the run. Script 04 does NOT
   delay multi-breach inlets by `pre_breach_h` – use script 18 for quake + storm.
+* Eyre flood at the north embankment (HANDOVER §8.6, `docs/eyre-flood-north-embankment.md`): own domain in `config/north.yaml`
+  (west to the foothills above Oxford), `damflood/north.py`, scripts 22–26. Scripts 05/06 do not work on this domain – use
+  `scripts/25_north_eyre_report.py`. River peaks 300 / 600 m³/s are sensitivity values; only 150 ≈ NIWA regional 1 % AEP is sourced.
+

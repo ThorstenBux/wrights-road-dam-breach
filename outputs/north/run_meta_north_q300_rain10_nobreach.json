@@ -1,0 +1,97 @@
+{
+  "scenario": "north",
+  "mode": "north",
+  "bbox": [
+    1518000,
+    5187000,
+    1562500,
+    5210000
+  ],
+  "pre_breach_s": 28800.0,
+  "rain_mm_h": 10.0,
+  "inflows": [
+    {
+      "name": "Eyre River",
+      "peak_m3s": 300.0,
+      "base_m3s": 5.0,
+      "time_to_peak_h": 5.0,
+      "shape": 3.0,
+      "location_nztm": [
+        1519823.5435006164,
+        5209627.062035156
+      ],
+      "flow_dir": [
+        -0.20328153049162917,
+        -0.979120329357419
+      ],
+      "volume_Mm3": 8.242205238799233,
+      "polygon": [
+        [
+          1519723.5986523756,
+          5209637.598984913
+        ],
+        [
+          1519919.4227182472,
+          5209596.942678814
+        ],
+        [
+          1519907.2258264178,
+          5209538.195459052
+        ],
+        [
+          1519711.4017605463,
+          5209578.851765151
+        ]
+      ]
+    }
+  ],
+  "hydrograph_tag": "",
+  "breach": false,
+  "dem": "/Users/thorstenbux/repos/tripod-digital/wrights-road-dam-breach/.claude/worktrees/dewatering-pathway-evidence-783b05/data/derived/dem_north_20m.tif",
+  "triangles": 417361,
+  "manning_n": 0.045,
+  "finaltime_s": 72000.0,
+  "yieldstep_s": 300,
+  "inlet_polygon": [
+    [
+      1534870.1963788166,
+      5197505.309327824
+    ],
+    [
+      1534793.445864421,
+      5197527.878300775
+    ],
+    [
+      1534801.9092292774,
+      5197556.659743672
+    ],
+    [
+      1534878.659743673,
+      5197534.090770721
+    ]
+  ],
+  "inlet_polygons": [
+    [
+      [
+        1534870.1963788166,
+        5197505.309327824
+      ],
+      [
+        1534793.445864421,
+        5197527.878300775
+      ],
+      [
+        1534801.9092292774,
+        5197556.659743672
+      ],
+      [
+        1534878.659743673,
+        5197534.090770721
+      ]
+    ]
+  ],
+  "flow_algorithm": "DE0",
+  "time_offset_s": 7818.0,
+  "started": "2026-09-20 18:43:03",
+  "note": "Exploratory Eyre-flood run on the north-extended domain \u2013 screening model, not a certified assessment."
+}

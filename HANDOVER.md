@@ -235,3 +235,37 @@ script 16 moved into `shelterbelts.fraction_friction`). Screening model, not a c
   `outputs/races/races_conditioning.gpkg` – stagger the starts.
 * **Open**: Eyre at the north embankment (extend the domain ~7 km north + a real Eyre hydrograph from ECan); HIRDS storm and
   infiltration instead of 10 mm/h with none; debris-dam bound for belts; stopbank crest survey for the tight Eyre reach.
+
+### 8.6 Eyre River flood at the north embankment, and what a breach adds to it (20 Sep 2026)
+
+The question §8.5 left open. Write-up: [docs/eyre-flood-north-embankment.md](docs/eyre-flood-north-embankment.md); drafted data
+requests: [docs/eyre-flood-information-requests.md](docs/eyre-flood-information-requests.md). Exploratory and separate (new files
+only; nothing of scripts 01–21, `dam.yaml`, `site.yaml`, `RESULTS.md` or the viewers changed). Screening model, not a certified assessment.
+
+* **Findings**: (1) river water does not reach the north embankment – not in the LiDAR terrain (ponds on a fan ridge, ground falls
+  towards the Eyre; embankment catchment 0.7 km²) and not in 2D at 150 / 300 / 600 m³/s (0.0 m at the gauges, nearest river water
+  4.9 km away); the WDC mapping cited in the design report is most likely local rain-on-grid ponding (councils' current model:
+  0–0.3 m there, no Eyre scenario). (2) No flood frequency exists for the Eyre on the plains: one headwater recorder (Trig Road
+  Ford, 166405), NIWA regional 1 % AEP ≈ 148 m³/s ± 55 %, largest ECan gaugings 292 / 266 m³/s. (3) Any breach (north, north
+  full-depth, east, quake) meets the river only at river km 53 by South Eyre Road, adds 50–170 m³/s and ≤ 0.33 m there, +0.6–1.6
+  Mm³ over the north-east bank line that already spills 2.2 Mm³; no reach spills only because of a breach; breach-added depth on
+  North Eyre Road 0.0 m (≤ 0.01 m with rain); the bigger the river flood or the wetter the plain, the smaller the rise a breach
+  causes (full-depth north breach 0.36 / 0.33 / 0.26 m on 150 / 300 / 600 m³/s; 0.17–0.22 m with 10 mm/h rain, which itself puts
+  0.12–0.35 m of LOCAL runoff at the north embankment). (4) The Eyre alone wets North Eyre Road in the model (0.08 / 0.16 / 0.29 m). (5) The Diversion dates from
+  1929, not the 1860s (clg-notes corrected).
+* **Files**: `config/north.yaml` (domain `[1518000, 5187000, 1562500, 5210000]`, mesh, hydrograph, gauges), `damflood/north.py`
+  (gamma hydrograph, DEM fetch with gap mask, priority-flood fill, D8 trace, upslope mask, MFD spread, run tags),
+  `scripts/22_north_domain.py`, `23_eyre_north_terrain.py`, `24_run_north_eyre.py`, `25_north_eyre_report.py`,
+  `26_council_flood_depths.py`, `tests/test_north.py`. Outputs: `outputs/north_eyre/` (report JSON, figures, road / building CSV)
+  and `outputs/<scenario>/<scenario>_north_q<peak>[_rain10][_full][_nobreach].sww`; all baselines live in `outputs/north/`.
+* **Gotchas**: (1) scripts 05/06 cannot post-process this domain (tied to the three tiers and `osm_domain.gpkg`) – script 25 does
+  it. (2) Script 25 must process baselines before breach runs (it sorts them). (3) Script 23 caches its 2 m DEM chunks by extent –
+  an index-keyed cache silently reused the wrong tiles when the domain changed. (4) A static "minimum water level that connects
+  river and embankment" is meaningless on a sloping plain (any up-river point qualifies); use flow paths / upslope area.
+  (5) Bank-line "leaving" volumes count every outward crossing and can exceed the inflow – use differences. (6) 417k triangles, 1.7 GB per SWW,
+  20 h simulated: ~1¾ h dry, ~3½ h with rain; python stdout to a log file is block-buffered (use `python -u`). (7) The 90 km² LiDAR
+  gap in the bbox is south-west of the Waimakariri and irrelevant.
+* **Open**: send the ECan / WDC requests; a sourced design hydrograph; HIRDS storm (needs a NIWA DataHub account) instead of 10 mm/h;
+  stopbank crest survey and a stopbank-failure case between Wolffs Road and the Diversion; local drainage along Dixons Road at
+  2–5 m resolution if the CLG wants the rain-ponding question answered properly.
+

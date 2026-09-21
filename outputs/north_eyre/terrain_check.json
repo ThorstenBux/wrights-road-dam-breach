@@ -1,0 +1,127 @@
+{
+  "note": "exploratory screening \u2013 not a certified assessment. Static terrain check: no volumes, no losses, no momentum; flows are sensitivity values without a return period.",
+  "reach_km": [
+    5.961595977613059,
+    30.961595977613058
+  ],
+  "sections": 100,
+  "section_half_width_m": 600.0,
+  "manning_n": 0.035,
+  "river_point_nearest_embankment_nztm": [
+    1536798.0780827105,
+    5202906.14927282
+  ],
+  "distance_river_to_embankment_km": 5.736554961037061,
+  "river_thalweg_at_nearest_point_mRL": 210.08071899414062,
+  "right_crest_at_nearest_point_mRL": 213.66040790310984,
+  "toe_ground_mRL_min_median_max": [
+    212.9710202761358,
+    216.78761238186283,
+    220.6819982238976
+  ],
+  "embankment_height_above_toe_m_min_max": [
+    6.549538576377927,
+    11.328979723864222
+  ],
+  "max_static_ponding_depth_at_toe_m": 0.0,
+  "capacity_m3s_percentiles_5_25_50_75": [
+    355.894389948759,
+    1402.8655353103227,
+    3503.5663967367886,
+    7066.001004313728
+  ],
+  "limiting_bank_share_right": 0.56,
+  "sections_whose_right_bank_overflow_path_passes_within_250m_of_north_embankment": 0,
+  "their_chainage_rel_site_km": [],
+  "closest_path_approach_m": 3549.3847354154213,
+  "north_embankment_d8_catchment_km2": 0.7448,
+  "north_embankment_anypath_area_km2": 85.4664,
+  "sections_with_right_bank_in_anypath_area": 29,
+  "their_chainage_rel_site_km_from_to": [
+    -18.875,
+    -8.125
+  ],
+  "their_E_from_to": [
+    1521260.01148757,
+    1529945.2298136752
+  ],
+  "their_capacity_m3s_min_median": [
+    17.715999264786415,
+    5799.018947666533
+  ],
+  "largest_mfd_share_of_right_bank_overflow_at_north_embankment": 1.1415190163115942e-20,
+  "by_flow": {
+    "100": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        1.1500000000000057,
+        2.9499999999999886
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    },
+    "150": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        1.3000000000000114,
+        3.1499999999999773
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    },
+    "300": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        1.5500000000000114,
+        3.75
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    },
+    "500": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        1.7750000000000057,
+        4.100000000000023
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    },
+    "800": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        2.0250000000000057,
+        4.550000000000011
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    },
+    "1200": {
+      "sections_over_right_bank": 1,
+      "sections_over_left_bank": 0,
+      "of_those_right_with_path_to_embankment": 0,
+      "normal_depth_m_median_max": [
+        2.25,
+        5.100000000000023
+      ],
+      "chainage_rel_site_km_over_right": [
+        4.88
+      ]
+    }
+  }
+}
