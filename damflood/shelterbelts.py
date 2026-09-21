@@ -43,6 +43,25 @@ def equivalent_manning(fraction, n_open: float, n_belt: float):
     return np.sqrt(f * n_belt ** 2 + (1.0 - f) * n_open ** 2)
 
 
+def fraction_friction(frac: DEM, centroids_abs: np.ndarray, areas: np.ndarray, n_open: float, n_belt: float,
+                      windows=((0, 25, 20.0), (25, 50, 40.0), (50, 1e9, 70.0))) -> tuple[np.ndarray, dict]:
+    """Equivalent n per triangle from a canopy-FRACTION raster (scripts/15_canopy_fraction.py): the fraction is
+    averaged in a window about the size of the triangle (`windows` = (side from, side to, window m)).
+    Returns (n, stats)."""
+    side = np.sqrt(np.asarray(areas, float))
+    n = np.full(len(side), float(n_open))
+    for lo, hi, win in windows:
+        sel = (side >= lo) & (side < hi)
+        if sel.any():
+            sm = DEM.__new__(DEM); sm.transform = frac.transform
+            sm.arr = ndimage.uniform_filter(frac.arr, size=max(int(round(win / frac.res)), 1), mode="nearest")
+            n[sel] = equivalent_manning(sm.sample(centroids_abs[sel, 0], centroids_abs[sel, 1]), n_open, n_belt)
+    wt = n > n_open * 1.02
+    stats = {"tree_n": float(n_belt), "triangles_with_trees": int(wt.sum()), "share_of_triangles": float(wt.mean()),
+             "median_n_where_trees": float(np.median(n[wt])) if wt.any() else None, "max_n": float(n.max())}
+    return n, stats
+
+
 def triangle_friction(mask: np.ndarray, dem: DEM, centroids_abs: np.ndarray, areas: np.ndarray,
                       n_open: float, n_belt: float) -> np.ndarray:
     """Equivalent n per triangle: canopy share in a window matched to the triangle size (three size classes)."""

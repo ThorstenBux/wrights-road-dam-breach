@@ -39,3 +39,12 @@ def test_triangle_friction_raises_n_only_near_trees():
     assert n[1] == pytest.approx(0.045)
     assert 0.06 < n[0] < 0.1            # 10 m belt across a ~55 m triangle
     assert n[2] == pytest.approx(0.2, abs=0.01)   # small triangle inside the belt
+
+
+def test_fraction_friction_matches_the_canopy_share_and_reports_stats():
+    frac = _dem(np.zeros((100, 100)), res=10.0); frac.arr[:, 50:] = 0.5      # east half: half of every cell under trees
+    c = np.array([[100.0, 500.0], [900.0, 500.0]]); areas = np.array([3000.0, 3000.0])
+    n, stats = shelterbelts.fraction_friction(frac, c, areas, 0.045, 0.2)
+    assert n[0] == pytest.approx(0.045)
+    assert n[1] == pytest.approx(shelterbelts.equivalent_manning(0.5, 0.045, 0.2))
+    assert stats["triangles_with_trees"] == 1 and stats["tree_n"] == 0.2

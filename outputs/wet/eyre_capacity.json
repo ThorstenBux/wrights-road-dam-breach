@@ -1,0 +1,33 @@
+{
+  "note": "exploratory screening \u2013 not a certified assessment. Capacity of the section confined by the highest ground within 400 m each side; LiDAR bed (check for water on the survey day); Manning n 0.035.",
+  "sections": 110,
+  "length_km": 27.411015547865077,
+  "median_slope": 0.005912652136217882,
+  "capacity_m3s_percentiles_5_25_50_75": [
+    201.16036935594397,
+    549.534707255501,
+    829.1178326612237,
+    1129.4490774359278
+  ],
+  "limiting_bank_share_left": 0.5545454545454546,
+  "sections_below_150_m3s": 5,
+  "share_below_150_m3s": 0.045454545454545456,
+  "chainage_km_below_150_m3s": [
+    4.12,
+    4.38,
+    4.62,
+    5.12,
+    5.38
+  ],
+  "sections_below_300_m3s": 7,
+  "share_below_300_m3s": 0.06363636363636363,
+  "chainage_km_below_300_m3s": [
+    3.62,
+    3.88,
+    4.12,
+    4.38,
+    4.62,
+    5.12,
+    5.38
+  ]
+}

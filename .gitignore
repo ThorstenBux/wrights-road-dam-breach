@@ -16,3 +16,4 @@ outputs/**/webgl/data.js
 outputs/races/viewer/
 outputs/races/log_*.txt
 outputs/shelterbelts_logs/
+outputs/wet_logs/

@@ -1,0 +1,16 @@
+road,first_arrival_h open,max_depth_m open,first_arrival_h blocked,max_depth_m blocked
+Carleton Road,0.83,2.3,0.83,1.25
+Wolffs Road,1.33,1.25,1.33,0.99
+Poyntzs Road,1.92,0.71,1.84,0.68
+Pesters Road,2.25,0.46,2.25,0.46
+Downs Road,,,,
+Browns Road,,,,
+Two Chain Road,,,,
+Diversion Road,,,,
+Wrights Road,0.3,1.9,0.3,1.9
+Dixon Road,1.0,0.93,1.0,0.97
+South Eyre Road,,0.0,,0.0
+Thongcaster Road,,,,
+Domain Road,,0.0,,0.0
+Barrett Road,,,,
+Kennedy Road,,,,
