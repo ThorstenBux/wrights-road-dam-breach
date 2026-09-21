@@ -14,7 +14,6 @@ import time
 from pathlib import Path
 
 import numpy as np
-from scipy import ndimage
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from damflood import config, model, shelterbelts, terrain  # noqa: E402
@@ -71,18 +70,9 @@ def main():
     domain, offset = model.build_domain(burned, bbox, mesh_cfg, refine, out_dir, name, n0)
 
     # equivalent n per triangle: canopy share in a window about the size of the triangle
-    frac = terrain.DEM(canopy); c = domain.get_centroid_coordinates(absolute=True); side = np.sqrt(domain.areas)
-    n = np.full(len(side), float(n0))
-    for lo, hi, win in ((0, 25, 20.0), (25, 50, 40.0), (50, 1e9, 70.0)):
-        sel = (side >= lo) & (side < hi)
-        if sel.any():
-            sm = terrain.DEM.__new__(terrain.DEM); sm.transform = frac.transform
-            sm.arr = ndimage.uniform_filter(frac.arr, size=max(int(round(win / frac.res)), 1), mode="nearest")
-            n[sel] = shelterbelts.equivalent_manning(sm.sample(c[sel, 0], c[sel, 1]), n0, n_tree)
+    n, stats = shelterbelts.fraction_friction(terrain.DEM(canopy), domain.get_centroid_coordinates(absolute=True),
+                                              domain.areas, n0, n_tree)
     domain.set_quantity("friction", n, location="centroids")
-    wt = n > n0 * 1.02
-    stats = {"tree_n": n_tree, "triangles_with_trees": int(wt.sum()), "share_of_triangles": float(wt.mean()),
-             "median_n_where_trees": float(np.median(n[wt])) if wt.any() else None, "max_n": float(n.max())}
     print(f"[trees] {stats}")
     if a.mesh_only:
         return

@@ -195,6 +195,9 @@ carry that caveat.
 6. Exploratory (HANDOVER §8): should tree shelterbelts (LiDAR canopy, built and tested) become part of the roughness in the
    reported runs, and should emergency dewatering down the races be reported as its own scenario? The latter needs WIL's race
    identification, capacities, culvert inventory and the R2/R3 flow split.
+7. Exploratory (HANDOVER §8.5, docs/wet-worstcase-trees-races.md): should the wet worst case (storm + Eyre in flood + east or
+   earthquake breach, with shelterbelts) be reported? It needs an Eyre flood hydrograph with a return period (ECan), a HIRDS
+   design storm, and – for the Eyre reaching the north embankment – a domain extended ~7 km north.
 
 ## 7. First results (Phase 0 shakedown, 15 Sep 2026)
 
