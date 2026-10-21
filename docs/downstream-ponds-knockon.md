@@ -26,21 +26,71 @@ flood picture significantly?
   its bank along about a third of its length (by up to ~0.7 m). The other four are topped only at isolated low
   points, or not at all. A bank overtopped for hours at 1–2 m/s could erode. So a knock-on failure there is
   credible, but it is small next to the main flood.
-* **Where it could matter:** two of the five are mapped as wastewater ponds. If they failed or were flooded, the
-  breach water would carry effluent. That is a health and clean-up issue rather than a depth issue.
+* **Where it could matter:** two of the five (F and G on the map below) are mapped as wastewater ponds. If they
+  failed or were flooded, the breach water would carry effluent. See [Contamination](#contamination) below.
 
 **Message for the CLG:** knock-on failures of farm ponds downstream would not change the flood extent or the
 arrival times in any significant way: at most about one-fifth more water, released later and more slowly.
 Contamination from the effluent ponds is the consequence worth raising with WDC/ECan.
 
-![map and hydrographs](../outputs/downstream_ponds/east/downstream_ponds.png)
+![ponds 4–5.5 km downstream with the flood](../outputs/downstream_ponds/east/downstream_ponds_map.png)
+
+*Close-up of the 4–5.5 km group. Blue shows peak flood depth for the east breach; dashed lines show flood arrival
+time. Red dots mark bank the peak flood tops; orange dots mark bank within 0.5 m of the flood. C–G are the five
+ponds in the knock-on estimate; F and G are the two mapped as wastewater.*
+
+![overview and knock-on hydrographs](../outputs/downstream_ponds/east/downstream_ponds.png)
+
+## Contamination
+
+**What the breach water is.** The Wrights Road ponds store irrigation water taken from the Waimakariri River
+through the WIL races. The breach water itself is therefore not a contamination source. The concern is what it
+picks up on the way.
+
+**The two wastewater ponds (F, G).** They lie between Wolffs Road and Main Race Road, 4.9–5.3 km from the site,
+with about a dozen buildings within 500 m. The flood reaches them 1.3–1.4 h after the breach opens. It is
+shallow there (0.7–0.9 m), because they sit on the northern edge of the flood.
+
+* **F (17 ha):** the flood does not top its bank anywhere; the closest it gets is 0.2 m below the crest. It comes
+  within 0.5 m along about 12 % of the bank, on the west side facing the flow. Its water stands ~0.6 m above the
+  outside ground, so a breach would release about 0.1 Mm³ as surveyed, or 0.34 Mm³ if full.
+* **G (13 ha):** the flood tops the bank over ~40 m at the south-west corner, where F and G meet. This is probably
+  a low point, inlet or ramp, so floodwater could flow *into* G there and mix with its contents. G is dug in (its
+  water level equals the outside ground), so a breached bank would release almost nothing as surveyed. If it were
+  full, it could release up to ~0.3 Mm³.
+
+**How much that is.** Even the upper bound (both full and both breached, ~0.6 Mm³) is less than a tenth of the
+7.2 Mm³ breach flood. Spread across the whole flood, that is a dilution of 10–20 times or more. Close to F and G,
+though, and in the flow path running east from them, the water would be far more concentrated. Effluent left on
+pasture, in races and around buildings after the flood recedes is the more lasting problem.
+
+**Is "wastewater" correct?** This needs checking before anything goes to the CLG. Both outlines were imported from
+the LINZ Topo50 map and carry no name or operator. Each is 13–17 ha, far bigger than a typical farm dairy effluent
+pond (usually under 1 ha). They might be a larger effluent or treatment operation, or irrigation storage with the
+wrong tag. If they turn out to be irrigation storage, this contamination point largely falls away.
+
+**Other contamination in the flood path, independent of these ponds:**
+* the 15 small ponds under 1.5 ha that were not measured; some are likely farm effluent ponds;
+* septic tanks, farm chemical and fuel stores, silage, and livestock across the ~40–70 km² of farmland the east flood covers (shakedown vs full domain);
+* drinking-water bores: floodwater over a wellhead can run down a poorly sealed casing even though the water table
+  is ~20 m down;
+* stock-water races that the flood crosses and fills, which would carry contamination further.
+
+**Who would need to know:** the operators of F and G (for notification in the EAP), WDC (water supplies) and ECan
+(consents, wells, clean-up). The model cannot quantify contamination. It can only show where the water goes and
+when.
+
+**Data that would settle it:** the ECan consents database (what F and G hold, their lining and volume); the ECan
+wells database and WDC community-supply wellheads inside the flood footprint (the max-depth rasters give the
+footprint); and the EAP's notification list.
 
 ## Method
 
 Run: `python scripts/18_downstream_ponds.py --scenario east --root <checkout with data/ and the 2D .tif outputs>`
 (about a minute; it fetches a small 1 m LiDAR patch per pond into `data/raw/lidar_ponds/`). Outputs go to
 `outputs/downstream_ponds/east/`: `ponds.csv` (every wetted water body), `knockon.csv` (per pond and case),
-`knockon_hydrographs.csv`, `summary.json`, `downstream_ponds.png`.
+`knockon_hydrographs.csv`, `bank_points.csv` (crest vs flood every 5 m of bank), `summary.json`, `downstream_ponds.png`
+(overview) and `downstream_ponds_map.png` (close-up of the group).
 
 1. **Which ponds.** OSM `natural=water` / `landuse=reservoir` polygons (`data/raw/osm_domain.gpkg`, layer
    `water`), duplicates removed, that the east shakedown max-depth raster wets by ≥ 0.05 m within 60 m.

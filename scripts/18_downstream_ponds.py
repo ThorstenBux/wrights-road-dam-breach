@@ -20,7 +20,7 @@ import geopandas as gpd
 import numpy as np
 import rasterio
 from rasterio.mask import mask as rmask
-from shapely.geometry import Point
+from shapely.geometry import Point, box
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from damflood import config, terrain  # noqa: E402
@@ -143,7 +143,7 @@ def main():
     water = water.sort_values("kind").drop_duplicates("key")
 
     flood = Surface(bed_tif, depth_tif)
-    ponds, knock, hyd = [], [], {}
+    ponds, knock, hyd, banks, outlines = [], [], {}, [], {}
     for _, w in water.iterrows():
         poly = w.geometry if w.geometry.geom_type == "Polygon" else max(w.geometry.geoms, key=lambda g: g.area)
         near = poly.buffer(60).difference(poly.buffer(15))     # ground just outside the banks
@@ -170,6 +170,8 @@ def main():
             local = np.array([flood.next_to(pt, poly) for pt in cpts])
             margin = crest - local                      # >0: bank stays above the flood next to it
             wet = np.isfinite(margin)
+            banks += [{"osm_id": w.osm_id, "x": pt.x, "y": pt.y, "crest_mRL": float(cr), "flood_mRL": float(fl),
+                       "margin_m": float(mg)} for pt, cr, fl, mg in zip(cpts, crest, local, margin)]
             ground = clip(patch, poly.buffer(45).difference(poly.buffer(25)))
             row.update({"surface_mRL": surface, "crest_low_mRL": float(np.percentile(crest, 5)),
                         "crest_med_mRL": float(np.median(crest)), "ground_out_med_mRL": float(np.median(ground)),
@@ -197,6 +199,7 @@ def main():
                     rec.update(k)
                 knock.append(rec)
         ponds.append(row)
+        outlines[w.osm_id] = (poly, w.kind)
 
     ponds.sort(key=lambda r: r["dist_km"])
     write_csv(out / "ponds.csv", ponds)
@@ -227,7 +230,9 @@ def main():
         wr.writerow(keys)
         for i in range(len(t)):
             wr.writerow([f"{hrows[k][i]:.3f}" for k in keys])
+    write_csv(out / "bank_points.csv", banks)
     plot(out, ponds, hrows, summary, depth_tif, centre)
+    zoom_map(out, a.root, ponds, outlines, banks, depth_tif, arr_tif, a.cluster_km, centre)
     print(json.dumps(summary, indent=2))
 
 
@@ -267,6 +272,87 @@ def plot(out, ponds, hrows, summary, depth_tif, centre):
     fig.text(0.01, 0.01, NOTE, fontsize=7, color="grey")
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     fig.savefig(out / "downstream_ponds.png", dpi=130)
+
+
+def zoom_map(out, root, ponds, outlines, banks, depth_tif, arr_tif, cluster_km, centre):
+    """Close-up of the 4-5.5 km group: flood depth, arrival contours, roads, buildings, pond outlines and the
+    bank stretches the peak flood tops."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Patch
+    group = [p for p in ponds if cluster_km[0] <= p["dist_km"] <= cluster_km[1] and p["area_ha"] * 1e4 >= MIN_AREA_M2]
+    if not group:
+        return
+    W = min(outlines[p["osm_id"]][0].bounds[0] for p in group) - 900
+    S = min(outlines[p["osm_id"]][0].bounds[1] for p in group) - 900
+    E = max(outlines[p["osm_id"]][0].bounds[2] for p in group) + 900
+    N = max(outlines[p["osm_id"]][0].bounds[3] for p in group) + 900
+    gpkg = root / "data" / "raw" / "osm_domain.gpkg"
+    roads = gpd.read_file(gpkg, layer="roads", bbox=(W, S, E, N))
+    bldg = gpd.read_file(gpkg, layer="buildings", bbox=(W, S, E, N))
+    fig, ax = plt.subplots(figsize=(11, 10))
+    with rasterio.open(depth_tif) as r:
+        win = rasterio.windows.from_bounds(W, S, E, N, r.transform)
+        d = r.read(1, window=win).astype(float); d[(d < WET_M) | (d == r.nodata)] = np.nan
+        ext = rasterio.windows.bounds(win, r.transform)
+    with rasterio.open(arr_tif) as r:
+        win2 = rasterio.windows.from_bounds(W, S, E, N, r.transform)
+        t_arr = r.read(1, window=win2).astype(float); t_arr[(t_arr == r.nodata) | (t_arr < 0)] = np.nan
+        ext2 = rasterio.windows.bounds(win2, r.transform)
+    im = ax.imshow(d, extent=(ext[0], ext[2], ext[1], ext[3]), cmap="Blues", vmin=0, vmax=2, zorder=1)
+    ys = np.linspace(ext2[3], ext2[1], t_arr.shape[0]); xs = np.linspace(ext2[0], ext2[2], t_arr.shape[1])
+    cs = ax.contour(xs, ys, t_arr, levels=[1.0, 1.25, 1.5, 1.75, 2.0], colors="0.35", linewidths=0.6,
+                    linestyles="dashed", zorder=2)
+    ax.clabel(cs, fmt=lambda v: f"{v:g} h", fontsize=7)
+    roads.plot(ax=ax, color="0.55", lw=0.8, zorder=3)
+    for name, g in roads.dropna(subset=["name"]).groupby("name"):
+        seg = max((x.intersection(box(W + 150, S + 150, E - 150, N - 150)) for x in g.geometry), key=lambda x: x.length)
+        if seg.length > 400 and seg.geom_type == "LineString":
+            p = seg.interpolate(0.5, normalized=True)
+            ax.text(p.x, p.y, name, fontsize=7, color="0.25", ha="center", va="center", zorder=6,
+                    bbox=dict(fc="white", ec="none", alpha=0.6, pad=0.5))
+    bldg.plot(ax=ax, color="0.15", zorder=4)
+    colours = {"wastewater": "#b5651d", "reservoir": "#2a9d8f", "pond": "#2a9d8f", "basin": "#7a7a7a"}
+    letters = iter("ABCDEFGHIJ")
+    legend_rows = []
+    for p in sorted(ponds, key=lambda q: q["dist_km"]):
+        poly, kind = outlines[p["osm_id"]]
+        if not poly.intersects(box(W, S, E, N)):
+            continue
+        measured = p["area_ha"] * 1e4 >= MIN_AREA_M2
+        gpd.GeoSeries([poly]).plot(ax=ax, facecolor="none", edgecolor=colours.get(kind, "k"),
+                                   lw=2.2 if measured else 1, hatch="///" if kind == "wastewater" else None, zorder=5)
+        if measured:
+            L = next(letters)
+            c = poly.representative_point()
+            ax.text(c.x, c.y, L, fontsize=13, weight="bold", ha="center", va="center", color=colours.get(kind, "k"),
+                    zorder=7, bbox=dict(fc="white", ec="none", alpha=0.75, pad=1))
+            legend_rows.append(f"{L}: {kind}, {p['area_ha']:.0f} ha, {p['dist_km']:.1f} km, flood arrives "
+                               f"{p['arrival_h']:.1f} h, {p.get('bank_overtopped_pct', 0):.0f} % of bank topped")
+    b = [q for q in banks if np.isfinite(q["margin_m"])]
+    top = [q for q in b if q["margin_m"] < 0]
+    near = [q for q in b if 0 <= q["margin_m"] < 0.5]
+    ax.scatter([q["x"] for q in near], [q["y"] for q in near], s=9, c="orange", zorder=8)
+    ax.scatter([q["x"] for q in top], [q["y"] for q in top], s=12, c="red", zorder=9)
+    ax.set_xlim(W, E); ax.set_ylim(S, N); ax.set_aspect("equal")
+    ax.ticklabel_format(useOffset=False, style="plain")
+    ax.set_xlabel("NZTM E (m)"); ax.set_ylabel("NZTM N (m)")
+    fig.colorbar(im, ax=ax, shrink=0.6, label="peak flood depth (m), east breach")
+    handles = [Patch(fc="none", ec=colours["reservoir"], lw=2, label="reservoir / pond (OSM)"),
+               Patch(fc="none", ec=colours["wastewater"], lw=2, hatch="///", label="wastewater pond (OSM / Topo50)"),
+               Line2D([], [], marker="o", ls="", color="red", ms=4, label="bank topped by the peak flood"),
+               Line2D([], [], marker="o", ls="", color="orange", ms=4, label="bank within 0.5 m of the flood"),
+               Line2D([], [], color="0.35", ls="--", lw=0.8, label="flood arrival, h after breach opens"),
+               Patch(fc="0.15", label="building (OSM)")]
+    ax.legend(handles=handles, loc="lower left", fontsize=8, framealpha=0.95)
+    ax.set_title(f"Ponds {cluster_km[0]:g}–{cluster_km[1]:g} km downstream of the Wrights Road ponds, "
+                 "with the east-breach flood", fontsize=11)
+    fig.text(0.02, 0.015, "\n".join(legend_rows + [NOTE + " Flood: 20 m shakedown run; banks: 1 m LiDAR."]),
+             fontsize=7.5, va="bottom", family="monospace")
+    fig.tight_layout(rect=(0, 0.02 + 0.016 * len(legend_rows), 1, 1))
+    fig.savefig(out / "downstream_ponds_map.png", dpi=140)
 
 
 if __name__ == "__main__":
