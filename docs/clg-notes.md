@@ -78,7 +78,11 @@ is overtopped along about a third of its bank, so a knock-on failure there is cr
 only at isolated points, or not at all. The Pond 1 → Pond 2 domino on the site itself is already in every cascade
 scenario and the earthquake case. **Message for the CLG:** knock-on failures of farm ponds would not significantly
 change the flood. The point worth raising with WDC/ECan is **contamination**: two of the five are mapped as
-wastewater ponds. Details: [downstream-ponds-knockon.md](downstream-ponds-knockon.md).
+wastewater ponds (13–17 ha, between Wolffs Road and Main Race Road). The flood reaches them in ~1.3 h; it tops
+one only at a ~40 m low corner where it could flow in and mix. Confirm with ECan first what they actually hold:
+they are unusually large for farm effluent ponds, and the "wastewater" tag comes from Topo50. Also ask WDC/ECan
+about drinking-water bores and wellheads inside the flood footprint. Details and map:
+[downstream-ponds-knockon.md](downstream-ponds-knockon.md#contamination).
 
 ## Assumptions in the model that real data would improve
 
