@@ -66,6 +66,20 @@ the river at the site). Follow-ups: WDC Eyre flood mapping (point 2), dewatering
 (point 1), and optionally a 2D run of the north breach on the extended domain to quantify how much reaches
 the Eyre.
 
+### 4. Could the breach flood knock out other ponds downstream?
+
+Asked Oct 2026. The flood from an east breach reaches 30 mapped ponds, reservoirs and effluent ponds. The five that
+matter are 13–19 ha, sit 4.3–5.3 km downstream, and are reached 1.2–1.4 h after the breach opens. Measured on the
+1 m LiDAR, their water stands only 0–1.2 m above the ground outside. If all five failed as soon as the flood
+reached them, they would add about **0.5 Mm³ at a combined peak of ~40 m³/s** as surveyed, and at most **1.45 Mm³
+at ~230 m³/s** if all were full to the brim. The main breach releases 7.2 Mm³ at ~2,100 m³/s. The extra water
+arrives after the peak has passed, so flood extent and arrival times would barely change. One 12.7 ha reservoir
+is overtopped along about a third of its bank, so a knock-on failure there is credible. The other four are topped
+only at isolated points, or not at all. The Pond 1 → Pond 2 domino on the site itself is already in every cascade
+scenario and the earthquake case. **Message for the CLG:** knock-on failures of farm ponds would not significantly
+change the flood. The point worth raising with WDC/ECan is **contamination**: two of the five are mapped as
+wastewater ponds. Details: [downstream-ponds-knockon.md](downstream-ponds-knockon.md).
+
 ## Assumptions in the model that real data would improve
 
 | # | Assumption | Used in | What would replace it |
@@ -89,3 +103,4 @@ the Eyre.
 | A17 | Exploratory race runs: MR4 / R2 / R3 matched to unnamed OSM waterways; beds = LiDAR water surface; culverts either open cuts or fully blocked; Pond 2 dewatering split 10 / 5 m³/s between R2 / R3; constant EAP Table F.1 example rates | exploratory dewatering / race runs (not in RESULTS) | WIL race GIS, cross-sections, gate ratings and culvert inventory; EAP App. F detail |
 | A18 | Exploratory dewatering-then-breach: the ponds are assumed to fail anyway, the Pond 2 breach initiating 0.56 m below the level it would reach unbreached (where 223.6 sits for full ponds) | exploratory dewatering sensitivity | engineer's view on failure development under a falling pool; Appendix H |
 | A19 | Exploratory shelterbelts: trees = LiDAR canopy ≥ 6 m, Manning n 0.12–0.30 under canopy as an area-weighted equivalent per triangle; no trunk / fence / debris blockage | exploratory shelterbelt runs (not in RESULTS) | field check of belt density and fencing; literature values for flow through shelterbelts; LCDB for other land cover |
+| A20 | Exploratory knock-on pond failures: pond outlines and types from OSM; pond level = 1 m LiDAR water surface (2020–23); each pond ≥ 1.5 ha fails on flood arrival by Froehlich (2008) overtopping down to outside ground; knock-on outflow not fed back into the 2D run; east scenario only | exploratory downstream-pond screening (not in RESULTS) | ECan consents and as-built levels for the ponds at 4–5.5 km (volumes, crest levels, spillways, effluent pond lining); field check; 2D run with the knock-on inflows if the reviewer wants it |

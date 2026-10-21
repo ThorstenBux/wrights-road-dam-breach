@@ -1,0 +1,46 @@
+osm_id,kind,area_ha,dist_km,case,pool_mRL,breach_invert_mRL,head_m,in_cluster,peak_Q_m3s,released_m3,time_to_peak_h,froehlich1995_peak_m3s,B_bot_m,t_f_h
+905272514,basin,7.839,2.986,"surveyed level, dry toe",194.3,194.335,-0.035,False,0.0,0.0,,,,
+905272514,basin,7.839,2.986,"full (0.5 m freeboard), dry toe",195.627,194.335,1.292,False,21.269,100201.14,1.381,25.001,12.884,1.38
+905272514,basin,7.839,2.986,"surveyed level, flood tailwater",194.3,195.166,-0.866,False,0.0,0.0,,,,
+903988571,basin,2.216,2.788,"surveyed level, dry toe",195.2,196.027,-0.827,False,0.0,0.0,,,,
+903988571,basin,2.216,2.788,"full (0.5 m freeboard), dry toe",197.241,196.027,1.214,False,11.395,26828.414,0.757,15.64,8.037,0.757
+903988571,basin,2.216,2.788,"surveyed level, flood tailwater",195.2,196.513,-1.313,False,0.0,0.0,,,,
+536262380,basin,1.789,1.344,"surveyed level, dry toe",206.961,208.41,-1.449,False,0.0,0.0,,,,
+536262380,basin,1.789,1.344,"full (0.5 m freeboard), dry toe",210.437,208.41,2.027,False,22.989,36232.793,0.527,32.263,8.363,0.527
+536262380,basin,1.789,1.344,"surveyed level, flood tailwater",206.961,209.009,-2.048,False,0.0,0.0,,,,
+638914307,basin,8.193,7.435,"surveyed level, dry toe",162.4,161.788,0.612,False,7.567,48393.547,2.051,8.047,10.376,2.05
+638914307,basin,8.193,7.435,"full (0.5 m freeboard), dry toe",163.978,161.788,2.19,False,93.676,176934.256,1.084,56.928,15.195,1.084
+638914307,basin,8.193,7.435,"surveyed level, flood tailwater",162.4,161.826,0.574,False,6.791,45241.363,2.117,7.296,10.164,2.117
+638914309,basin,8.491,12.687,"surveyed level, dry toe",126.1,125.418,0.682,False,8.936,56130.782,1.977,9.606,10.874,1.977
+638914309,basin,8.491,12.687,"full (0.5 m freeboard), dry toe",127.245,125.418,1.828,False,37.28,154078.591,1.208,43.573,14.649,1.208
+638914309,basin,8.491,12.687,"surveyed level, flood tailwater",126.1,126.154,-0.054,False,0.0,0.0,,,,
+993206854,basin,8.301,13.005,"surveyed level, dry toe",123.6,122.992,0.608,False,7.582,48628.968,2.072,7.989,10.398,2.071
+993206854,basin,8.301,13.005,"full (0.5 m freeboard), dry toe",125.406,122.992,2.414,False,57.128,199467.665,1.039,66.349,15.667,1.039
+993206854,basin,8.301,13.005,"surveyed level, flood tailwater",123.6,124.101,-0.501,False,0.0,0.0,,,,
+1072172318,pond,6.713,5.71,"surveyed level, dry toe",173.2,171.844,1.356,False,24.569,90268.818,1.247,25.718,12.37,1.247
+1072172318,pond,6.713,5.71,"full (0.5 m freeboard), dry toe",173.856,171.844,2.012,False,41.828,134434.508,1.024,47.12,13.809,1.024
+1072172318,pond,6.713,5.71,"surveyed level, flood tailwater",173.2,173.241,-0.041,False,0.0,0.0,,,,
+993206853,pond,10.918,12.372,"surveyed level, dry toe",126.45,126.069,0.381,False,3.684,37652.756,3.001,4.227,9.773,3.001
+993206853,pond,10.918,12.372,"full (0.5 m freeboard), dry toe",128.02,126.069,1.951,False,45.905,211165.162,1.326,51.887,16.331,1.326
+993206853,pond,10.918,12.372,"surveyed level, flood tailwater",126.45,126.97,-0.52,False,0.0,0.0,,,,
+885343385,reservoir,19.234,4.28,"surveyed level, dry toe",184.5,184.0,0.5,True,7.108,84574.422,3.477,7.584,12.923,3.476
+885343385,reservoir,19.234,4.28,"full (0.5 m freeboard), dry toe",185.824,184.0,1.824,True,52.284,344136.986,1.82,55.313,19.566,1.82
+885343385,reservoir,19.234,4.28,"surveyed level, flood tailwater",184.5,184.749,-0.249,True,0.0,0.0,,,,
+885343384,reservoir,16.941,4.547,"surveyed level, dry toe",184.0,182.756,1.244,True,29.934,204600.063,2.068,29.61,16.651,2.068
+885343384,reservoir,16.941,4.547,"full (0.5 m freeboard), dry toe",184.761,182.756,2.005,True,58.478,334820.754,1.629,61.599,19.244,1.629
+885343384,reservoir,16.941,4.547,"surveyed level, flood tailwater",184.0,184.738,-0.738,True,0.0,0.0,,,,
+885343383,reservoir,12.726,4.548,"surveyed level, dry toe",181.9,181.197,0.703,True,10.208,85161.955,2.385,11.323,12.591,2.385
+885343383,reservoir,12.726,4.548,"full (0.5 m freeboard), dry toe",182.326,181.197,1.129,True,20.652,140261.082,1.882,23.444,14.639,1.882
+885343383,reservoir,12.726,4.548,"surveyed level, flood tailwater",181.9,182.03,-0.13,True,0.0,0.0,,,,
+905272503,reservoir,9.14,14.255,"surveyed level, dry toe",114.3,114.478,-0.178,False,0.0,0.0,,,,
+905272503,reservoir,9.14,14.255,"full (0.5 m freeboard), dry toe",114.3,114.478,-0.178,False,0.0,0.0,,,,
+905272503,reservoir,9.14,14.255,"surveyed level, flood tailwater",114.3,115.231,-0.931,False,0.0,0.0,,,,
+905272501,reservoir,9.35,9.72,"surveyed level, dry toe",147.0,145.455,1.545,False,33.525,142933.945,1.379,34.633,14.449,1.379
+905272501,reservoir,9.35,9.72,"full (0.5 m freeboard), dry toe",147.592,145.455,2.137,False,51.675,198487.974,1.172,56.974,15.838,1.173
+905272501,reservoir,9.35,9.72,"surveyed level, flood tailwater",147.0,146.666,0.334,False,2.691,28218.427,2.968,3.293,8.877,2.968
+1072172260,wastewater,12.678,5.269,"surveyed level, dry toe",176.8,176.8,0.0,True,0.0,0.0,,,,
+1072172260,wastewater,12.678,5.269,"full (0.5 m freeboard), dry toe",179.172,176.8,2.372,True,66.638,298337.207,1.296,73.18,18.202,1.296
+1072172260,wastewater,12.678,5.269,"surveyed level, flood tailwater",176.8,177.662,-0.862,True,0.0,0.0,,,,
+1072172259,wastewater,16.892,4.919,"surveyed level, dry toe",180.1,179.492,0.609,True,9.533,94450.659,2.953,9.867,13.211,2.953
+1072172259,wastewater,16.892,4.919,"full (0.5 m freeboard), dry toe",181.493,179.492,2.002,True,57.211,333267.807,1.628,61.377,19.215,1.628
+1072172259,wastewater,16.892,4.919,"surveyed level, flood tailwater",180.1,179.804,0.296,True,2.708,39929.43,4.238,3.257,10.361,4.238

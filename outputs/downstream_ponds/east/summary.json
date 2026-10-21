@@ -1,0 +1,36 @@
+{
+  "scenario": "east",
+  "tier": "shakedown",
+  "cluster_km": [
+    4.0,
+    5.5
+  ],
+  "note": "Screening-level estimate, not a certified assessment. Pond banks from 1 m LiDAR, volumes assumed.",
+  "cases": {
+    "full (0.5 m freeboard), dry toe": {
+      "ponds": 5,
+      "released_Mm3": 1.4508238368979087,
+      "sum_of_peaks_m3s": 255.26202744828018,
+      "combined_peak_m3s": 226.88351478651649,
+      "combined_peak_t_h": 2.95
+    },
+    "surveyed level, dry toe": {
+      "ponds": 5,
+      "released_Mm3": 0.4687870994518397,
+      "sum_of_peaks_m3s": 56.78294615393119,
+      "combined_peak_m3s": 38.0286578066823,
+      "combined_peak_t_h": 3.433333333333333
+    },
+    "surveyed level, flood tailwater": {
+      "ponds": 5,
+      "released_Mm3": 0.039929429762367304,
+      "sum_of_peaks_m3s": 2.7081638421755225,
+      "combined_peak_m3s": 2.7046333832800866,
+      "combined_peak_t_h": 5.55
+    }
+  },
+  "main_breach": {
+    "peak_Q_m3s": 2092.773,
+    "released_Mm3": 7.18253772
+  }
+}
